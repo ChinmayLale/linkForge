@@ -1,5 +1,5 @@
 import { NavbarProps } from '@/interfaces/ui.interface'
-import { Book, Menu, Sunset, Trees, Zap } from 'lucide-react'
+import { Book, Link, Menu, Sunset, Trees, Zap } from 'lucide-react'
 import {
     Accordion,
     AccordionContent,
@@ -31,7 +31,7 @@ function NavBar({
         url: "https://www.shadcnblocks.com",
         src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
         alt: "logo",
-        title: "Shadcnblocks.com",
+        title: "LinkForge",
     },
     menu = [
         { title: "Home", url: "#" },
@@ -111,7 +111,7 @@ function NavBar({
     },
 }: NavbarProps) {
     return (
-        <section className="py-4 w-full px-6 sticky top-0 z-50 bg-white border-b border-border shadow-sm ">
+        <section className="py-4 w-full px-6 sticky top-0 z-50 bg-[var(--background)] border-b border-border shadow-sm ">
             <div className='flex flex-row items-center justify-center'>
                 <div className="container">
                     {/* Desktop Menu */}
@@ -119,7 +119,8 @@ function NavBar({
                         <div className="flex items-center gap-6">
                             {/* Logo */}
                             <a href={logo.url} className="flex items-center gap-2">
-                                <img src={logo.src} className="max-h-8" alt={logo.alt} />
+                                {/* <img src={logo.src} className="max-h-8" alt={logo.alt} /> */}
+                                <Link className="max-h-8" />
                                 <span className="text-lg font-semibold tracking-tighter">
                                     {logo.title}
                                 </span>
