@@ -1,16 +1,11 @@
 import {
-    BatteryCharging,
-    GitPullRequest,
-    Layers,
+
     LineChart,
     PlugZap,
-    RadioTower,
     Settings,
     Share2,
     Smartphone,
-    SquareKanban,
     TrendingUp,
-    WandSparkles,
 } from "lucide-react";
 
 interface Reason {

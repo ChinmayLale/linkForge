@@ -6,6 +6,7 @@ import * as ProgressPrimitive from "@radix-ui/react-progress"
 import { cn } from "@/lib/utils"
 import { useDispatch, useSelector } from "react-redux"
 import { toggleProgressBar } from "@/store/slices/miscSlice"
+import { RootState } from "@/store/store"
 
 function Progress({
   className,
@@ -14,7 +15,8 @@ function Progress({
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
 
   const [value, setValue] = React.useState(0)
-  const show = useSelector((state: any) => state.misc.showProgressBar);
+  const show = useSelector((state: RootState) => state.misc.showProgressBar);
+  console.log({show})
   const dispatch = useDispatch()
   React.useEffect(() => {
     // setShow(true)

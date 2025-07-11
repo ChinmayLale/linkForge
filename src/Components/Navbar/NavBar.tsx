@@ -1,25 +1,19 @@
 import { NavbarProps } from '@/interfaces/ui.interface'
-import { BarChart, Book, BookOpen, FileText, HelpCircle, Link, Mail, Menu, Palette, Smartphone, Sunset, Trees, Zap } from 'lucide-react'
+import { BarChart,  BookOpen, FileText, HelpCircle, Link, Mail, Menu, Palette, Smartphone} from 'lucide-react'
 import {
     Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
+
 } from "@/Components/ui/accordion";
 import { Button } from "@/Components/ui/button";
 import {
     NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
     NavigationMenuList,
-    NavigationMenuTrigger,
 } from "@/Components/ui/navigation-menu";
 import {
     Sheet,
     SheetContent,
     SheetHeader,
-    SheetTitle,
+    SheetTitle,NavBarWrapper
     SheetTrigger,
 } from "@/Components/ui/sheet";
 import React from 'react'

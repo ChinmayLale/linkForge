@@ -1,10 +1,10 @@
 "use client"
 import Image from 'next/image'
 import React from 'react'
-import { SheetTitle } from '@/Components/ui/sheet'
+// import { SheetTitle } from '@/Components/ui/sheet'
 import BioCounts from '../BioCounts'
 import { Button } from '@/Components/ui/button'
-import { Eye, Share, Share2 } from 'lucide-react'
+import { Eye,  Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 function DashBoardUserProfile({ username = "Chinmay Lale" }: { username?: string }) {

@@ -1,7 +1,7 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import {  ArrowUpRight } from "lucide-react";
 
 import { Badge } from "@/Components/ui/badge";
-import { Button } from "@/Components/ui/button";
+
 import { FeaturesSection } from "./Features";
 import HandleSearch from "@/Components/SearchBar/HandlerSearch";
 import HowItWorksSection from "./HowItWorksSection";
@@ -30,16 +30,16 @@ const LandingPage = ({
     badge = "🌐 One Profile. Infinite Reach.",
     heading = "Your Personalized LinkHub, Reimagined",
     description = "Effortlessly share all your links, social handles, products, and more — beautifully presented, mobile-first, and powered by React, Tailwind, and shadcn/ui.",
-    buttons = {
-        primary: {
-            text: "Get Started for Free",
-            url: "/signup", // assuming internal route
-        },
-        secondary: {
-            text: "Learn More",
-            url: "#features", // can scroll to a section or be a real page
-        },
-    },
+    // buttons = {
+    //     primary: {
+    //         text: "Get Started for Free",
+    //         url: "/signup", // assuming internal route
+    //     },
+    //     secondary: {
+    //         text: "Learn More",
+    //         url: "#features", // can scroll to a section or be a real page
+    //     },
+    // },
     image = {
         src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/placeholder-1.svg", // place an SVG/PNG in public/images
         alt: "Preview of a personalized LinkNode profile page",

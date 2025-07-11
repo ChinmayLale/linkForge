@@ -13,8 +13,7 @@ import {
     CreditCard,
     LogOut,
     Plus,
-    Menu,
-    X
+    Menu
 } from 'lucide-react'
 
 // shadcn/ui components

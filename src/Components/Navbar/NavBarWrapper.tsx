@@ -4,7 +4,7 @@
 import { usePathname } from 'next/navigation';
 import DashboardNavBar from './UserNavbar';
 import LandingNavBar from './NavBar';
-import { Progress } from '../ui/progress';
+// import { Progress } from '../ui/progress';
 
 export default function NavWrapper() {
     const pathname = usePathname();
