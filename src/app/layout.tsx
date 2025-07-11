@@ -16,10 +16,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "LinkForge",
-  description: "Connecting audiences to your content",
-};
 
 export const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -28,6 +24,55 @@ export const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 })
 
+
+
+export const metadata: Metadata = {
+  title: {
+    default: "LinkForge",
+    template: "%s | LinkForge",
+  },
+  description:
+    "LinkForge helps creators and brands consolidate all their links in one personalized hub.",
+  keywords: [
+    "LinkForge",
+    "link in bio",
+    "bio link tool",
+    "linktree alternative",
+    "portfolio link manager",
+    "smart link",
+    "creator tools",
+  ],
+  metadataBase: new URL("https://linkforge.vercel.app"),
+  openGraph: {
+    title: "LinkForge",
+    description: "Create and share your personalized bio link.",
+    url: "https://linkforge.vercel.app",
+    siteName: "LinkForge",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://linkforge.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "LinkForge Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LinkForge",
+    description: "One link to rule them all – by LinkForge.",
+    images: ["https://linkforge.vercel.app/og-image.png"],
+    creator: "@yourhandle",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  themeColor: "#ffffff",
+};
 
 export default function RootLayout({
   children,
