@@ -25,47 +25,44 @@ export const plusJakarta = Plus_Jakarta_Sans({
 })
 
 
-
 export const metadata: Metadata = {
   title: {
     default: "LinkForge",
     template: "%s | LinkForge",
   },
-  description:
-    "LinkForge helps creators and brands consolidate all their links in one personalized hub.",
-  keywords: [
-    "LinkForge",
-    "link in bio",
-    "bio link tool",
-    "linktree alternative",
-    "portfolio link manager",
-    "smart link",
-    "creator tools",
-  ],
-  metadataBase: new URL("https://linkforge.vercel.app"),
+  description: "LinkForge helps creators and brands consolidate all their links in one personalized hub.",
+  metadataBase: new URL("https://link-forge-ten.vercel.app"), // ✅ Update here
   openGraph: {
     title: "LinkForge",
     description: "Create and share your personalized bio link.",
-    url: "https://linkforge.vercel.app",
+    url: "https://link-forge-ten.vercel.app",
     siteName: "LinkForge",
-    locale: "en_US",
-    type: "website",
     images: [
       {
-        url: "https://linkforge.vercel.app/og-image.png",
+        url: "https://link-forge-ten.vercel.app/og-image.png", // ✅ Your OG image
         width: 1200,
         height: 630,
         alt: "LinkForge Preview",
       },
     ],
+    locale: "en_US",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "LinkForge",
-    description: "One link to rule them all – by LinkForge.",
-    images: ["https://linkforge.vercel.app/og-image.png"],
-    creator: "@yourhandle",
+    description: "One link to rule them all - by LinkForge.",
+    images: ["https://link-forge-ten.vercel.app/og-image.png"],
+    creator: "@chinmayLale", // optional
   },
+  keywords: [
+    "LinkForge",
+    "link in bio",
+    "linktree alternative",
+    "bio link manager",
+    "creator tools",
+    "smart profile links"
+  ],
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
