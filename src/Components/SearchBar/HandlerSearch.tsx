@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/Components/ui/button"
 import {
     Form,
     FormControl,
@@ -14,8 +14,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/Components/ui/form"
+import { Input } from "@/Components/ui/input"
 import { useDispatch } from "react-redux"
 import { toggleProgressBar } from "@/store/slices/miscSlice"
 

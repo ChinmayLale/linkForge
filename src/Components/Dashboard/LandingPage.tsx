@@ -1,9 +1,9 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
 import { FeaturesSection } from "./Features";
-import HandleSearch from "@/components/SearchBar/HandlerSearch";
+import HandleSearch from "@/Components/SearchBar/HandlerSearch";
 import HowItWorksSection from "./HowItWorksSection";
 
 interface Hero1Props {

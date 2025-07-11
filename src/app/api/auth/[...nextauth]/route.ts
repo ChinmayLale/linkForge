@@ -3,6 +3,3 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import Google, { GoogleProfile } from 'next-auth/providers/google'
 
 
-export const authOptions:NextAuthOptions = {
-    
-}
