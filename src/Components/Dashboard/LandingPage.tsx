@@ -2,6 +2,9 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
+import { FeaturesSection } from "./Features";
+import HandleSearch from "@/Components/SearchBar/HandlerSearch";
+import HowItWorksSection from "./HowItWorksSection";
 
 interface Hero1Props {
     badge?: string;
@@ -23,7 +26,7 @@ interface Hero1Props {
     };
 }
 
-const Hero1 = ({
+const LandingPage = ({
     badge = "🌐 One Profile. Infinite Reach.",
     heading = "Your Personalized LinkHub, Reimagined",
     description = "Effortlessly share all your links, social handles, products, and more — beautifully presented, mobile-first, and powered by React, Tailwind, and shadcn/ui.",
@@ -43,7 +46,7 @@ const Hero1 = ({
     }
 }: Hero1Props) => {
     return (
-        <section className="py-32">
+        <section className="py-28">
             <div className="container">
                 <div className="grid items-center gap-8 lg:grid-cols-2">
                     <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
@@ -59,7 +62,7 @@ const Hero1 = ({
                         <p className="text-muted-foreground mb-8 max-w-xl lg:text-xl">
                             {description}
                         </p>
-                        <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
+                        {/* <div className="flex w-full flex-col justify-center gap-2 sm:flex-row lg:justify-start">
                             {buttons.primary && (
                                 <Button asChild className="w-full sm:w-auto">
                                     <a href={buttons.primary.url}>{buttons.primary.text}</a>
@@ -73,7 +76,8 @@ const Hero1 = ({
                                     </a>
                                 </Button>
                             )}
-                        </div>
+                        </div> */}
+                        <HandleSearch />
                     </div>
                     <img
                         src={image.src}
@@ -82,8 +86,13 @@ const Hero1 = ({
                     />
                 </div>
             </div>
+
+            <HowItWorksSection />
+
+
+            <FeaturesSection />
         </section>
     );
 };
 
-export default Hero1;
+export default LandingPage;

@@ -4,7 +4,7 @@ import React from 'react'
 function SubMenuLink({ item }: { item: MenuItem }) {
     return (
         <a
-            className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground"
+            className="flex flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground "
             href={item.url}
         >
             <div className="text-foreground">{item.icon}</div>

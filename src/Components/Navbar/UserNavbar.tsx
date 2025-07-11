@@ -76,7 +76,7 @@ const DashboardNavigation = () => {
                 <span className={`${isMobile ? 'text-xs mt-1' : 'text-sm'}`}>
                     {item.label}
                 </span>
-                {item.badge && (
+                {item.badge && !isMobile && (
                     <Badge variant="secondary" className="ml-auto text-xs">
                         {item.badge}
                     </Badge>

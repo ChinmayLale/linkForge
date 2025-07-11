@@ -1,5 +1,5 @@
 import { NavbarProps } from '@/interfaces/ui.interface'
-import { Book, Link, Menu, Sunset, Trees, Zap } from 'lucide-react'
+import { BarChart, Book, BookOpen, FileText, HelpCircle, Link, Mail, Menu, Palette, Smartphone, Sunset, Trees, Zap } from 'lucide-react'
 import {
     Accordion,
     AccordionContent,
@@ -28,40 +28,39 @@ import RenderMobileMenuItem from './RenderMobileMenuItem';
 
 function NavBar({
     logo = {
-        url: "https://www.shadcnblocks.com",
+        url: "https://www.linkforge.com",
         src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-        alt: "logo",
+        alt: "LinkForge logo",
         title: "LinkForge",
     },
     menu = [
         { title: "Home", url: "#" },
         {
-            title: "Products",
+            title: "Features",
             url: "#",
             items: [
                 {
-                    title: "Blog",
-                    description: "The latest industry news, updates, and info",
-                    icon: <Book className="size-5 shrink-0" />,
+                    title: "Link Management",
+                    description: "Organize and customize all your links in one place",
+                    icon: <Link className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
-                    title: "Company",
-                    description: "Our mission is to innovate and empower the world",
-                    icon: <Trees className="size-5 shrink-0" />,
+                    title: "Custom Design",
+                    description: "Brand your page with custom themes and colors",
+                    icon: <Palette className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
-                    title: "Careers",
-                    description: "Browse job listing and discover our workspace",
-                    icon: <Sunset className="size-5 shrink-0" />,
+                    title: "Analytics",
+                    description: "Track clicks and engagement with detailed insights",
+                    icon: <BarChart className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
-                    title: "Support",
-                    description:
-                        "Get in touch with our support team or visit our community forums",
-                    icon: <Zap className="size-5 shrink-0" />,
+                    title: "Mobile Optimized",
+                    description: "Perfect experience on all devices",
+                    icon: <Smartphone className="size-5 shrink-0" />,
                     url: "#",
                 },
             ],
@@ -73,25 +72,25 @@ function NavBar({
                 {
                     title: "Help Center",
                     description: "Get all the answers you need right here",
-                    icon: <Zap className="size-5 shrink-0" />,
+                    icon: <HelpCircle className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
                     title: "Contact Us",
                     description: "We are here to help you with any questions you have",
-                    icon: <Sunset className="size-5 shrink-0" />,
+                    icon: <Mail className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
-                    title: "Status",
-                    description: "Check the current status of our services and APIs",
-                    icon: <Trees className="size-5 shrink-0" />,
+                    title: "Blog",
+                    description: "Tips, tutorials, and industry insights",
+                    icon: <BookOpen className="size-5 shrink-0" />,
                     url: "#",
                 },
                 {
                     title: "Terms of Service",
                     description: "Our terms and conditions for using our services",
-                    icon: <Book className="size-5 shrink-0" />,
+                    icon: <FileText className="size-5 shrink-0" />,
                     url: "#",
                 },
             ],
@@ -101,13 +100,13 @@ function NavBar({
             url: "#",
         },
         {
-            title: "Blog",
+            title: "Examples",
             url: "#",
         },
     ],
     auth = {
         login: { title: "Login", url: "#" },
-        signup: { title: "Sign up", url: "#" },
+        signup: { title: "Get Started Free", url: "#" },
     },
 }: NavbarProps) {
     return (
