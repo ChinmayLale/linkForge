@@ -1,14 +1,14 @@
 import { cn } from "@/lib/utils"
-import { Button } from "@/Components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/Components/ui/card"
-import { Input } from "@/Components/ui/input"
-import { Label } from "@/Components/ui/label"
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import Link from "next/link"
 
 export function SignUpForm({
@@ -21,7 +21,7 @@ export function SignUpForm({
                 <CardHeader className="text-center">
                     <CardTitle className="text-xl">Welcome</CardTitle>
                     <CardDescription>
-                       Sign up with your Apple or Google account
+                        Sign up with your Apple or Google account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

@@ -5,8 +5,8 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/Components/ui/accordion";
-import { Button } from "@/Components/ui/button";
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -14,14 +14,14 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-} from "@/Components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/Components/ui/sheet";
+} from "@/components/ui/sheet";
 import React from 'react'
 import RenderMenuItem from './RenderMenuItem';
 import RenderMobileMenuItem from './RenderMobileMenuItem';

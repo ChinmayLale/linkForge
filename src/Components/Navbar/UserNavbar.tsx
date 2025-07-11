@@ -18,8 +18,8 @@ import {
 } from 'lucide-react'
 
 // shadcn/ui components
-import { Button } from '@/Components/ui/button'
-import { Badge } from '@/Components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -27,10 +27,10 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@/Components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/Components/ui/sheet'
-import { Separator } from '@/Components/ui/separator'
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Separator } from '@/components/ui/separator'
 
 // Mock user data
 const mockUser = {

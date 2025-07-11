@@ -1,13 +1,13 @@
 "use client"
 import { Edit3, ExternalLink, Filter, MoreVertical, MousePointer, Plus, Search, ToggleLeft, ToggleRight, Trash2 } from 'lucide-react'
 import React from 'react'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogHeader, DialogDescription, DialogFooter } from '@/Components/ui/dialog'
-import { Label } from '../ui/label'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
-import { Card, CardContent } from '../ui/card'
-import { Badge } from '../ui/badge'
+import { Label } from '@/components/ui/label'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 
 

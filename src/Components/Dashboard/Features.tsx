@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, BarChart, Palette, Smartphone } from "lucide-react";
 
 const features = [

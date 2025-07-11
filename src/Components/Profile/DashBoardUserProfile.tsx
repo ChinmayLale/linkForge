@@ -1,9 +1,9 @@
 "use client"
 import Image from 'next/image'
 import React from 'react'
-import { SheetTitle } from '../ui/sheet'
+import { SheetTitle } from '@/components/ui/sheet'
 import BioCounts from '../BioCounts'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import { Eye, Share, Share2 } from 'lucide-react'
 import { toast } from 'sonner'
 
