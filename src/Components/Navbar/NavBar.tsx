@@ -1,5 +1,5 @@
 import { NavbarProps } from '@/interfaces/ui.interface'
-import { BarChart,  BookOpen, FileText, HelpCircle, Link, Mail, Menu, Palette, Smartphone} from 'lucide-react'
+import { BarChart, BookOpen, FileText, HelpCircle, Link, Mail, Menu, Palette, Smartphone } from 'lucide-react'
 import {
     Accordion,
 
@@ -13,7 +13,7 @@ import {
     Sheet,
     SheetContent,
     SheetHeader,
-    SheetTitle,NavBarWrapper
+    SheetTitle,
     SheetTrigger,
 } from "@/Components/ui/sheet";
 import React from 'react'
