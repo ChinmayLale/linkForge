@@ -1,11 +1,10 @@
 "use client"
 import React from 'react'
-import { ArrowLeft, TrendingUp, TrendingDown, MousePointer, Eye, Users, Download, MoreVertical } from "lucide-react"
-import { useRouter } from "next/navigation"
+import {  MoreVertical } from "lucide-react"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
+
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select"
 
 const linkPerformance = [
