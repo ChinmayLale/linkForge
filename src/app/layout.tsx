@@ -40,9 +40,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://link-forge-ten.vercel.app/ogimg.png", // ✅ Your OG image
-        width: 1200,
-        height: 630,
+        width: 2048,
+        height: 2048,
         alt: "LinkForge Preview",
+        
       },
     ],
     locale: "en_US",
