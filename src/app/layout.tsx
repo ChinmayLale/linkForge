@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "LinkForge",
     images: [
       {
-        url: "https://link-forge-ten.vercel.app/og-image.png", // ✅ Your OG image
+        url: "https://link-forge-ten.vercel.app/ogimg.png", // ✅ Your OG image
         width: 1200,
         height: 630,
         alt: "LinkForge Preview",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LinkForge",
     description: "One link to rule them all - by LinkForge.",
-    images: ["https://link-forge-ten.vercel.app/og-image.png"],
+    images: ["https://link-forge-ten.vercel.app/ogimg.png"],
     creator: "@chinmayLale", // optional
   },
   keywords: [
