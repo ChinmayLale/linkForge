@@ -102,70 +102,72 @@ function YourLinks() {
     }
 
     return (
-        <div className="rounded-2xl shadow-sm border border-primary-foreground p-6  bg-[var(--secondary)]">
-            <div className="flex items-center justify-between mb-6">
+        <div className="rounded-2xl shadow-sm border border-primary-foreground p-6  bg-background">
+            <div className="flex md:flex-row flex-col md:items-center md:justify-between mb-6">
                 <div>
                     <h3 className="text-xl font-semibold text-foreground">Your Links</h3>
                     <p className="text-gray-500 mt-1">Manage and organize your links</p>
                 </div>
 
-                <div className="flex items-center space-x-3">
+                <div className="flex md:flex-row flex-col md:m-0 mt-2 items-start space-x-2 ">
                     <div className="flex items-center space-x-2">
                         <Search className="h-4 w-4 text-gray-400" />
                         <Input placeholder="Search links..." className="w-64" />
                     </div>
-                    <Button variant="outline" size="sm">
-                        <Filter className="mr-2 h-4 w-4" />
-                        Filter
-                    </Button>
-                    <Dialog open={isAddLinkOpen} onOpenChange={setIsAddLinkOpen}>
-                        <DialogTrigger asChild>
-                            <Button>
-                                <Plus className="mr-2 h-4 w-4" />
-                                Add Link
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Add New Link</DialogTitle>
-                                <DialogDescription>Create a new link to add to your profile.</DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="title">Title</Label>
-                                    <Input
-                                        id="title"
-                                        value={newLink.title}
-                                        onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
-                                        placeholder="Enter link title"
-                                    />
+                    <div className="flex flex-row md:m-0 mt-2 md:items-center space-x-3">
+                        <Button variant="outline" size="sm">
+                            <Filter className="mr-2 h-4 w-4" />
+                            Filter
+                        </Button>
+                        <Dialog open={isAddLinkOpen} onOpenChange={setIsAddLinkOpen} >
+                            <DialogTrigger asChild>
+                                <Button variant="default" size="sm">
+                                    <Plus className="h-4 w-4" />
+                                    Add Link
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Add New Link</DialogTitle>
+                                    <DialogDescription>Create a new link to add to your profile.</DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="title">Title</Label>
+                                        <Input
+                                            id="title"
+                                            value={newLink.title}
+                                            onChange={(e) => setNewLink({ ...newLink, title: e.target.value })}
+                                            placeholder="Enter link title"
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="url">URL</Label>
+                                        <Input
+                                            id="url"
+                                            value={newLink.url}
+                                            onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
+                                            placeholder="https://example.com"
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="thumbnail">Icon (Emoji)</Label>
+                                        <Input
+                                            id="thumbnail"
+                                            value={newLink.thumbnail}
+                                            onChange={(e) => setNewLink({ ...newLink, thumbnail: e.target.value })}
+                                            placeholder="🔗"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="url">URL</Label>
-                                    <Input
-                                        id="url"
-                                        value={newLink.url}
-                                        onChange={(e) => setNewLink({ ...newLink, url: e.target.value })}
-                                        placeholder="https://example.com"
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="thumbnail">Icon (Emoji)</Label>
-                                    <Input
-                                        id="thumbnail"
-                                        value={newLink.thumbnail}
-                                        onChange={(e) => setNewLink({ ...newLink, thumbnail: e.target.value })}
-                                        placeholder="🔗"
-                                    />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button onClick={handleAddLink}>Add Link</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                                <DialogFooter>
+                                    <Button variant="default" size="sm" onClick={handleAddLink}>Add Link</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </div>
-            </div>
+            </div >
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {links.map((link) => (
@@ -234,7 +236,7 @@ function YourLinks() {
                     </Card>
                 ))}
             </div>
-        </div>
+        </div >
     )
 }
 

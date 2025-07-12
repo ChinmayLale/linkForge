@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 
 function DashBoardUserProfile({ username = "Chinmay Lale" }: { username?: string }) {
     return (
-        <div className='w-full h-fit flex md:flex-row justify-center gap-4 p-4 bg-[var(--secondary)] rounded-2xl flex-col'>
+        <div className='w-full h-fit flex md:flex-row justify-center gap-4 p-4 bg-sidebar rounded-2xl flex-col'>
             <div className='w-[50%] md:w-[15%] h-full flex flex-row items-center justify-center'>
                 <Image
                     src={`https://picsum.photos/1000/1000`}
