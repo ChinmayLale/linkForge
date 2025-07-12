@@ -4,7 +4,7 @@ import "./globals.css";
 import NavBar from "@/Components/Navbar/NavBarWrapper";
 import StoreProvider from "@/store/StoreProvider";
 import { Toaster } from "sonner";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         width: 2048,
         height: 2048,
         alt: "LinkForge Preview",
-        
+
       },
     ],
     locale: "en_US",
@@ -87,6 +87,7 @@ export default function RootLayout({
           <NavBar />
           {children}
         </StoreProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
