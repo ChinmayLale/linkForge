@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable}${plusJakarta.variable} antialiased dark`}
+        className={`${geistSans.variable} ${geistMono.variable}${plusJakarta.variable} antialiased dark  scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
       >
         <StoreProvider>
           <Toaster richColors position="top-center" />

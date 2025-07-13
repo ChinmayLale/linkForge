@@ -30,6 +30,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/Components/ui/sheet'
 import { Separator } from '@/Components/ui/separator'
+import { useDispatch } from 'react-redux'
+import { setTabName, TabName } from '@/store/slices/navigationSlice'
 
 // Mock user data
 const mockUser = {
@@ -45,7 +47,7 @@ const DashboardNavigation = () => {
     const [notifications] = useState(2)
     const [linkCount] = useState(12)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
+    const dispatch = useDispatch();
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home, badge: null },
         { id: 'links', label: 'Links', icon: Link, badge: linkCount },
@@ -64,7 +66,7 @@ const DashboardNavigation = () => {
         isMobile?: boolean
     }
     // NavItem component for both desktop and mobile
-    const NavItem = ({ item, isMobile = false }:NavItemProps) => {
+    const NavItem = ({ item, isMobile = false }: NavItemProps) => {
         const Icon = item.icon
         const isActive = activeTab === item.id
 
@@ -78,6 +80,7 @@ const DashboardNavigation = () => {
         `}
                 onClick={() => {
                     setActiveTab(item.id)
+                    dispatch(setTabName(item.label as TabName))
                     if (isMobile) setMobileMenuOpen(false)
                 }}
             >

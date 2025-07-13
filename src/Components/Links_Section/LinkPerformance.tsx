@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import {  MoreVertical } from "lucide-react"
+import { MoreVertical } from "lucide-react"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/Components/ui/dropdown-menu"
@@ -78,18 +78,19 @@ const linkPerformance = [
 
 function LinkPerformanceSection() {
     return (
-        <div className="w-full max-h-full" >
-            <Card className='w-full h-full bg-background max-h-full'>
+        <div className="w-full h-full " >
+            <Card className='w-full max-h-full bg-background'>
                 <CardHeader>
                     <CardTitle>Individual Link Performance</CardTitle>
                     <CardDescription>Detailed analytics for each of your links</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {linkPerformance.map((link) => (
-                            <Card key={link.id} className="p-4">
+                        {linkPerformance.slice(0, 4).map((link, idx) => (
+                            <Card key={link.id} className="p-4  ">
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
                                     <div className="flex items-center space-x-4 flex-1 min-w-0">
+                                        <p>#{idx + 1}</p>
                                         <div
                                             className={`w-10 h-10 sm:w-12 sm:h-12 ${link.color} rounded-lg flex items-center justify-center text-white text-lg flex-shrink-0`}
                                         >
@@ -137,6 +138,7 @@ function LinkPerformanceSection() {
                                     </div>
                                 </div>
                             </Card>
+
                         ))}
                     </div>
                 </CardContent>

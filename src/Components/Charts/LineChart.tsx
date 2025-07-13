@@ -37,7 +37,7 @@ const chartConfig = {
 
 function LineCharts() {
     return (
-        <div className='md:w-[50%] w-full  h-full  bg-background'>
+        <div className='md:w-[50%] w-full  h-full  bg-background rounded-xl'>
             <Card className="h-full w-full bg-background">
                 <CardHeader>
                     <CardTitle>Views Vs Clicks</CardTitle>

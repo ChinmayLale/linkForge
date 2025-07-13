@@ -124,3 +124,36 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  /* Light mode default */
+  border-radius: 6px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(200, 200, 200, 0.2);
+  /* Dark mode */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
