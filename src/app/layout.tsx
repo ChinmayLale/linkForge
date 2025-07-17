@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "LinkForge",
     images: [
       {
-        url: "https://link-forge-ten.vercel.app/ogimg.png", // ✅ Your OG image
+        url: "https://link-forge-ten.vercel.app/linkHubOGImg.png", // ✅ Your OG image
         width: 2048,
         height: 2048,
         alt: "LinkForge Preview",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LinkForge",
     description: "One link to rule them all - by LinkForge.",
-    images: ["https://link-forge-ten.vercel.app/ogimg.png"],
+    images: ["https://link-forge-ten.vercel.app/linkHubOGImg.png"],
     creator: "@chinmayLale", // optional
   },
   keywords: [
@@ -69,7 +69,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
