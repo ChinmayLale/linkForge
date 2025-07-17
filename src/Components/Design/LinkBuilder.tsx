@@ -28,7 +28,7 @@ import {
   VideoIcon,
   SquareIcon,
   MusicIcon,
-  Music2Icon,
+  // Music2Icon,
   FileIcon,
   PhoneIcon,
   MapPinIcon,

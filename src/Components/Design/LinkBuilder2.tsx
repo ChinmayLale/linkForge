@@ -339,6 +339,7 @@ export default function PageBuilderDashboard() {
     `
 
         const getStyleClasses = (style: string, color: string) => {
+            console.log({color});
             switch (style) {
                 case "outline":
                     return `bg-transparent border-2 text-white`

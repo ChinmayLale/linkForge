@@ -382,6 +382,7 @@ export default function LinkBuilder3() {
     `
 
     const getStyleClasses = (style: string, color: string) => {
+    console.log({color})
       switch (style) {
         case "outline":
           return `bg-transparent border-2 text-white`

@@ -39,7 +39,7 @@ function Progress({
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [dispatch])
 
   return (
     <ProgressPrimitive.Root
