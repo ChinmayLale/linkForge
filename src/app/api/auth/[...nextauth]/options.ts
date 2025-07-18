@@ -35,10 +35,10 @@ export const authOptions: NextAuthOptions = {
                 } catch (error: unknown) {
                     if (error instanceof Error) {
                         console.log("Error While Logging In:", error.message);
-                        throw new Error(error.message);
+                        return null
                     } else {
                         console.log("Unexpected error:", error);
-                        throw new Error("An unknown error occurred");
+                        return null
                     }
                 }
             },
