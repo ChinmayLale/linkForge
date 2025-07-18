@@ -51,6 +51,7 @@ import { Slider } from "@/Components/ui/slider"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible"
 import { Progress } from "@/Components/ui/progress"
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet"
+import { cn } from "@/lib/utils"
 
 interface LinkItem {
   id: string
@@ -178,7 +179,7 @@ export default function LinkBuilder3() {
       id: "2",
       type: "video",
       title: "Behind the Scenes",
-      url: "https://youtube.com/watch?v=123",
+      url: "https://www.youtube.com/watch?v=oO5uLE7EUlM",
       color: "#ff0000",
       visible: true,
       style: "default",
@@ -369,20 +370,19 @@ export default function LinkBuilder3() {
     const baseClasses = `
       group relative transition-all duration-300 cursor-pointer overflow-hidden
       ${selectedElement === link.id ? "ring-2 ring-blue-400 ring-opacity-60" : ""}
-      ${
-        theme.cardStyle === "glass"
-          ? "backdrop-blur-md bg-white/10 border border-white/20"
-          : theme.cardStyle === "minimal"
-            ? "border-2 border-white/30"
-            : theme.cardStyle === "neumorphism"
-              ? "bg-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] shadow-lg"
-              : "bg-white/90 border border-white/20 shadow-lg"
+      ${theme.cardStyle === "glass"
+        ? "backdrop-blur-md bg-white/10 border border-white/20"
+        : theme.cardStyle === "minimal"
+          ? "border-2 border-white/30"
+          : theme.cardStyle === "neumorphism"
+            ? "bg-white/5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)] shadow-lg"
+            : "bg-white/90 border border-white/20 shadow-lg"
       }
       hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]
     `
 
     const getStyleClasses = (style: string, color: string) => {
-    console.log({color})
+      console.log({ color })
       switch (style) {
         case "outline":
           return `bg-transparent border-2 text-white`
@@ -468,12 +468,14 @@ export default function LinkBuilder3() {
             onClick={() => setSelectedElement(link.id)}
           >
             <div className="relative">
-              <img
-                src={link.metadata?.thumbnail || "/placeholder.svg"}
-                alt="Video thumbnail"
-                className="w-full h-24 sm:h-32 object-cover"
+              <video
+                src={link.metadata?.thumbnail || "/placeholder.mp4"}
+                autoPlay={true}
+
+                // alt="Video thumbnail"
+                className="w-full h-24 sm:h-32 object-cover z-20"
               />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10">
                 <Button size="lg" variant="ghost" className="bg-white/20 hover:bg-white/30 text-white rounded-full">
                   <Play className="w-4 h-4 sm:w-6 sm:h-6 ml-1" />
                 </Button>
@@ -626,10 +628,10 @@ export default function LinkBuilder3() {
               <Button
                 key={template.id}
                 variant="outline"
-                className="h-16 p-2 flex flex-col gap-1 bg-transparent"
+                className={`h-16 p-2 flex flex-col gap-1 bg-transparent`}
                 onClick={() => applyTemplate(template.id)}
               >
-                <div className={`w-full h-6 rounded text-xs flex items-center justify-center ${template.preview}`}>
+                <div className={`w-full h-full rounded text-xs flex items-center justify-center ${template.preview}`}>
                   {template.name}
                 </div>
               </Button>
@@ -1162,12 +1164,11 @@ export default function LinkBuilder3() {
                   className={`
                     transition-all duration-300 shadow-2xl border
                     ${getPreviewSize()}
-                    ${
-                      previewMode === "mobile" && screenSize !== "mobile"
-                        ? "rounded-[2.5rem] border-8 border-gray-800"
-                        : previewMode === "tablet"
-                          ? "rounded-[1.5rem] border-4 border-gray-700"
-                          : "rounded-lg border-gray-200"
+                    ${previewMode === "mobile" && screenSize !== "mobile"
+                      ? "rounded-[2.5rem] border-8 border-gray-800"
+                      : previewMode === "tablet"
+                        ? "rounded-[1.5rem] border-4 border-gray-700"
+                        : "rounded-lg border-gray-200"
                     }
                     overflow-hidden relative
                   `}
@@ -1227,8 +1228,29 @@ export default function LinkBuilder3() {
                         </div>
 
                         {/* Components */}
-                        <div className="space-y-3 sm:space-y-4">
-                          {links.filter((link) => link.visible).map((link) => renderComponent(link))}
+                        <div
+                          className={cn(
+                            theme.layout === "grid"
+                              ? "grid grid-cols-1 sm:grid-cols-2 gap-4"
+                              : theme.layout === "masonry"
+                                ? "columns-1 sm:columns-2 gap-4 space-y-0"
+                                : "flex flex-col gap-3 sm:gap-4"
+                          )}
+                        >
+                          {
+                            links.filter((link) => link.visible)
+                              .map((link) =>
+                              (
+                                <div
+                                  key={link.id}
+                                  className={cn(
+                                    theme.layout === "masonry" ? "break-inside-avoid mb-4" : ""
+                                  )}
+                                >
+                                  {renderComponent(link)}
+                                </div>)
+                              )
+                          }
                         </div>
 
                         {/* Footer */}

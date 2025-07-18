@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils"
 import { Button } from "@/Components/ui/button"
 import { Card, CardContent } from "@/Components/ui/card"
@@ -6,15 +7,55 @@ import { Label } from "@/Components/ui/label"
 import Link from "next/link"
 import Image from "next/image"
 import loginBg from '../assets/LoginBg.jpg'
+import { useState } from "react";
+import { loginProps } from "@/interfaces/auth/loginSignup";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+
 
 
 
 export function LoginForm({ className }: { className?: string }) {
+  const router = useRouter();
+  const [loginUser, setLoginUser] = useState<loginProps>({
+    username: "",
+    password: ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginUser((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Here you can call your login function, e.g., loginUserWithEmail(loginUser);
+    console.log("Login User:", loginUser);
+    // You can also handle the response and errors here
+    const res = await signIn('credentials', {
+      username: loginUser.username,
+      password: loginUser.password,
+      redirect: false
+    })
+
+    if (res?.ok) {
+      toast.success("Login successful");
+      router.push(`/dashboard/${loginUser.username}`); // or any page after successful login
+    } else {
+      console.log("Login failed", res);
+      toast.error("Invalid username or password");
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} >
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-4xl font-bold">Welcome back</h1>
@@ -23,12 +64,15 @@ export function LoginForm({ className }: { className?: string }) {
                 </p>
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="username">UserName</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="john doe"
+                  onChange={handleChange}
                   required
+                  value={loginUser.username}
                 />
               </div>
               <div className="grid gap-3">
@@ -41,7 +85,15 @@ export function LoginForm({ className }: { className?: string }) {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                  placeholder="********"
+                  value={loginUser.password}
+                />
               </div>
               <Button type="submit" className="w-full">
                 Login
