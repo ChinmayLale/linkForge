@@ -6,6 +6,7 @@ import axios from "axios";
 
 export const loginUserWithEmail = async (credentials: loginProps): Promise<LoginResponse | null> => {
     try {
+        console.log("Inside loginUserWithEmail Attempting to login with credentials:", credentials);
         const response = await axios.post<LoginResponse>(
             'https://dummyjson.com/auth/login',
             credentials,

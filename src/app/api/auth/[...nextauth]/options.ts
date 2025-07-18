@@ -18,9 +18,10 @@ export const authOptions: NextAuthOptions = {
             async authorize(credentials, req): Promise<LoginResponse | null> {
                 console.log({ req })
                 try {
+                    console.log("Inside Authorize Function with credentials:", credentials);
                     const res = await loginUserWithEmail(credentials as loginProps) as LoginResponse | null;
                     if (res) {
-                        console.log("User Logged In:", res);
+                        // console.log("User Logged In:", res);
                         return {
                             id: res.id,
                             username: res.username,
