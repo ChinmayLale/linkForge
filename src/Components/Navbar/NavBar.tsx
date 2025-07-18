@@ -99,7 +99,7 @@ function NavBar({
         },
     ],
     auth = {
-        login: { title: "Login", url: "#" },
+        login: { title: "Login", url: "/login" },
         signup: { title: "Get Started Free", url: "#" },
     },
 }: NavbarProps) {
