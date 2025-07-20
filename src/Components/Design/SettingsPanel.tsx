@@ -243,6 +243,7 @@ export function SettingsPanel({
                                         value={profile.avatar}
                                         onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
                                         className="mt-1"
+                                        placeholder="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face"
                                     />
                                 </div>
                                 <div>
@@ -251,6 +252,7 @@ export function SettingsPanel({
                                         value={profile.coverImage || ""}
                                         onChange={(e) => setProfile({ ...profile, coverImage: e.target.value })}
                                         className="mt-1"
+                                        placeholder="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop"
                                     />
                                 </div>
                             </CardContent>

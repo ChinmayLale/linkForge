@@ -39,7 +39,7 @@ const Tab = () => {
             );
         case "Design":
             return (
-                <div className='w-full h-fit flex flex-col  justify-center gap-4  bg-[var(--primary-bg)]'>
+                <div className='w-full h-fit flex flex-col  justify-center bg-[var(--primary-bg)]'>
                     <LinkBuilder />
                 </div>
             );

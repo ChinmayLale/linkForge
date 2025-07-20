@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { ScrollArea } from "@/Components/ui/scroll-area"
+import "../../styles/animation.css" // Add this import
 import { Header } from "./Header"
 import { MobileSidebar } from "./MobileSidebar"
 import { SettingsPanel } from "./SettingsPanel"
@@ -8,7 +9,7 @@ import { PreviewCanvas } from "./PreviewCanvas"
 import { LinkComponents } from "./LinkComponents"
 import type { LinkItem, ProfileData, ThemeSettings, ScreenSize, PreviewMode } from "../../types"
 
-export default function LinkBuilder() {
+export default function LinkBuilder4() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile")
@@ -43,9 +44,9 @@ export default function LinkBuilder() {
   const [profile, setProfile] = useState<ProfileData>({
     name: "Alex Johnson",
     bio: "Digital Creator & Music Producer",
-    avatar: "https://images.unsplash.com/photo-1744878150591-6ebf3a050d4f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxMnx8fGVufDB8fHx8fA%3D%3D",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
     username: "alexjohnson",
-    coverImage: "https://images.unsplash.com/photo-1682685797366-715d29e33f9d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8",
+    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop",
   })
 
   const [links, setLinks] = useState<LinkItem[]>([
@@ -60,19 +61,19 @@ export default function LinkBuilder() {
       metadata: {
         artist: "Alex Johnson",
         duration: "3:42",
-        thumbnail: "/placeholder.svg?height=60&width=60",
+        thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
       },
     },
     {
       id: "2",
       type: "video",
       title: "Behind the Scenes",
-      url: "https://www.youtube.com/watch?v=DhFh8Kw7ymk",
+      url: "https://youtube.com/watch?v=123",
       color: "#ff0000",
       visible: true,
       style: "default",
       metadata: {
-        thumbnail: "/placeholder.svg?height=120&width=200",
+        thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
         duration: "5:23",
         description: "Creating my latest music video",
       },
@@ -111,10 +112,10 @@ export default function LinkBuilder() {
       style: "default",
       metadata: {
         images: [
-          "https://images.unsplash.com/photo-1752350434950-50e8df9c268e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
-          "https://images.unsplash.com/photo-1752350434950-50e8df9c268e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
-          "https://images.unsplash.com/photo-1752350434950-50e8df9c268e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
-          "https://images.unsplash.com/photo-1752350434950-50e8df9c268e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw3fHx8ZW58MHx8fHx8",
+          "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop",
+          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&h=80&fit=crop",
+          "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop",
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=80&h=80&fit=crop",
         ],
       },
     },
@@ -138,14 +139,24 @@ export default function LinkBuilder() {
       music: {
         title: "New Track",
         url: "https://spotify.com",
-        metadata: { artist: "Artist", duration: "3:00", thumbnail: "/placeholder.svg?height=60&width=60" },
+        metadata: {
+          artist: "Artist",
+          duration: "3:00",
+          thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
+        },
       },
       video: {
         title: "New Video",
         url: "https://youtube.com",
-        metadata: { duration: "2:30", thumbnail: "/placeholder.svg?height=120&width=200" },
+        metadata: {
+          duration: "2:30",
+          thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
+        },
       },
-      image: { title: "Image", url: "/placeholder.svg?height=200&width=300" },
+      image: {
+        title: "Image",
+        url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop",
+      },
       contact: { title: "Contact Me", url: "mailto:contact@example.com" },
       event: {
         title: "New Event",
@@ -155,7 +166,7 @@ export default function LinkBuilder() {
       gallery: {
         title: "Gallery",
         url: "#gallery",
-        metadata: { images: ["/placeholder.svg?height=80&width=80"] },
+        metadata: { images: ["https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop"] },
       },
     }
     const defaults = componentDefaults[type as keyof typeof componentDefaults] || componentDefaults.link
@@ -266,7 +277,7 @@ export default function LinkBuilder() {
   )
 
   return (
-    <div className={`relative min-h-screen ${darkMode ? "dark" : ""}`}>
+    <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
       <div className="min-h-screen bg-background text-foreground">
         <Header
           screenSize={screenSize}
