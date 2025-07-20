@@ -3,9 +3,9 @@ import { Button } from "@/Components/ui/button"
 import { Badge } from "../ui/badge"
 import type React from "react"
 
-import { Smartphone, Tablet, Monitor, ZoomIn, ZoomOut, ZoomOutIcon, Undo, RotateCcw } from "lucide-react"
+import { Smartphone, Tablet, Monitor, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import type { PreviewMode, ScreenSize, ProfileData, ThemeSettings, LinkItem } from "../../types"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 interface PreviewCanvasProps {
     previewMode: PreviewMode
@@ -29,11 +29,11 @@ export function PreviewCanvas({
     const [zoomLevel, setZoomLevel] = useState(1)
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
     const [isRotated, setIsRotated] = useState(false)
-    const [isFullscreen, setIsFullscreen] = useState(false)
-    const [isPanning, setIsPanning] = useState(false)
-    const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 })
-    const containerRef = useRef<HTMLDivElement>(null)
-    const deviceRef = useRef<HTMLDivElement>(null)
+    // const [isFullscreen, setIsFullscreen] = useState(false)
+    // const [isPanning, setIsPanning] = useState(false)
+    // const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 })
+    // const containerRef = useRef<HTMLDivElement>(null)
+    // const deviceRef = useRef<HTMLDivElement>(null)
 
 
     const handleZoomIn = useCallback(() => {
@@ -53,6 +53,7 @@ export function PreviewCanvas({
         if (zoomLevel === 1) {
             setPanOffset({ x: 0, y: 0 })
         }
+        setIsRotated(false)
     }, [zoomLevel, previewMode, isRotated])
 
 
@@ -134,9 +135,9 @@ export function PreviewCanvas({
                     </Badge>
                 </div>
             </div>
-            <div 
+            <div
                 className="flex-1 bg-muted/30 p-2 sm:p-4 lg:p-8 overflow-auto"
- 
+
             >
                 <div className="flex justify-center">
                     <div
@@ -153,7 +154,8 @@ export function PreviewCanvas({
                         `}
                         style={{
                             transform: `scale(${zoomLevel}) translate(${panOffset.x / zoomLevel}px, ${panOffset.y / zoomLevel}px)`,
-                            transformOrigin: "center center",}}
+                            transformOrigin: "center center",
+                        }}
                     >
                         {previewMode === "mobile" && screenSize !== "mobile" && (
                             <>
@@ -166,7 +168,7 @@ export function PreviewCanvas({
                         )}
                         <div className="w-full h-full overflow-y-auto" style={getBackgroundStyle()}>
                             <div className="relative">
-                                {profile.coverImage && (
+                                {/* {profile.coverImage && (
                                     <div className="relative h-24 sm:h-32 overflow-hidden">
                                         <img
                                             src={profile.coverImage || "https://images.unsplash.com/photo-1682685797366-715d29e33f9d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"}
@@ -175,7 +177,7 @@ export function PreviewCanvas({
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                     </div>
-                                )}
+                                )} */}
                                 <div className="px-4 sm:px-6 py-6 sm:py-8">
                                     <div className="text-center mb-6 sm:mb-8">
                                         <div className="relative inline-block mb-3 sm:mb-4">

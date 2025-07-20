@@ -4,6 +4,7 @@ import { Separator } from "@/Components/ui/separator"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/Components/ui/collapsible"
 import { Layout, Plus, ChevronRight } from "lucide-react"
 import { templates, components } from "../../Constants"
+import { Card, CardContent } from "../ui/card"
 
 interface MobileSidebarProps {
     templatesOpen: boolean
@@ -37,16 +38,21 @@ export function MobileSidebar({
                 <CollapsibleContent className="space-y-2 mt-2">
                     <div className="grid grid-cols-2 gap-2">
                         {templates.map((template) => (
-                            <Button
+                            <Card
                                 key={template.id}
-                                variant="outline"
-                                className="h-16 p-2 flex flex-col gap-1 bg-transparent"
+                                className={`cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.02] ${template.preview} h-16 flex items-center justify-center`}
                                 onClick={() => applyTemplate(template.id)}
                             >
-                                <div className={`w-full h-6 rounded text-xs flex items-center justify-center ${template.preview}`}>
-                                    {template.name}
-                                </div>
-                            </Button>
+                                <CardContent>
+                                    <div className="flex items-center">
+                                        <div
+                                            className={`w-full h-full rounded-md flex items-center justify-center text-xs font-medium`}
+                                        >
+                                           <h4 className="font-medium text-sm">{template.name}</h4>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
                         ))}
                     </div>
                 </CollapsibleContent>

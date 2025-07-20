@@ -39,3 +39,22 @@ export interface ThemeSettings {
 
 export type ScreenSize = "mobile" | "tablet" | "desktop"
 export type PreviewMode = "mobile" | "tablet" | "desktop"
+
+
+
+export interface PublishedDesign {
+    id: string
+    title: string
+    profile: ProfileData
+    theme: ThemeSettings
+    links: LinkItem[]
+    publishedAt: Date
+    lastModified: Date
+    views: number
+    isPublic: boolean
+    slug: string
+    thumbnail?: string
+    status: "published" | "draft" | "archived"
+    category?: string
+    tags?: string[]
+}

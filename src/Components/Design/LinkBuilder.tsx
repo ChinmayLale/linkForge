@@ -230,6 +230,55 @@ export default function LinkBuilder4() {
         textColor: "#ffffff",
         cardStyle: "glass" as const,
       },
+      sunset: {
+        backgroundColor: "linear-gradient(135deg, #fdcfe8, #e0c3fc)",
+        backgroundType: "gradient" as const,
+        primaryColor: "#6b7280", // gray-500
+        textColor: "#374151", // gray-700
+        cardStyle: "default" as const,
+      },
+      clay: {
+        backgroundColor: "#ecf0f3",
+        backgroundType: "solid" as const,
+        primaryColor: "#94a3b8", // slate-400
+        textColor: "#374151", // gray-700
+        cardStyle: "default" as const,
+      },
+      frosted: {
+        backgroundColor: "rgba(255, 255, 255, 0.3)",
+        backgroundType: "solid" as const,
+        primaryColor: "#000000",
+        textColor: "#000000",
+        cardStyle: "glass" as const,
+      },
+      brutalist: {
+        backgroundColor: "#fde047", // yellow-300
+        backgroundType: "solid" as const,
+        primaryColor: "#000000",
+        textColor: "#000000",
+        cardStyle: "default" as const,
+      },
+      softpink: {
+        backgroundColor: "#fce7f3", // pink-100
+        backgroundType: "solid" as const,
+        primaryColor: "#be185d", // pink-800
+        textColor: "#be185d",
+        cardStyle: "default" as const,
+      },
+      mint: {
+        backgroundColor: "linear-gradient(135deg, #ccfbf1, #d1fae5)", // teal-100 to green-100
+        backgroundType: "gradient" as const,
+        primaryColor: "#047857", // green-800
+        textColor: "#047857",
+        cardStyle: "default" as const,
+      },
+      vibrant: {
+        backgroundColor: "linear-gradient(135deg, #facc15, #ec4899, #ef4444)", // yellow-400 → pink-500 → red-500
+        backgroundType: "gradient" as const,
+        primaryColor: "#ffffff",
+        textColor: "#ffffff",
+        cardStyle: "glass" as const,
+      },
     }
     const template = templateStyles[templateId as keyof typeof templateStyles]
     if (template) {

@@ -1,33 +1,67 @@
 import { loginUserWithEmail } from "@/Services/auth/Login";
-import { NextAuthOptions } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleLoginProvider from "next-auth/providers/google"
+import GoogleProvider from "next-auth/providers/google";
 import { loginProps, LoginResponse } from "@/interfaces/auth/loginSignup";
 import { toast } from "sonner";
-// import { NextApiRequest } from "next";
+import type { NextAuthOptions } from "next-auth";
+
+import { Session } from "next-auth";
+
+
+interface User {
+    id: string;
+    username?: string;
+    email?: string | null;
+    name?: string | null;
+    image?: string | null;
+    token?: string;
+}
+
+interface Account {
+    provider: string;
+    type: string;
+}
+
+interface Profile {
+    email?: string;
+    name?: string;
+}
+
+// Google profile interface
+interface GoogleProfile extends Profile {
+    sub: string;
+    name: string;
+    email: string;
+    picture: string;
+}
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             id: "credentials",
             name: "Credentials",
-
             credentials: {
                 username: { label: "Username", type: "text", placeholder: "abc@gmail.com" },
                 password: { label: "Password", type: "password" }
             },
-
-            async authorize(credentials, req): Promise<LoginResponse | null> {
-                console.log({ req })
+            async authorize(credentials, req) {
                 try {
                     console.log("Inside Authorize Function with credentials:", credentials);
+                    console.log("Request Headers:", req.body);
+                    if (!credentials?.username || !credentials?.password) {
+                        return null;
+                    }
+
                     const res = await loginUserWithEmail(credentials as loginProps) as LoginResponse | null;
+
                     if (res) {
-                        // console.log("User Logged In:", res);
                         return {
                             id: res.id,
+                            name: res.username,
+                            email: res.email ?? undefined,
                             username: res.username,
-                            email: res.email,
-                            token: res.token, // add custom token field
+                            token: res.token,
                         };
                     } else {
                         console.log("Login Failed: Invalid credentials");
@@ -37,42 +71,52 @@ export const authOptions: NextAuthOptions = {
                 } catch (error: unknown) {
                     if (error instanceof Error) {
                         console.log("Error While Logging In:", error.message);
-                        return null
                     } else {
                         console.log("Unexpected error:", error);
-                        return null
                     }
+                    return null;
                 }
-            },
+            }
         }),
 
-        GoogleLoginProvider({
+        GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-
-            async profile(profile) {
+            profile(profile: GoogleProfile) {
                 console.log("Google Profile:", profile);
                 return {
-                    id: profile.sub, // ✅ this is required
+                    id: profile.sub,
                     name: profile.name,
                     email: profile.email,
                     image: profile.picture,
-                    token:profile.sub,
+                    username: profile.name,
+                    token: profile.sub,
                 };
-
             },
         })
-
     ],
+
     session: {
         strategy: "jwt",
     },
+
     pages: {
         signIn: "/login",
-        error: "/auth/error", // Error code passed in query string as ?error=
+        error: "/auth/error",
     },
+
     callbacks: {
-        async jwt({ token, account, profile, user }) {
+        async jwt({
+            token,
+            account,
+            profile,
+            user
+        }: {
+            token: JWT;
+            account: Account | null;
+            profile?: Profile;
+            user?: User;
+        }): Promise<JWT> {
             console.log("🔧 JWT Callback triggered:", {
                 provider: account?.provider,
                 hasProfile: !!profile,
@@ -113,9 +157,9 @@ export const authOptions: NextAuthOptions = {
             if (account?.provider === "credentials" && user) {
                 console.log("🔐 Processing credentials login");
                 token.id = user.id;
-                token.username = (user as any).username;
-                token.email = user.email;
-                token.customToken = (user as any).token;
+                token.username = user.username;
+                token.email = user.email ?? undefined;
+                token.customToken = user.token;
             }
 
             console.log("🏁 Final token:", {
@@ -128,7 +172,7 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
 
-        async session({ session, token }) {
+        async session({ session, token }: { session: Session; token: JWT }) {
             console.log("📋 Session Callback triggered:", {
                 hasToken: !!token,
                 tokenId: token?.id,
@@ -138,32 +182,31 @@ export const authOptions: NextAuthOptions = {
             if (token) {
                 session.user.id = token.id as string;
                 session.user.email = token.email as string;
-                session.user.name = token.name as string;
-                (session as any).username = token.username;
-                (session as any).customToken = token.customToken;
+                session.user.name = token.username as string;
+                session.username = token.username;
+                session.customToken = token.customToken;
 
                 console.log("🎯 Session updated:", {
                     userId: session.user.id,
                     userEmail: session.user.email,
                     userName: session.user.name,
-                    username: (session as any).username,
-                    hasCustomToken: !!(session as any).customToken
+                    username: session.username,
+                    hasCustomToken: !!session.customToken
                 });
             }
 
             return session;
         },
     }
-}
+};
 
-
-export async function loginUserWithGoogle(email: string) {
+export async function loginUserWithGoogle(email: string): Promise<LoginResponse> {
     console.log("Simulating Google Login for email:", email);
 
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // Dummy response
+    // Return typed response
     return {
         id: "google-user-123",
         username: "Google User",

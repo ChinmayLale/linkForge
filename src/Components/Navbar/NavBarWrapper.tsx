@@ -10,7 +10,7 @@ export default function NavWrapper() {
     const pathname = usePathname();
 
     const isDashboard = pathname.startsWith('/dashboard');
-    const isLogin = pathname.startsWith('/login') || pathname.startsWith('/signup');
+    const isLogin = (pathname.startsWith('/login') || pathname.startsWith('/signup')) || !isDashboard;
     if( isLogin) return null; // Don't render NavBar on login/signup pages
 
     return (

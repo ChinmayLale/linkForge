@@ -61,7 +61,7 @@ export function LoginForm({ className }: { className?: string }) {
       });
 
       console.log("SignIn response:", res);
-      return;
+      // return;
       if (res?.error) {
         console.error("Google login error:", res.error);
         toast.error("Google login failed");
@@ -77,7 +77,7 @@ export function LoginForm({ className }: { className?: string }) {
           toast.success("Google login successful");
 
           // Access custom session data
-          const username = (session as any).username || session.user.name;
+          const username = session.user.name;
           console.log({ username });
           // Redirect to dashboard with username
           // router.push(`/dashboard/${username}`);
