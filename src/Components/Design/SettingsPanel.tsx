@@ -1,5 +1,5 @@
 "use client"
-import { Settings, Trash2 } from "lucide-react"
+import { Plus, Settings, Trash2 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs"
 import { Label } from "@/Components/ui/label"
@@ -175,6 +175,74 @@ export function SettingsPanel({
                                                     </SelectContent>
                                                 </Select>
                                             </div>
+                                        )}
+                                        {element.type === "gallery" && (
+                                            <>
+                                                <div>
+                                                    <Label className="text-xs">Gallery Images</Label>
+                                                    <div className="space-y-2 mt-1">
+                                                        {element.metadata?.images?.map((image, index) => (
+                                                            <div key={index} className="flex gap-2">
+                                                                <Input
+                                                                    value={image}
+                                                                    onChange={(e) => {
+                                                                        const newImages = [...(element.metadata?.images || [])]
+                                                                        newImages[index] = e.target.value
+                                                                        updateLink(element.id, {
+                                                                            metadata: { ...element.metadata, images: newImages },
+                                                                        })
+                                                                    }}
+                                                                    placeholder="Image URL"
+                                                                    className="flex-1"
+                                                                />
+                                                                <Button
+                                                                    variant="outline"
+                                                                    size="sm"
+                                                                    onClick={() => {
+                                                                        const newImages = element.metadata?.images?.filter((_, i) => i !== index) || []
+                                                                        updateLink(element.id, {
+                                                                            metadata: { ...element.metadata, images: newImages },
+                                                                        })
+                                                                    }}
+                                                                >
+                                                                    <Trash2 className="h-3 w-3" />
+                                                                </Button>
+                                                            </div>
+                                                        ))}
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() => {
+                                                                const newImages = [
+                                                                    ...(element.metadata?.images || []),
+                                                                    "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop",
+                                                                ]
+                                                                updateLink(element.id, {
+                                                                    metadata: { ...element.metadata, images: newImages },
+                                                                })
+                                                            }}
+                                                            className="w-full"
+                                                        >
+                                                            <Plus className="h-3 w-3 mr-2" />
+                                                            Add Image
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <Label className="text-xs">Gallery Description</Label>
+                                                    <Textarea
+                                                        value={element.metadata?.description || ""}
+                                                        onChange={(e) =>
+                                                            updateLink(element.id, {
+                                                                metadata: { ...element.metadata, description: e.target.value },
+                                                            })
+                                                        }
+                                                        className="mt-1 resize-none"
+                                                        rows={2}
+                                                        placeholder="Gallery description..."
+                                                    />
+                                                </div>
+                                            </>
                                         )}
                                         <div className="flex items-center justify-between">
                                             <Label className="text-xs">Visible</Label>

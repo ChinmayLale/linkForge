@@ -3,8 +3,9 @@ import { Button } from "@/Components/ui/button"
 import { Badge } from "../ui/badge"
 import type React from "react"
 
-import { Smartphone, Tablet, Monitor } from "lucide-react"
+import { Smartphone, Tablet, Monitor, ZoomIn, ZoomOut, ZoomOutIcon, Undo, RotateCcw } from "lucide-react"
 import type { PreviewMode, ScreenSize, ProfileData, ThemeSettings, LinkItem } from "../../types"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 interface PreviewCanvasProps {
     previewMode: PreviewMode
@@ -25,6 +26,36 @@ export function PreviewCanvas({
     links,
     renderComponent,
 }: PreviewCanvasProps) {
+    const [zoomLevel, setZoomLevel] = useState(1)
+    const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
+    const [isRotated, setIsRotated] = useState(false)
+    const [isFullscreen, setIsFullscreen] = useState(false)
+    const [isPanning, setIsPanning] = useState(false)
+    const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 })
+    const containerRef = useRef<HTMLDivElement>(null)
+    const deviceRef = useRef<HTMLDivElement>(null)
+
+
+    const handleZoomIn = useCallback(() => {
+        setZoomLevel((prev) => Math.min(3, prev + 0.1))
+    }, [])
+
+    const handleZoomOut = useCallback(() => {
+        setZoomLevel((prev) => Math.max(0.3, prev - 0.1))
+    }, [])
+
+    const handleZoomReset = useCallback(() => {
+        setZoomLevel(1)
+        setPanOffset({ x: 0, y: 0 })
+    }, [])
+
+    useEffect(() => {
+        if (zoomLevel === 1) {
+            setPanOffset({ x: 0, y: 0 })
+        }
+    }, [zoomLevel, previewMode, isRotated])
+
+
     const getPreviewSize = () => {
         switch (previewMode) {
             case "mobile":
@@ -78,12 +109,35 @@ export function PreviewCanvas({
                             <span className="hidden sm:inline">Desktop</span>
                         </Button>
                     </div>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                        <Button variant="ghost" size="sm" onClick={handleZoomIn} className="text-xs sm:text-sm">
+                            <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 " />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleZoomReset}
+                            className="text-xs text-muted-foreground min-w-[3rem] hover:bg-muted transition-colors bg-transparent"
+                            title="Reset zoom and pan"
+                        >
+                            {Math.round(zoomLevel * 100)}%
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={handleZoomOut} className="text-xs sm:text-sm">
+                            <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={handleZoomReset} className="text-xs sm:text-sm">
+                            <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
+                        </Button>
+                    </div>
                     <Badge variant="outline" className="text-xs">
                         Live Preview
                     </Badge>
                 </div>
             </div>
-            <div className="flex-1 bg-muted/30 p-2 sm:p-4 lg:p-8 overflow-auto">
+            <div 
+                className="flex-1 bg-muted/30 p-2 sm:p-4 lg:p-8 overflow-auto"
+ 
+            >
                 <div className="flex justify-center">
                     <div
                         className={`
@@ -97,6 +151,9 @@ export function PreviewCanvas({
                             }
                             overflow-hidden relative
                         `}
+                        style={{
+                            transform: `scale(${zoomLevel}) translate(${panOffset.x / zoomLevel}px, ${panOffset.y / zoomLevel}px)`,
+                            transformOrigin: "center center",}}
                     >
                         {previewMode === "mobile" && screenSize !== "mobile" && (
                             <>
