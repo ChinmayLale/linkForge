@@ -5,6 +5,7 @@ import NavBar from "@/Components/Navbar/NavBarWrapper";
 import StoreProvider from "@/store/StoreProvider";
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { ThemeProviderWrapper } from "./providers/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,12 +82,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable}${plusJakarta.variable} antialiased dark  scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
       >
-        <StoreProvider>
-          <Toaster richColors position="top-center" />
-          <NavBar />
-          {children}
-        </StoreProvider>
-        <SpeedInsights />
+        <ThemeProviderWrapper>
+          <StoreProvider>
+            <Toaster richColors position="top-center" />
+            <NavBar />
+            {children}
+          </StoreProvider>
+          <SpeedInsights />
+        </ThemeProviderWrapper>
       </body>
     </html>
   );

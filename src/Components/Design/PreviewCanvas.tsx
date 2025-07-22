@@ -29,11 +29,7 @@ export function PreviewCanvas({
     const [zoomLevel, setZoomLevel] = useState(1)
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
     const [isRotated, setIsRotated] = useState(false)
-    // const [isFullscreen, setIsFullscreen] = useState(false)
-    // const [isPanning, setIsPanning] = useState(false)
-    // const [lastPanPoint, setLastPanPoint] = useState({ x: 0, y: 0 })
-    // const containerRef = useRef<HTMLDivElement>(null)
-    // const deviceRef = useRef<HTMLDivElement>(null)
+
 
 
     const handleZoomIn = useCallback(() => {
@@ -111,8 +107,8 @@ export function PreviewCanvas({
                         </Button>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2">
-                        <Button variant="ghost" size="sm" onClick={handleZoomIn} className="text-xs sm:text-sm">
-                            <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 " />
+                        <Button variant="ghost" size="sm" onClick={handleZoomOut} className="text-xs sm:text-sm">
+                            <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                         <Button
                             variant="outline"
@@ -123,8 +119,8 @@ export function PreviewCanvas({
                         >
                             {Math.round(zoomLevel * 100)}%
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={handleZoomOut} className="text-xs sm:text-sm">
-                            <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <Button variant="ghost" size="sm" onClick={handleZoomIn} className="text-xs sm:text-sm">
+                            <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4 " />
                         </Button>
                         <Button variant="ghost" size="sm" onClick={handleZoomReset} className="text-xs sm:text-sm">
                             <RotateCcw className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -164,7 +160,7 @@ export function PreviewCanvas({
                             </>
                         )}
                         {previewMode === "tablet" && (
-                            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-10"></div>
+                            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-gray-600 rounded-full z-10 px-100"></div>
                         )}
                         <div className="w-full h-full overflow-y-auto" style={getBackgroundStyle()}>
                             <div className="relative">
@@ -208,7 +204,7 @@ export function PreviewCanvas({
                                     </div>
                                     <div className="text-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/20">
                                         <p className="text-xs opacity-60" style={{ color: theme.textColor }}>
-                                            Made with ❤️ using PageBuilder
+                                            Made with ❤️ using linkForge
                                         </p>
                                     </div>
                                 </div>
