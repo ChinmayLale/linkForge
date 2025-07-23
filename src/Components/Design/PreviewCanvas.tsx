@@ -15,6 +15,7 @@ interface PreviewCanvasProps {
     theme: ThemeSettings
     links: LinkItem[]
     renderComponent: (link: LinkItem) => React.ReactNode
+    setSelectedElement: () => void
 }
 
 export function PreviewCanvas({
@@ -25,6 +26,7 @@ export function PreviewCanvas({
     theme,
     links,
     renderComponent,
+    setSelectedElement
 }: PreviewCanvasProps) {
     const [zoomLevel, setZoomLevel] = useState(1)
     const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
@@ -164,16 +166,6 @@ export function PreviewCanvas({
                         )}
                         <div className="w-full h-full overflow-y-auto" style={getBackgroundStyle()}>
                             <div className="relative">
-                                {/* {profile.coverImage && (
-                                    <div className="relative h-24 sm:h-32 overflow-hidden">
-                                        <img
-                                            src={profile.coverImage || "https://images.unsplash.com/photo-1682685797366-715d29e33f9d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDF8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxfHx8ZW58MHx8fHx8"}
-                                            alt="Cover"
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                                    </div>
-                                )} */}
                                 <div className="px-4 sm:px-6 py-6 sm:py-8">
                                     <div className="text-center mb-6 sm:mb-8">
                                         <div className="relative inline-block mb-3 sm:mb-4">
@@ -181,16 +173,24 @@ export function PreviewCanvas({
                                                 src={profile.avatar || "https://images.unsplash.com/photo-1744878150591-6ebf3a050d4f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxMnx8fGVufDB8fHx8fA%3D%3D"}
                                                 alt={profile.name}
                                                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-white/30 shadow-xl"
+
+                                                onClick={() => { setSelectedElement() }}
                                             />
                                             <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-6 sm:h-6 bg-green-500 rounded-full border-2 border-white"></div>
                                         </div>
-                                        <h1 className="text-lg sm:text-xl font-bold mb-2" style={{ color: theme.textColor }}>
+                                        <h1 className="text-lg sm:text-xl font-bold mb-2" style={{ color: theme.textColor }}
+                                            onClick={() => { setSelectedElement() }}
+                                        >
                                             {profile.name}
                                         </h1>
-                                        <p className="text-xs sm:text-sm opacity-80 mb-3 sm:mb-4" style={{ color: theme.textColor }}>
+                                        <p className="text-xs sm:text-sm opacity-80 mb-3 sm:mb-4" style={{ color: theme.textColor }}
+                                            onClick={() => { setSelectedElement() }}
+                                        >
                                             {profile.bio}
                                         </p>
-                                        <div className="flex justify-center gap-2 flex-wrap">
+                                        <div className="flex justify-center gap-2 flex-wrap"
+                                            onClick={() => { setSelectedElement() }}
+                                        >
                                             <Badge variant="secondary" className="text-xs">
                                                 🎵 Music Producer
                                             </Badge>
@@ -202,7 +202,9 @@ export function PreviewCanvas({
                                     <div className="space-y-3 sm:space-y-4">
                                         {links.filter((link) => link.visible).map((link) => renderComponent(link))}
                                     </div>
-                                    <div className="text-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/20">
+                                    <div className="text-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/20"
+                                        onClick={() => { setSelectedElement() }}
+                                    >
                                         <p className="text-xs opacity-60" style={{ color: theme.textColor }}>
                                             Made with ❤️ using linkForge
                                         </p>

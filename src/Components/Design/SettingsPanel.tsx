@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/Components/ui/switch"
 import { Button } from "@/Components/ui/button"
 import { Slider } from "@/Components/ui/slider"
+import { useState } from "react"
 import type { LinkItem, ProfileData, ThemeSettings } from "../../types"
 
 interface SettingsPanelProps {
@@ -32,9 +33,20 @@ export function SettingsPanel({
     theme,
     setTheme,
 }: SettingsPanelProps) {
+    // Add state to control which tab is active
+    const [activeTab, setActiveTab] = useState<"profile" | "theme" | "layout">("profile")
+
+
     const getSelectedElement = () => {
         return links.find((link) => link.id === selectedElement)
     }
+
+    const updateProfile = (updates: Partial<ProfileData>) => {
+        const nextProfile = { ...profile, ...updates };
+        if (JSON.stringify(profile) !== JSON.stringify(nextProfile)) {
+            setProfile(nextProfile);
+        }
+    };
 
     return (
         <div className="p-4">
@@ -262,7 +274,11 @@ export function SettingsPanel({
                     </Card>
                 </div>
             ) : (
-                <Tabs defaultValue="profile" className="w-full">
+                <Tabs
+                    value={activeTab}
+                    onValueChange={(val) => setActiveTab(val as "profile" | "theme" | "layout")}
+                    className="w-full"
+                >
                     <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="profile" className="text-xs">
                             Profile
@@ -318,7 +334,7 @@ export function SettingsPanel({
                                     <Label className="text-xs">Cover Image URL</Label>
                                     <Input
                                         value={profile.coverImage || ""}
-                                        onChange={(e) => setProfile({ ...profile, coverImage: e.target.value })}
+                                        onChange={(e) =>updateProfile({ coverImage: e.target.value })}
                                         className="mt-1"
                                         placeholder="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop"
                                     />

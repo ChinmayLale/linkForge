@@ -20,7 +20,7 @@ interface HeaderProps {
     setDarkMode: (dark: boolean) => void
     username: string
     MobileSidebar: React.ComponentType
-    SettingsPanel: React.ComponentType
+    SettingsPanel: any
 }
 
 export function Header({

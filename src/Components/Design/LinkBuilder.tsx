@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { ScrollArea } from "@/Components/ui/scroll-area"
 import "../../styles/animation.css" // Add this import
 import { Header } from "./Header"
@@ -51,20 +51,20 @@ export default function LinkBuilder4() {
   })
 
   const [links, setLinks] = useState<LinkItem[]>([
-    {
-      id: "1",
-      type: "music",
-      title: "Latest Track - Midnight Vibes",
-      url: "https://spotify.com/track/123",
-      color: "#1db954",
-      visible: true,
-      style: "default",
-      metadata: {
-        artist: "Alex Johnson",
-        duration: "3:42",
-        thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
-      },
-    },
+    // {
+    //   id: "1",
+    //   type: "music",
+    //   title: "Latest Track - Midnight Vibes",
+    //   url: "https://spotify.com/track/123",
+    //   color: "#1db954",
+    //   visible: true,
+    //   style: "default",
+    //   metadata: {
+    //     artist: "Alex Johnson",
+    //     duration: "3:42",
+    //     thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
+    //   },
+    // },
     {
       id: "2",
       type: "video",
@@ -237,7 +237,7 @@ export default function LinkBuilder4() {
     />
   )
 
-  const SettingsPanelComponent = () => (
+  const SettingsPanelComponent = useMemo(() => (
     <SettingsPanel
       selectedElement={selectedElement}
       links={links}
@@ -248,7 +248,9 @@ export default function LinkBuilder4() {
       theme={theme}
       setTheme={setTheme}
     />
-  )
+  ), [selectedElement, links, profile, theme])
+
+
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -285,11 +287,21 @@ export default function LinkBuilder4() {
             theme={theme}
             links={links}
             renderComponent={renderComponent}
+            setSelectedElement = {()=> setSelectedElement(null)}
           />
           {screenSize !== "mobile" && (
             <div className="w-64 lg:w-80 border-l bg-background">
               <ScrollArea className="h-full">
-                <SettingsPanelComponent />
+                <SettingsPanel
+                  selectedElement={selectedElement}
+                  links={links}
+                  updateLink={updateLink}
+                  deleteLink={deleteLink}
+                  profile={profile}
+                  setProfile={setProfile}
+                  theme={theme}
+                  setTheme={setTheme}
+                />
               </ScrollArea>
             </div>
           )}

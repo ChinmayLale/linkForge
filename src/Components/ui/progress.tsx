@@ -15,8 +15,8 @@ function Progress({
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
 
   const [value, setValue] = React.useState(0)
-  const show = useSelector((state: RootState) => state.misc.showProgressBar);
-  console.log({show})
+  // const show = useSelector((state: RootState) => state.misc.showProgressBar);
+  // console.log({show})
   const dispatch = useDispatch()
   React.useEffect(() => {
     // setShow(true)
