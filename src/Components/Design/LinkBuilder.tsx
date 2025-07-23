@@ -248,7 +248,7 @@ export default function LinkBuilder4() {
       theme={theme}
       setTheme={setTheme}
     />
-  ), [selectedElement, links, profile, theme])
+  ), [selectedElement, links, profile, theme, deleteLink, updateLink])
 
 
 
@@ -287,7 +287,7 @@ export default function LinkBuilder4() {
             theme={theme}
             links={links}
             renderComponent={renderComponent}
-            setSelectedElement = {()=> setSelectedElement(null)}
+            setSelectedElement={() => setSelectedElement(null)}
           />
           {screenSize !== "mobile" && (
             <div className="w-64 lg:w-80 border-l bg-background">

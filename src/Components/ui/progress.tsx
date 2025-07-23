@@ -4,9 +4,9 @@ import * as React from "react"
 import * as ProgressPrimitive from "@radix-ui/react-progress"
 
 import { cn } from "@/lib/utils"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { toggleProgressBar } from "@/store/slices/miscSlice"
-import { RootState } from "@/store/store"
+// import { RootState } from "@/store/store"
 
 function Progress({
   className,

@@ -20,7 +20,7 @@ interface HeaderProps {
     setDarkMode: (dark: boolean) => void
     username: string
     MobileSidebar: React.ComponentType
-    SettingsPanel: any
+    SettingsPanel: React.ReactNode
 }
 
 export function Header({
@@ -83,7 +83,7 @@ export function Header({
                             </SheetTrigger>
                             <SheetContent side="right" className="w-80 p-0">
                                 <ScrollArea className="h-full">
-                                    <SettingsPanel />
+                                    {SettingsPanel}
                                 </ScrollArea>
                             </SheetContent>
                         </Sheet>
