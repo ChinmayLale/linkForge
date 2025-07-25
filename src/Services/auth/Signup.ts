@@ -1,7 +1,6 @@
 import { BASE_URL } from "@/Constants/Endpoints";
-import { string } from "zod";
 
-const SignupWithGoogle = async({email,username,name,pfp}:{email:string,username:string,name:string,pfp:string}):Promise<any> => {
+const SignupWithGoogle = async({email,username,name,pfp}:{email:string,username:string,name:string,pfp:string}):Promise<boolean> => {
     try {
         if(!email || !username || !name || !pfp) {
             throw new Error("All fields are required");
@@ -20,7 +19,7 @@ const SignupWithGoogle = async({email,username,name,pfp}:{email:string,username:
 
         if (response.status === 201) {
             console.log("Signup successful:", response.data);
-            return response.data;
+            return response.data !== null;
         } else {
             throw new Error(`Signup failed with status: ${response.status}`);
         }

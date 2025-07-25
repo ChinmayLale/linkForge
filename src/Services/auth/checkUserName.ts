@@ -1,4 +1,4 @@
-import axios from "axios";
+
 
 export const checkUsernameAvailability = async (username: string): Promise<{ available: boolean; message?: string }> => {
     // Simulate API delay
