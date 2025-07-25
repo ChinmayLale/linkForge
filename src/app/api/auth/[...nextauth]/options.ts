@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { NextAuthOptions } from "next-auth";
 
 import { Session } from "next-auth";
+import { SignupWithGoogle } from "@/Services/auth/Signup";
 
 
 interface User {
@@ -125,33 +126,12 @@ export const authOptions: NextAuthOptions = {
             });
 
             // Handle Google login
-            if (account?.provider === "google" && profile?.email) {
-                try {
-                    console.log("🔄 Processing Google login for:", profile.email);
-                    const res = await loginUserWithGoogle(profile.email);
-
-                    if (res) {
-                        console.log("✅ Backend response received:", res);
-                        token.id = res.id;
-                        token.username = res.username;
-                        token.email = res.email;
-                        token.customToken = res.token;
-
-                        console.log("🎯 Token updated:", {
-                            id: token.id,
-                            username: token.username,
-                            email: token.email,
-                            hasCustomToken: !!token.customToken
-                        });
-                    } else {
-                        console.error("❌ Google login failed: No response from backend");
-                        throw new Error("Backend authentication failed");
-                    }
-                } catch (error) {
-                    console.error("💥 Error during Google login:", error);
-                    throw error;
-                }
-            }
+            if (user && account?.provider === "google") {
+                token.id = user.id;
+                token.username = user.username;
+                token.picture = user.image;
+                token.customToken = user.token; // or sub
+              }
 
             // Handle credentials login
             if (account?.provider === "credentials" && user) {
@@ -199,18 +179,3 @@ export const authOptions: NextAuthOptions = {
         },
     }
 };
-
-export async function loginUserWithGoogle(email: string): Promise<LoginResponse> {
-    console.log("Simulating Google Login for email:", email);
-
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // Return typed response
-    return {
-        id: "google-user-123",
-        username: "Google User",
-        email: email,
-        token: "dummy-jwt-token-from-backend",
-    };
-}
