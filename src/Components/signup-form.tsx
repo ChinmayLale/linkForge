@@ -14,14 +14,14 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { ArrowLeft, Check, X, Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { getSession, signIn } from "next-auth/react"
+import { getSession, signIn, signOut } from "next-auth/react"
 import { checkUsernameAvailability } from "@/Services/auth/checkUserName"
 import { useDebounce } from "@/hooks/useDebounce"
-import { BASE_URL } from "@/Constants/Endpoints"
-import axios from "axios"
-// import type { AxiosRe } from "axios"
-
-
+import { useRouter } from "next/navigation"
+import { signupWithEmail, SignupWithGoogle } from "@/Services/auth/Signup"
+import { isAxiosError } from "axios"
+import { useDispatch } from "react-redux"
+import { setUsernameSlice } from "@/store/slices/userSlice"
 
 export function SignUpForm({
     className,
@@ -32,7 +32,10 @@ export function SignUpForm({
     const [progress, setProgress] = useState(0)
     const [userEmail, setUserEmail] = useState("")
     const [hasCheckedLogin, setHasCheckedLogin] = useState(false)
-
+    const [userPassword, setUserPassword] = useState("")
+    const [signupMethod, setSignupMethod] = useState<'google' | 'email' | null>(null)
+    const router = useRouter();
+    const dispatch = useDispatch()
     // Username availability states
     const [isCheckingUsername, setIsCheckingUsername] = useState(false)
     const [usernameStatus, setUsernameStatus] = useState<{
@@ -41,29 +44,55 @@ export function SignUpForm({
     }>({ available: null, message: '' })
 
     // Debounce username input
-    const debouncedUsername = useDebounce(username, 500); // 500ms delay
+    const debouncedUsername = useDebounce(username, 500);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
             if (hasCheckedLogin) return;
 
-            const session = await getSession();
+            try {
+                const session = await getSession();
 
-            if (session?.user) {
-                console.log("User already logged in:", session.user);
-                setUserEmail(session.user.email || "");
-                setProgress(1);
-                toast.success("Welcome back!");
-            } else if (localStorage.getItem('googleLoginInProgress')) {
-                localStorage.removeItem('googleLoginInProgress');
-                toast.error("Login was interrupted. Please try again.");
+                // Check if user completed signup before
+                const hasCompletedSignup = sessionStorage.getItem('signupCompleted');
+
+                if (session?.user) {
+                    console.log("Session found:", session.user);
+
+                    // If user already completed signup, redirect to dashboard
+                    if (hasCompletedSignup) {
+                        const savedUsername = sessionStorage.getItem('userUsername');
+                        if (savedUsername) {
+                            router.push(`/dashboard/${savedUsername}`);
+                            return;
+                        }
+                    }
+
+                    // Check if this is a returning user who's already registered
+                    // You might want to call an API to check if user exists in your database
+
+                    // If user has a session but hasn't completed signup flow, continue to username selection
+                    if (sessionStorage.getItem('googleSignupInProgress')) {
+                        setUserEmail(session.user.email || "");
+                        setSignupMethod('google');
+                        setProgress(1);
+                        toast.success("Please complete your signup by choosing a username");
+                    }
+                } else {
+                    // Clean up any signup progress if no session
+                    sessionStorage.removeItem('googleSignupInProgress');
+                    sessionStorage.removeItem('signupCompleted');
+                    sessionStorage.removeItem('userUsername');
+                }
+            } catch (error) {
+                console.error("Error checking login status:", error);
+            } finally {
+                setHasCheckedLogin(true);
             }
-
-            setHasCheckedLogin(true);
         };
 
         checkLoginStatus();
-    }, [hasCheckedLogin]);
+    }, [hasCheckedLogin, router]);
 
     // Check username availability when debounced value changes
     useEffect(() => {
@@ -107,18 +136,58 @@ export function SignUpForm({
     }, [debouncedUsername]);
 
     const handleGoogleLogin = async () => {
-        try {
-            console.log("Starting Google login...");
-            localStorage.setItem('googleLoginInProgress', 'true');
+        if (isLoading) return;
 
-            await signIn('google', {
-                callbackUrl: window.location.href
+        try {
+            setIsLoading(true);
+            console.log("Starting Google signup...");
+
+            // Clear any existing sessions first (optional - only if you want to force fresh login)
+            // await signOut({ redirect: false });
+
+            // Mark that Google signup is in progress
+            sessionStorage.setItem('googleSignupInProgress', 'true');
+            toast.dismiss();
+
+            const loadingToastId = toast.loading("Redirecting to Google...");
+
+            const result = await signIn('google', {
+                callbackUrl: window.location.href,
+                redirect: false
             });
 
+            toast.dismiss(loadingToastId);
+
+            if (result?.error) {
+                console.error("Google OAuth error:", result.error);
+                toast.error(`Google signup failed: ${result.error}`);
+                sessionStorage.removeItem('googleSignupInProgress');
+                return;
+            }
+
+            if (result?.url) {
+                // Redirect to Google OAuth
+                window.location.href = result.url;
+                return;
+            }
+
+            // If no redirect but successful
+            if (result?.ok) {
+                const session = await getSession();
+                if (session?.user?.email) {
+                    setUserEmail(session.user.email);
+                    setSignupMethod('google');
+                    setProgress(1);
+                    toast.success("Google authentication successful! Please choose a username.");
+                }
+            }
+
         } catch (error) {
-            console.error("Error during Google login:", error);
-            localStorage.removeItem('googleLoginInProgress');
-            toast.error("An error occurred during Google login");
+            console.error("Error during Google signup:", error);
+            sessionStorage.removeItem('googleSignupInProgress');
+            toast.error("An error occurred during Google signup");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -143,50 +212,90 @@ export function SignUpForm({
         setIsLoading(true);
 
         try {
-            // Here you would send the username to your backend
-            // Include session data to link the username with the Google account
-            const session = await getSession();
+            if (signupMethod === 'google') {
+                const session = await getSession();
 
-            // Mock API call - replace with your actual endpoint
-            const response = await axios.post(`${BASE_URL}/auth/signup`, {
-                username: username,
-                userId: session?.user?.id,
-                email: session?.user?.email,
-                profilePic : session?.user?.image || "",
-                name: session?.user?.name || "",
-                provider: "google"
-            });
+                if (!session?.user?.email) {
+                    toast.error("Session expired. Please sign in again.");
+                    setProgress(0);
+                    setSignupMethod(null);
+                    return;
+                }
 
-            console.log({ response })
-            if (!response.status || response.status !== 201) {
-                throw new Error('Failed to complete signup');
+                const response = await SignupWithGoogle({
+                    email: session.user.email,
+                    username,
+                    name: session.user.name || "User",
+                    pfp: session.user.image || ""
+
+                });
+
+                if (!response || response.status !== 201) {
+                    toast.error("Signup failed: " + (response?.data?.data?.message || "Unknown error"));
+                    return;
+                }
+
+                // Mark signup as completed
+                sessionStorage.setItem('signupCompleted', 'true');
+                sessionStorage.setItem('userUsername', username);
+                sessionStorage.removeItem('googleSignupInProgress');
+                toast.success("Account created successfully!");
+                dispatch(setUsernameSlice(username)); // Update Redux store with username
+                router.push(`/dashboard/${username}`);
+
+            } else if (signupMethod === 'email') {
+                // Handle email signup completion
+                const response = await signupWithEmail({
+                    email: userEmail,
+                    username,
+                    password: userPassword
+                });
+
+                if (response) {
+                    sessionStorage.setItem('signupCompleted', 'true');
+                    sessionStorage.setItem('userUsername', username);
+                    toast.success("Account created successfully!");
+                    dispatch(setUsernameSlice(username)); // Update Redux store with username
+                    router.push(`/dashboard/${username}`);
+                }
             }
 
-
-
-            toast.success("Account created successfully!");
-
-            // Redirect to dashboard
-            // router.push(`/dashboard/${username}`);
-
-        } catch (error) {
+        } catch (error: isAxiosError | any) {
             console.error("Error creating account:", error);
-            toast.error("Failed to create account");
+
+            if (isAxiosError(error) && error.response) {
+                toast.error(error.response.data?.message || "Signup failed");
+            } else {
+                toast.error("An unexpected error occurred during signup");
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleBackToLogin = () => {
+    const handleBackToLogin = async () => {
+        // Sign out from NextAuth session
+        await signOut({ redirect: false });
+
+        // Clear all signup-related storage
+        sessionStorage.removeItem('googleSignupInProgress');
+        sessionStorage.removeItem('signupCompleted');
+        sessionStorage.removeItem('userUsername');
+
+        // Reset component state
         setProgress(0);
         setUsername("");
         setUserEmail("");
+        setUserPassword("");
+        setSignupMethod(null);
         setUsernameStatus({ available: null, message: '' });
+
+        toast.success("Signed out successfully");
     };
 
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        setUsername(value);
+        setUsername(value.toLowerCase().replace(/\s+/g, '_')); // Normalize username
 
         // Reset status when user is typing
         if (value !== debouncedUsername) {
@@ -215,6 +324,25 @@ export function SignUpForm({
         return null;
     };
 
+    const handleEmailSignup = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!userEmail || !userPassword || !userPassword.trim()) {
+            toast.error("Please enter email and password");
+            return;
+        }
+
+        if (userPassword.length < 6) {
+            toast.error("Password must be at least 6 characters long");
+            return;
+        }
+
+        // Move to username selection for email signup
+        setSignupMethod('email');
+        setProgress(1);
+        toast.success("Please enter a username to complete your signup");
+    };
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             {progress === 0 ? (
@@ -222,37 +350,33 @@ export function SignUpForm({
                     <CardHeader className="text-center">
                         <CardTitle className="text-xl">Welcome</CardTitle>
                         <CardDescription>
-                            Sign up with your Apple or Google account
+                            Sign up with your Google account
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <form>
-                            <div className="grid gap-6">
-                                <div className="flex flex-col gap-4">
-                                    <Button variant="outline" className="w-full">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                            <path
-                                                d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                        Continue with Apple
-                                    </Button>
-                                    <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                            <path
-                                                d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                                                fill="currentColor"
-                                            />
-                                        </svg>
-                                        Continue with Google
-                                    </Button>
-                                </div>
-                                <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                                    <span className="bg-card text-muted-foreground relative z-10 px-2">
-                                        or continue with
-                                    </span>
-                                </div>
+                        <div className="grid gap-6">
+                            <div className="flex flex-col gap-4">
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={handleGoogleLogin}
+                                    disabled={isLoading}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    {isLoading ? "Please wait..." : "Continue with Google"}
+                                </Button>
+                            </div>
+                            <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                                <span className="bg-card text-muted-foreground relative z-10 px-2">
+                                    or continue with
+                                </span>
+                            </div>
+                            <form onSubmit={handleEmailSignup}>
                                 <div className="grid gap-6">
                                     <div className="grid gap-3">
                                         <Label htmlFor="email">Email</Label>
@@ -261,20 +385,43 @@ export function SignUpForm({
                                             type="email"
                                             placeholder="m@example.com"
                                             required
+                                            value={userEmail}
+                                            onChange={(e) => setUserEmail(e.target.value)}
+                                            disabled={isLoading}
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
-                                        Signup
+                                    <div className="grid gap-3">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            placeholder="Enter your password"
+                                            required
+                                            minLength={6}
+                                            value={userPassword}
+                                            onChange={(e) => setUserPassword(e.target.value)}
+                                            disabled={isLoading}
+                                        />
+                                    </div>
+                                    <Button type="submit" className="w-full" disabled={isLoading}>
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            "Continue"
+                                        )}
                                     </Button>
                                 </div>
-                                <div className="text-center text-sm">
-                                    have an account?{" "}
-                                    <Link href="/login" className="underline underline-offset-4">
-                                        logIn
-                                    </Link>
-                                </div>
+                            </form>
+                            <div className="text-center text-sm">
+                                Already have an account?{" "}
+                                <Link href="/login" className="underline underline-offset-4">
+                                    Sign in
+                                </Link>
                             </div>
-                        </form>
+                        </div>
                     </CardContent>
                 </Card>
             ) : (
@@ -303,7 +450,7 @@ export function SignUpForm({
                                     <Label htmlFor="signup-method">Signed up with</Label>
                                     <Input
                                         id="signup-method"
-                                        value={`Google ${userEmail || "example@gmail.com"}`}
+                                        value={`${signupMethod === 'google' ? 'Google' : 'Email'} ${userEmail || "example@example.com"}`}
                                         disabled
                                         className="bg-muted"
                                     />
@@ -322,6 +469,7 @@ export function SignUpForm({
                                             maxLength={20}
                                             pattern="[a-zA-Z0-9_]+"
                                             className={cn("pr-10", getUsernameInputClassName())}
+                                            disabled={isLoading}
                                         />
                                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                                             {getUsernameStatusIcon()}

@@ -1,6 +1,7 @@
 export interface loginProps {
-    username: string;
     password: string;
+    email: string; // Optional, if you want to support email login
+    provider?: string; // Optional, if you want to support different providers
 }
 
 export interface LoginResponse {

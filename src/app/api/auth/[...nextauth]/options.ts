@@ -37,23 +37,29 @@ interface GoogleProfile extends Profile {
     picture: string;
 }
 
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             id: "credentials",
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "abc@gmail.com" },
-                password: { label: "Password", type: "password" }
+                email: { label: "email", type: "email", placeholder: "abc@gmail.com" },
+                password: { label: "password", type: "password" },
+                provider: { label: "Provider", type: "hidden", value: "CREDENTIALS" } // Hidden field for provider
             },
             async authorize(credentials, req) {
                 try {
-                    console.log("Inside Authorize Function with credentials:", credentials);
-                    console.log("Request Headers:", req.body);
-                    if (!credentials?.username || !credentials?.password) {
+                    // console.log("Inside Authorize Function with credentials:", credentials);
+                    // console.log("Request Headers:", req.body);
+                    if (!credentials?.email || !credentials?.password) {
+                        console.log("Missing credentials: email or password is empty");
+                        toast.error("Email and password are required");
                         return null;
                     }
 
+                    // Set provider to CREDENTIALS
+                    credentials.provider = "CREDENTIALS";
                     const res = await loginUserWithEmail(credentials as loginProps) as LoginResponse | null;
 
                     if (res) {
@@ -131,7 +137,7 @@ export const authOptions: NextAuthOptions = {
                 token.username = user.username;
                 token.picture = user.image;
                 token.customToken = user.token; // or sub
-              }
+            }
 
             // Handle credentials login
             if (account?.provider === "credentials" && user) {
