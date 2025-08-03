@@ -9,8 +9,16 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
       {
-        protocol:'https',
+        protocol: 'https',
         hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatar.iran.liara.run',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
       }
     ],
   },

@@ -3,12 +3,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import miscSlice from '@/store/slices/miscSlice';
 import NavSlice from "@/store/slices/navigationSlice"
 import UserSlice from "@/store/slices/userSlice"
+import linksSlice from "@/store/slices/linkSlice"
 
 export const store = configureStore({
     reducer: {
         misc: miscSlice,
         nav: NavSlice,
-        user: UserSlice
+        user: UserSlice,
+        link: linksSlice
     },
 });
 

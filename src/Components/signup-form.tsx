@@ -260,7 +260,7 @@ export function SignUpForm({
                 }
             }
 
-        } catch (error: isAxiosError | any) {
+        } catch (error: any) {
             console.error("Error creating account:", error);
 
             if (isAxiosError(error) && error.response) {
