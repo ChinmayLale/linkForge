@@ -64,7 +64,7 @@ const userSlice = createSlice({
             state.error = undefined;
         });
         builder.addCase(userThunks.getUserProfileThunk.fulfilled, (state, action: PayloadAction<userState>) => {
-            const { username, name, bio, avatarUrl, tags, email, themeId, totalClicks, linksCount, ctr } = action.payload;
+            const { username, name, bio, avatarUrl, tags, email, themeId, totalClicks, totalLinks: linksCount, ctr } = action.payload;
             state.username = username;
             state.name = name || "";
             state.bio = bio || "";
