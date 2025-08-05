@@ -7,6 +7,7 @@ const getUserProfileThunk = createAsyncThunk(
     async (username: string, { rejectWithValue }) => {
         try {
             const response = await userProfileService.getUserProfileApi(username);
+            // console.log({ response })
             if (!response) {
                 throw new Error('Failed to fetch user profile for this username');
             }

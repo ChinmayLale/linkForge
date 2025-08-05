@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from '@/store/store'
 import { userThunks } from '@/store/thunks/user'
 import { Skeleton } from '../ui/skeleton'
 
-function DashBoardUserProfile({ user = "Chinmay Lale" }: { user?: string }) {
+function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
 
     const { username, name, bio, avatarUrl, loading, error, totalClicks = 0, totalLinks = 0, ctr = 0.0 } = useSelector(
         (state: RootState) => state.user
@@ -20,8 +20,9 @@ function DashBoardUserProfile({ user = "Chinmay Lale" }: { user?: string }) {
 
     useEffect(() => {
         if (!username && !name) {
-            dispatch(userThunks.getUserProfileThunk(user))
+
         }
+        dispatch(userThunks.getUserProfileThunk(user))
     }, [username]);
 
     useEffect(() => {
@@ -70,6 +71,7 @@ function DashBoardUserProfile({ user = "Chinmay Lale" }: { user?: string }) {
                     width={100}
                     height={100}
                     className='w-[80%] rounded-[50%] object-cover'
+                    unoptimized
                 />
             </div>
             <div className='w-full flex flex-col items-start'>

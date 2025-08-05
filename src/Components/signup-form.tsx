@@ -53,6 +53,22 @@ export function SignUpForm({
             try {
                 const session = await getSession();
 
+                console.log({ session })
+                if (session?.needsSignup as boolean === false && session) {
+                    toast.success("You are already signed up! Redirecting to your dashboard.");
+                    const savedUsername = session.username || session.user?.name || ""
+                    if (savedUsername) {
+                        router.push(`/dashboard/${savedUsername}`);
+                        return;
+                    } else {
+                        toast.error("No username found. Please sign up again.");
+                        setProgress(0);
+                        setSignupMethod(null);
+                        return;
+                    }
+
+                }
+
                 // Check if user completed signup before
                 const hasCompletedSignup = sessionStorage.getItem('signupCompleted');
 
@@ -174,6 +190,7 @@ export function SignUpForm({
             // If no redirect but successful
             if (result?.ok) {
                 const session = await getSession();
+
                 if (session?.user?.email) {
                     setUserEmail(session.user.email);
                     setSignupMethod('google');
@@ -245,18 +262,24 @@ export function SignUpForm({
 
             } else if (signupMethod === 'email') {
                 // Handle email signup completion
-                const response = await signupWithEmail({
-                    email: userEmail,
-                    username,
-                    password: userPassword
-                });
+                const response = await signIn(
+                    'credentials',
+                    {
+                        redirect: false,
+                        email: userEmail,
+                        password: userPassword,
+                        username: username,
+                    }
+                );
 
-                if (response) {
-                    sessionStorage.setItem('signupCompleted', 'true');
-                    sessionStorage.setItem('userUsername', username);
+                if (response?.ok) {
                     toast.success("Account created successfully!");
                     dispatch(setUsernameSlice(username)); // Update Redux store with username
-                    router.push(`/dashboard/${username}`);
+                    const session = await getSession();
+                    if (session?.user?.email && session.username) {
+                        router.push(`/dashboard/${username}`);
+                    }
+
                 }
             }
 

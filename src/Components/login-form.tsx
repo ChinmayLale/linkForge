@@ -7,12 +7,13 @@ import { Label } from "@/Components/ui/label"
 import Link from "next/link"
 import Image from "next/image"
 import loginBg from '../assets/LoginBg.jpg'
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import { loginProps } from "@/interfaces/auth/loginSignup";
 import { useRouter } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
-// import { loginWithGoogle } from "@/Services/auth/Login";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/Components/ui/alert";
 
 export function LoginForm({ className }: { className?: string }) {
   const router = useRouter();
@@ -22,6 +23,41 @@ export function LoginForm({ className }: { className?: string }) {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
+  const [showSignupPrompt, setShowSignupPrompt] = useState(false);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState<any>(null);
+
+  // Check for existing session and handle Google auth errors
+  useEffect(() => {
+    const checkSession = async () => {
+      if (hasCheckedLogin) return;
+
+      try {
+        const session = await getSession();
+        console.log("Current session:", session);
+
+        if (session) {
+          // Check if there's an error in the session (new Google user)
+          if (session.error === "GOOGLE_LOGIN_ERROR" && session.needsSignup) {
+            console.log("New Google user needs to signup");
+            setPendingGoogleUser(session.pendingGoogleUser);
+            // setShowSignupPrompt(true);
+            toast.error("Account not found. Please sign up first.");
+          }
+          // Check if user successfully logged in
+          else if (!session.needsSignup && session.username) {
+            console.log("User already logged in, redirecting...");
+            router.push(`/dashboard/${session.username}`);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking session:", error);
+      } finally {
+        setHasCheckedLogin(true);
+      }
+    };
+
+    checkSession();
+  }, [hasCheckedLogin, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,7 +70,8 @@ export function LoginForm({ className }: { className?: string }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
+    setShowSignupPrompt(false);
+
     try {
       const res = await signIn('credentials', {
         email: loginUser.email,
@@ -49,27 +86,121 @@ export function LoginForm({ className }: { className?: string }) {
           toast.error("Login failed. Please try again.");
           return;
         }
-        const username = currentSession.username;
+
+        const username = currentSession.username || "";
         toast.success("Login successful");
-        router.push(`/dashboard/${username}`);
+        const token = currentSession.customToken || "";
+        console.log("Login successful", { username, token });
+
+        if (username.trim() !== "") {
+          router.push(`/dashboard/${username}`);
+        }
       } else {
         console.log("Login failed", res);
-        toast.error("Login failed. Please check your credentials.");
+        if (res?.error === "CredentialsSignin") {
+          toast.error("Invalid email or password. Please check your credentials.");
+        } else {
+          toast.error("Login failed. Please try again.");
+        }
       }
     } catch (error) {
+      console.error("Login error:", error);
       toast.error("An error occurred during login");
     } finally {
       setIsLoading(false);
     }
   }
 
- 
   const handleGoogleLogin = async () => {
-    console.log("Google login button clicked");
+    if (isLoading) return;
+
+    setIsLoading(true);
+    setShowSignupPrompt(false);
+
+    try {
+      console.log("Starting Google login...");
+
+      const result = await signIn('google', {
+        redirect: false,
+        callbackUrl: window.location.href
+      });
+
+      console.log("Google signIn result:", result);
+
+      if (!result?.ok && result?.error) {
+        console.error("Google OAuth error:", result.error);
+        toast.error(`Google login failed: ${result.error}`);
+        return;
+      }
+
+      if (result?.url) {
+        // Redirect to Google OAuth
+        window.location.href = result.url;
+        return;
+      }
+
+      // Check session after Google auth attempt
+      setTimeout(async () => {
+        const session = await getSession();
+        console.log("Session after Google auth:", session);
+
+        if (session?.error === "USER_NOT_FOUND") {
+          setPendingGoogleUser(session.pendingGoogleUser);
+          setShowSignupPrompt(true);
+          toast.error("Account not found. Please sign up first.");
+        } else if (session?.username) {
+          toast.success("Login successful!");
+          router.push(`/dashboard/${session.username}`);
+        }
+      }, 1000);
+
+    } catch (error) {
+      console.error("Error during Google login:", error);
+      toast.error("An error occurred during Google login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignupRedirect = () => {
+    // Store pending Google user data for signup page
+    if (pendingGoogleUser) {
+      sessionStorage.setItem('pendingGoogleSignup', JSON.stringify(pendingGoogleUser));
+    }
+    router.push('/signup');
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} >
+      {/* Show signup prompt if Google user doesn't exist */}
+      {showSignupPrompt && (
+        <Alert className="border-orange-200 bg-orange-50">
+          <AlertCircle className="h-4 w-4 text-orange-600" />
+          <AlertDescription className="text-orange-800">
+            It looks like you don't have an account yet.
+            {pendingGoogleUser?.email && (
+              <span className="font-medium"> ({pendingGoogleUser.email})</span>
+            )}
+            <div className="mt-2 flex gap-2">
+              <Button
+                size="sm"
+                onClick={handleSignupRedirect}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
+                Sign up instead
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowSignupPrompt(false)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
@@ -132,10 +263,10 @@ export function LoginForm({ className }: { className?: string }) {
                   </svg>
                   <span className="sr-only">Login with Apple</span>
                 </Button>
-                <Button 
-                  variant="outline" 
-                  type="button" 
-                  className="w-full" 
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="w-full"
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
                 >
@@ -169,7 +300,7 @@ export function LoginForm({ className }: { className?: string }) {
             <Image
               src={loginBg}
               alt="Image"
-              className="absolute  inset-0 h-full w-full object-cover bg-left dark:brightness-[0.2] dark:grayscale "
+              className="absolute inset-0 h-full w-full object-cover bg-left dark:brightness-[0.2] dark:grayscale"
             />
           </div>
         </CardContent>

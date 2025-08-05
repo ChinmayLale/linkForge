@@ -1,7 +1,6 @@
 import { BASE_URL } from "@/Constants/Endpoints";
 import { loginProps } from "@/interfaces/auth/loginSignup";
 import axios from "axios";
-import { string } from "zod";
 
 
 
@@ -10,7 +9,6 @@ export const loginUserWithEmail = async (credentials: loginProps) => {
     try {
         credentials.provider = "CREDENTIALS"; // ✅ correct spelling
 
-        console.log({ credentials });
         const response = await axios.post(
             `${BASE_URL}/auth/login`, // Ensure this URL is correct
             credentials,
@@ -18,11 +16,14 @@ export const loginUserWithEmail = async (credentials: loginProps) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                withCredentials: true,
             }
         );
 
-        console.log("✅ Login successful:", response.data);
-        return response.data;
+        console.log("✅ Login successful:");
+        // console.log({ response });
+        const { data } = response
+        return data.data;
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.log("Error While Logging In:", error.message);
@@ -36,9 +37,9 @@ export const loginUserWithEmail = async (credentials: loginProps) => {
 
 export const loginWithGoogle = async ({ email, name, pfp }: { email: string, name: string, pfp: string }) => {
     try {
-        console.log("Attempting to login with Google user:", { email, name, pfp });
+        // console.log("Attempting to login with Google user:", { email, name, pfp });
         const response = await axios.post(
-            `${BASE_URL}/login`,
+            `${BASE_URL}/auth/login`,
             { email, name, pfp, provider: "GOOGLE" }, // Ensure the provider is set correctly
             {
                 headers: {
@@ -47,8 +48,9 @@ export const loginWithGoogle = async ({ email, name, pfp }: { email: string, nam
             }
         );
 
-        console.log("✅ Google login successful:", response.data);
-        return response.data;
+        console.log("✅ Google login successful:");
+        const { data } = response.data;
+        return data;
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.log("Error While Logging In with Google:", error.message);
@@ -57,6 +59,8 @@ export const loginWithGoogle = async ({ email, name, pfp }: { email: string, nam
             console.log("Unexpected error:", error);
             throw new Error("An unknown error occurred");
         }
+
+
     }
 }
 

@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 
 
 type Props = {
-    params: { username: string };
+    params: Promise<{ username: string }>;
 };
 
 const Tab = ({ username }: { username: string }) => {

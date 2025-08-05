@@ -37,7 +37,6 @@ const signupWithEmail = async ({ email, username, password }: { email: string, u
         const response = await axios.post(`${BASE_URL}/auth/signup`, {
             email,
             username,
-            name,
             password,
             provider: 'CREDENTIALS'
         }, {
@@ -46,7 +45,11 @@ const signupWithEmail = async ({ email, username, password }: { email: string, u
             }
         })
 
-        return response;
+        const { data } = response.data;
+        console.log("-------------------------------------------------------------------------")
+        console.log({ data })
+        console.log("-------------------------------------------------------------------------")
+        return data;
     } catch (error) {
         console.error("Error during email signup:", error);
         throw error;

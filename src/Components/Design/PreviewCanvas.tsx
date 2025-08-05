@@ -200,7 +200,7 @@ export function PreviewCanvas({
                                         </div>
                                     </div>
                                     <div className="space-y-3 sm:space-y-4">
-                                        {links.filter((link) => link.visible).map((link) => renderComponent(link))}
+                                        {links.filter((link) => link.active).map((link) => renderComponent(link))}
                                     </div>
                                     <div className="text-center mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-white/20"
                                         onClick={() => { setSelectedElement() }}

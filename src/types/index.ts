@@ -43,6 +43,7 @@ export interface LinkItem {
     metadata?: LinkMetadata;
     thumbnail?: string; // Optional thumbnail for links
     clicks?: number; // Optional clicks count for analytics
+    duration?: string; // Optional duration for music or video links
 }
 
 export interface ProfileData {

@@ -33,6 +33,7 @@ import { Separator } from '@/Components/ui/separator'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTabName, TabName } from '@/store/slices/navigationSlice'
 import { RootState } from '@/store/store'
+import { signOut } from 'next-auth/react'
 
 // Mock user data
 const mockUser = {
@@ -59,6 +60,17 @@ const DashboardNavigation = () => {
         { id: 'analytics', label: 'Analytics', icon: BarChart3, badge: null },
         { id: 'settings', label: 'Settings', icon: Settings, badge: null },
     ]
+
+    const handleLogOut = async () => {
+        try {
+            // Simulate logout logic
+            signOut({ callbackUrl: '/' });
+            console.log("User logged out successfully")
+            setActiveTab('dashboard') // Reset active tab on logout
+        } catch (error) {
+            console.error("Logout failed:", error)
+        }
+    }
 
     interface NavItemProps {
         item: {
@@ -148,7 +160,7 @@ const DashboardNavigation = () => {
                     <span>Help & Support</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">
+                <DropdownMenuItem className="text-red-600" onClick={handleLogOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
                 </DropdownMenuItem>

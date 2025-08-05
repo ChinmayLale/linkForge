@@ -64,7 +64,7 @@ const userSlice = createSlice({
             state.error = undefined;
         });
         builder.addCase(userThunks.getUserProfileThunk.fulfilled, (state, action: PayloadAction<userState>) => {
-            const { username, name, bio, avatarUrl, tags, email, themeId, totalClicks, totalLinks, ctr } = action.payload;
+            const { username, name, bio, avatarUrl, tags, email, themeId, totalClicks, linksCount, ctr } = action.payload;
             state.username = username;
             state.name = name || "";
             state.bio = bio || "";
@@ -75,7 +75,7 @@ const userSlice = createSlice({
             state.error = undefined; // Clear any previous error
             state.loading = false;
             state.totalClicks = totalClicks || 0;
-            state.totalLinks = totalLinks || 0;
+            state.totalLinks = linksCount || 0;
             state.ctr = ctr || 0; // Set click-through rate if provided
         });
         builder.addCase(userThunks.getUserProfileThunk.rejected, (state, action) => {
