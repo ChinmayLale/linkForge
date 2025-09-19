@@ -1,54 +1,62 @@
-"use client"
-import { useState, useEffect, useMemo } from "react"
-import { ScrollArea } from "@/Components/ui/scroll-area"
-import "../../styles/animation.css" // Add this import
-import { Header } from "./Header"
-import { MobileSidebar } from "./MobileSidebar"
-import { SettingsPanel } from "./SettingsPanel"
-import { PreviewCanvas } from "./PreviewCanvas"
-import { LinkComponents } from "./LinkComponents"
-import type { LinkItem, ProfileData, ThemeSettings, ScreenSize, PreviewMode } from "../../types"
-import { templateStyles } from "@/Constants"
+"use client";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { ScrollArea } from "@/Components/ui/scroll-area";
+import "../../styles/animation.css"; // Add this import
+import { Header } from "./Header";
+import { MobileSidebar } from "./MobileSidebar";
+import { SettingsPanel } from "./SettingsPanel";
+import { PreviewCanvas } from "./PreviewCanvas";
+import { LinkComponents } from "./LinkComponents";
+import type {
+  LinkItem,
+  ProfileData,
+  ThemeSettings,
+  ScreenSize,
+  PreviewMode,
+} from "../../types";
+import { templateStyles } from "@/Constants";
 
 export default function LinkBuilder4() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [darkMode, setDarkMode] = useState(false)
-  const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile")
-  const [selectedElement, setSelectedElement] = useState<string | null>(null)
-  const [templatesOpen, setTemplatesOpen] = useState(true)
-  const [componentsOpen, setComponentsOpen] = useState(true)
-  const [playingMusic, setPlayingMusic] = useState<string | null>(null)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [settingsPanelOpen, setSettingsPanelOpen] = useState(false)
-  const [screenSize, setScreenSize] = useState<ScreenSize>("desktop")
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
+  const [selectedElement, setSelectedElement] = useState<string | null>(null);
+  const [templatesOpen, setTemplatesOpen] = useState(true);
+  const [componentsOpen, setComponentsOpen] = useState(true);
+  const [playingMusic, setPlayingMusic] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
+  const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
 
   // Responsive hook
   useEffect(() => {
     const handleResize = () => {
-      const width = window.innerWidth
+      const width = window.innerWidth;
       if (width < 768) {
-        setScreenSize("mobile")
-        setSidebarCollapsed(true)
+        setScreenSize("mobile");
+        setSidebarCollapsed(true);
       } else if (width < 1024) {
-        setScreenSize("tablet")
-        setSidebarCollapsed(false)
+        setScreenSize("tablet");
+        setSidebarCollapsed(false);
       } else {
-        setScreenSize("desktop")
-        setSidebarCollapsed(false)
+        setScreenSize("desktop");
+        setSidebarCollapsed(false);
       }
-    }
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [profile, setProfile] = useState<ProfileData>({
     name: "Alex Johnson",
     bio: "Digital Creator & Music Producer",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
     username: "alexjohnson",
-    coverImage: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop",
-  })
+    coverImage:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop",
+  });
 
   const [links, setLinks] = useState<LinkItem[]>([
     // {
@@ -74,7 +82,8 @@ export default function LinkBuilder4() {
       visible: true,
       style: "default",
       metadata: {
-        thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
+        thumbnail:
+          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
         duration: "5:23",
         description: "Creating my latest music video",
       },
@@ -120,40 +129,26 @@ export default function LinkBuilder4() {
         ],
       },
     },
-  ])
+  ]);
 
-  const [theme, setTheme] = useState<ThemeSettings>({
-    backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    backgroundType: "gradient",
-    primaryColor: "#3b82f6",
-    textColor: "#ffffff",
-    fontFamily: "Inter",
-    borderRadius: 16,
-    cardStyle: "glass",
-    layout: "stack",
-
-    // Additional fields from ThemeSettings
-    cardBackground: "rgba(255, 255, 255, 0.1)",
-    cardBorderColor: "rgba(255, 255, 255, 0.2)",
-    cardShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-    cardPadding: "1rem",
-    cardBorder: "1px solid rgba(255, 255, 255, 0.2)",
-    backdropBlur: "blur(10px)",
-    shadow: "0 10px 15px rgba(0, 0, 0, 0.1)",
-    secondaryText: "#d1d5db" // Tailwind slate-300
-  });
+  const [theme, setTheme] = useState<ThemeSettings>(templateStyles.dark);
 
   const addComponent = (type: string) => {
     const componentDefaults = {
       link: { title: "New Link", url: "https://example.com" },
-      social: { title: "Social Link", url: "https://social.com", icon: "globe" },
+      social: {
+        title: "Social Link",
+        url: "https://social.com",
+        icon: "globe",
+      },
       music: {
         title: "New Track",
         url: "https://spotify.com",
         metadata: {
           artist: "Artist",
           duration: "3:00",
-          thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
+          thumbnail:
+            "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
         },
       },
       video: {
@@ -161,7 +156,8 @@ export default function LinkBuilder4() {
         url: "https://youtube.com",
         metadata: {
           duration: "2:30",
-          thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
+          thumbnail:
+            "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
         },
       },
       image: {
@@ -177,10 +173,16 @@ export default function LinkBuilder4() {
       gallery: {
         title: "Gallery",
         url: "#gallery",
-        metadata: { images: ["https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop"] },
+        metadata: {
+          images: [
+            "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop",
+          ],
+        },
       },
-    }
-    const defaults = componentDefaults[type as keyof typeof componentDefaults] || componentDefaults.link
+    };
+    const defaults =
+      componentDefaults[type as keyof typeof componentDefaults] ||
+      componentDefaults.link;
     const newItem: LinkItem = {
       id: Date.now().toString(),
       type: type as LinkItem["type"],
@@ -188,29 +190,38 @@ export default function LinkBuilder4() {
       visible: true,
       style: "default",
       ...defaults,
-    }
-    setLinks([...links, newItem])
-    setMobileMenuOpen(false)
-  }
+    };
+    setLinks([...links, newItem]);
+    setMobileMenuOpen(false);
+  };
 
-  const updateLink = (id: string, updates: Partial<LinkItem>) => {
-    setLinks(links.map((link) => (link.id === id ? { ...link, ...updates } : link)))
-  }
+  const updateLink = useCallback(
+    (id: string, updates: Partial<LinkItem>) => {
+      setLinks(
+        links.map((link) => (link.id === id ? { ...link, ...updates } : link))
+      );
+    },
+    [links]
+  );
 
-  const deleteLink = (id: string) => {
-    setLinks(links.filter((link) => link.id !== id))
-    if (selectedElement === id) {
-      setSelectedElement(null)
-    }
-  }
+  const deleteLink = useCallback(
+    (id: string) => {
+      setLinks(links.filter((link) => link.id !== id));
+      if (selectedElement === id) {
+        setSelectedElement(null);
+      }
+    },
+    [links, selectedElement]
+  );
 
   const applyTemplate = (templateId: string) => {
-    const template = templateStyles[templateId as keyof typeof templateStyles]
+    const template = templateStyles[templateId as keyof typeof templateStyles];
     if (template) {
-      setTheme({ ...theme, ...template })
+      // setTheme({ ...theme, ...template });
+      setTheme(template);
     }
-    setMobileMenuOpen(false)
-  }
+    setMobileMenuOpen(false);
+  };
 
   const renderComponent = (link: LinkItem) => {
     return (
@@ -223,8 +234,8 @@ export default function LinkBuilder4() {
         playingMusic={playingMusic}
         setPlayingMusic={setPlayingMusic}
       />
-    )
-  }
+    );
+  };
 
   const MobileSidebarComponent = () => (
     <MobileSidebar
@@ -235,22 +246,23 @@ export default function LinkBuilder4() {
       applyTemplate={applyTemplate}
       addComponent={addComponent}
     />
-  )
+  );
 
-  const SettingsPanelComponent = useMemo(() => (
-    <SettingsPanel
-      selectedElement={selectedElement}
-      links={links}
-      updateLink={updateLink}
-      deleteLink={deleteLink}
-      profile={profile}
-      setProfile={setProfile}
-      theme={theme}
-      setTheme={setTheme}
-    />
-  ), [selectedElement, links, profile, theme, deleteLink, updateLink])
-
-
+  const SettingsPanelComponent = useMemo(
+    () => (
+      <SettingsPanel
+        selectedElement={selectedElement}
+        links={links}
+        updateLink={updateLink}
+        deleteLink={deleteLink}
+        profile={profile}
+        setProfile={setProfile}
+        theme={theme}
+        setTheme={setTheme}
+      />
+    ),
+    [selectedElement, links, profile, theme, deleteLink, updateLink]
+  );
 
   return (
     <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
@@ -272,7 +284,9 @@ export default function LinkBuilder4() {
         <div className="flex h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)]">
           {screenSize !== "mobile" && (
             <div
-              className={`border-r bg-muted/50 transition-all duration-300 ${sidebarCollapsed ? "w-0" : "w-64 lg:w-80"} overflow-hidden`}
+              className={`border-r bg-muted/50 transition-all duration-300 ${
+                sidebarCollapsed ? "w-0" : "w-64 lg:w-80"
+              } overflow-hidden`}
             >
               <ScrollArea className="h-full">
                 <MobileSidebarComponent />
@@ -308,5 +322,5 @@ export default function LinkBuilder4() {
         </div>
       </div>
     </div>
-  )
+  );
 }

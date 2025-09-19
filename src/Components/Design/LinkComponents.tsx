@@ -395,7 +395,7 @@ export function LinkComponents({
         >
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex-shrink-0">
-              <img
+              <Image
                 src={
                   link.metadata?.thumbnail ||
                   "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop"
