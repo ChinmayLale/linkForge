@@ -277,6 +277,8 @@ export function SignUpForm({
                     dispatch(setUsernameSlice(username)); // Update Redux store with username
                     const session = await getSession();
                     if (session?.user?.email && session.username) {
+                        const token = session.customToken || "";
+                        localStorage.setItem('token', token);
                         router.push(`/dashboard/${username}`);
                     }
 

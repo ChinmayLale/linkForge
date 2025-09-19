@@ -17,6 +17,9 @@ type Props = {
 };
 
 const Tab = ({ username }: { username: string }) => {
+    if (typeof window !== "undefined") {
+        console.log(localStorage.getItem("token"));
+    }
     switch (useSelector((state: RootState) => state.nav.tabName)) {
         case "Dashboard":
             return (
@@ -56,6 +59,7 @@ const Tab = ({ username }: { username: string }) => {
 
 async function page({ params }: Props) {
     const { username } = await params;
+
     if (!username) {
         return <div className='w-full h-full flex items-center justify-center'>Please Login to view your dashboard</div>
     }

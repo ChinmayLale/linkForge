@@ -17,11 +17,9 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
         (state: RootState) => state.user
     );
     const dispatch = useDispatch<AppDispatch>();
-
+    // const session = useSession();
     useEffect(() => {
-        if (!username && !name) {
-
-        }
+        console.log("Fetching User Profile for:", user);
         dispatch(userThunks.getUserProfileThunk(user))
     }, [username]);
 

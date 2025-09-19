@@ -6,8 +6,10 @@ const getUserProfileThunk = createAsyncThunk(
     'getUserProfile',
     async (username: string, { rejectWithValue }) => {
         try {
-            const response = await userProfileService.getUserProfileApi(username);
-            // console.log({ response })
+            const token = sessionStorage.getItem('token') || localStorage.getItem('token') || '';
+            // console.log("Token retrieved from localStorage:", token);
+            const response = await userProfileService.getUserProfileApi(username, token);
+            console.log({ response })
             if (!response) {
                 throw new Error('Failed to fetch user profile for this username');
             }

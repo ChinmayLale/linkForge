@@ -116,7 +116,7 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Artist</Label>
                                                     <Input
-                                                        value={element.metadata?.artist || ""}
+                                                        value={"artist name here"}
                                                         onChange={(e) =>
                                                             updateLink(element.id, {
                                                                 metadata: { ...element.metadata, artist: e.target.value },
@@ -128,7 +128,7 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Duration</Label>
                                                     <Input
-                                                        value={element.metadata?.duration || ""}
+                                                        value={"duration here"}
                                                         onChange={(e) =>
                                                             updateLink(element.id, {
                                                                 metadata: { ...element.metadata, duration: e.target.value },
@@ -145,7 +145,7 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Date</Label>
                                                     <Input
-                                                        value={element.metadata?.date || ""}
+                                                        value={"date here"}
                                                         onChange={(e) =>
                                                             updateLink(element.id, {
                                                                 metadata: { ...element.metadata, date: e.target.value },
@@ -157,7 +157,7 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Location</Label>
                                                     <Input
-                                                        value={element.metadata?.location || ""}
+                                                        value={"location here"}
                                                         onChange={(e) =>
                                                             updateLink(element.id, {
                                                                 metadata: { ...element.metadata, location: e.target.value },
@@ -193,12 +193,12 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Gallery Images</Label>
                                                     <div className="space-y-2 mt-1">
-                                                        {element.metadata?.images?.map((image, index) => (
+                                                        {element.images?.map((image, index) => (
                                                             <div key={index} className="flex gap-2">
                                                                 <Input
                                                                     value={image}
                                                                     onChange={(e) => {
-                                                                        const newImages = [...(element.metadata?.images || [])]
+                                                                        const newImages = [...(element.images || [])]
                                                                         newImages[index] = e.target.value
                                                                         updateLink(element.id, {
                                                                             metadata: { ...element.metadata, images: newImages },
@@ -211,7 +211,7 @@ export function SettingsPanel({
                                                                     variant="outline"
                                                                     size="sm"
                                                                     onClick={() => {
-                                                                        const newImages = element.metadata?.images?.filter((_, i) => i !== index) || []
+                                                                        const newImages = element.images?.filter((_, i) => i !== index) || []
                                                                         updateLink(element.id, {
                                                                             metadata: { ...element.metadata, images: newImages },
                                                                         })
@@ -226,7 +226,7 @@ export function SettingsPanel({
                                                             size="sm"
                                                             onClick={() => {
                                                                 const newImages = [
-                                                                    ...(element.metadata?.images || []),
+                                                                    ...(element.images || []),
                                                                     "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop",
                                                                 ]
                                                                 updateLink(element.id, {
@@ -243,7 +243,7 @@ export function SettingsPanel({
                                                 <div>
                                                     <Label className="text-xs">Gallery Description</Label>
                                                     <Textarea
-                                                        value={element.metadata?.description || ""}
+                                                        value={"desc here"}
                                                         onChange={(e) =>
                                                             updateLink(element.id, {
                                                                 metadata: { ...element.metadata, description: e.target.value },
@@ -259,8 +259,8 @@ export function SettingsPanel({
                                         <div className="flex items-center justify-between">
                                             <Label className="text-xs">Visible</Label>
                                             <Switch
-                                                checked={element.visible}
-                                                onCheckedChange={(checked) => updateLink(element.id, { visible: checked })}
+                                                checked={element.active}
+                                                onCheckedChange={(checked) => updateLink(element.id, { active: checked })}
                                             />
                                         </div>
                                         <Button variant="destructive" size="sm" onClick={() => deleteLink(element.id)} className="w-full">
@@ -334,7 +334,7 @@ export function SettingsPanel({
                                     <Label className="text-xs">Cover Image URL</Label>
                                     <Input
                                         value={profile.coverImage || ""}
-                                        onChange={(e) =>updateProfile({ coverImage: e.target.value })}
+                                        onChange={(e) => updateProfile({ coverImage: e.target.value })}
                                         className="mt-1"
                                         placeholder="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop"
                                     />

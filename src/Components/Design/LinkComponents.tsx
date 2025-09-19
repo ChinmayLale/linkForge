@@ -73,7 +73,7 @@
 //             <div className="relative flex-shrink-0">
 //               <img
 //                 src={
-//                   link.metadata?.thumbnail ||
+//                   link.thumbnail ||
 //                   "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop"
 //                 }
 //                 alt="Track"
@@ -130,7 +130,7 @@
 //           <div className="relative">
 //             <img
 //               src={
-//                 link.metadata?.thumbnail ||
+//                 link.thumbnail ||
 //                 "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
 //               }
 //               alt="Video thumbnail"
@@ -397,7 +397,7 @@ export function LinkComponents({
             <div className="relative flex-shrink-0">
               <img
                 src={
-                  link.metadata?.thumbnail ||
+                  link.thumbnail ||
                   "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop"
                 }
                 alt="Track"
@@ -424,7 +424,7 @@ export function LinkComponents({
                 {link.title}
               </h3>
               <p className="text-xs" style={textStyles.secondary}>
-                {link.metadata?.artist}
+                Link-artist-here
               </p>
               <div className="flex items-center gap-2 mt-1">
                 <Progress
@@ -433,7 +433,7 @@ export function LinkComponents({
                   style={{ accentColor: theme.primaryColor }}
                 />
                 <span className="text-xs" style={textStyles.secondary}>
-                  {link.metadata?.duration}
+                  link metadataduration here
                 </span>
               </div>
             </div>
@@ -474,7 +474,7 @@ export function LinkComponents({
           <div className="relative">
             <img
               src={
-                link.metadata?.thumbnail ||
+                link.thumbnail ||
                 "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
               }
               alt="Video thumbnail"
@@ -500,7 +500,7 @@ export function LinkComponents({
                 color: theme.textColor,
               }}
             >
-              {link.metadata?.duration}
+              duration here
             </Badge>
           </div>
           <div className="p-3 sm:p-4">
@@ -508,7 +508,7 @@ export function LinkComponents({
               {link.title}
             </h3>
             <p className="text-xs line-clamp-2" style={textStyles.secondary}>
-              {link.metadata?.description}
+              duration
             </p>
           </div>
         </div>
@@ -533,7 +533,7 @@ export function LinkComponents({
             >
               <Calendar
                 className="w-4 h-4 sm:w-5 sm:h-5"
-                style={{ color: textStyles.secondary.color , opacity: 0.8}}
+                style={{ color: textStyles.secondary.color, opacity: 0.8 }}
               />
             </div>
             <div className="flex-1 min-w-0">
@@ -542,14 +542,14 @@ export function LinkComponents({
               </h3>
               <div className="flex items-center gap-2 text-xs mb-1" style={textStyles.secondary}>
                 <Calendar className="w-3 h-3" />
-                <span>{link.metadata?.date}</span>
+                <span>data here</span>
               </div>
               <div className="flex items-center gap-2 text-xs mb-2" style={textStyles.secondary}>
                 <MapPin className="w-3 h-3" />
-                <span className="truncate">{link.metadata?.location}</span>
+                <span className="truncate">location here</span>
               </div>
               <p className="text-xs line-clamp-2" style={textStyles.secondary}>
-                {link.metadata?.description}
+                link desc her
               </p>
             </div>
             <Button
@@ -634,12 +634,12 @@ export function LinkComponents({
                   color: theme.secondaryText,
                 }}
               >
-                {link.metadata?.images?.length || 0} photos
+                link photos here
               </Badge>
             </div>
 
             <div className="grid grid-cols-4 gap-1 rounded overflow-hidden">
-              {link.metadata?.images?.slice(0, 4).map((img: string, idx: number) => (
+              {link.images?.slice(0, 4).map((img: string, idx: number) => (
                 <div key={idx} className="aspect-square overflow-hidden rounded-sm">
                   <Image
                     src={

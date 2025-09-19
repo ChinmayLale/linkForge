@@ -37,6 +37,9 @@ export function LoginForm({ className }: { className?: string }) {
 
         if (session) {
           // Check if there's an error in the session (new Google user)
+          if (typeof window !== "undefined" && session.customToken) {
+            localStorage.setItem("token", session.customToken);
+          }
           if (session.error === "GOOGLE_LOGIN_ERROR" && session.needsSignup) {
             console.log("New Google user needs to signup");
             setPendingGoogleUser(session.pendingGoogleUser);

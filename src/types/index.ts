@@ -44,6 +44,7 @@ export interface LinkItem {
     thumbnail?: string; // Optional thumbnail for links
     clicks?: number; // Optional clicks count for analytics
     duration?: string; // Optional duration for music or video links
+    images?: string[]; // Optional images for gallery links
 }
 
 export interface ProfileData {
@@ -64,7 +65,7 @@ export interface ThemeSettings {
     cardStyle: string,
     layout: "stack" | "grid" | "masonry"
     cardBackground: string
-    cardBorderColor: string
+    cardBackground: string
     cardShadow: string
     cardPadding: string
     cardBorder: string
