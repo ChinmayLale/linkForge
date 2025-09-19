@@ -55,24 +55,44 @@ export interface ProfileData {
     coverImage?: string
 }
 
+// export interface ThemeSettings {
+//     backgroundColor: string
+//     backgroundType: "solid" | "gradient" | "image" | "glass"
+//     primaryColor: string
+//     textColor: string
+//     fontFamily: string
+//     borderRadius: number
+//     cardStyle: string,
+//     layout: "stack" | "grid" | "masonry"
+//     cardBackground: string
+//     cardBackground: string
+//     cardShadow: string
+//     cardPadding: string
+//     cardBorder: string
+//     backdropBlur: string
+//     shadow: string
+//     secondaryText: string
+// }
+
 export interface ThemeSettings {
-    backgroundColor: string
-    backgroundType: "solid" | "gradient" | "image" | "glass"
-    primaryColor: string
-    textColor: string
-    fontFamily: string
-    borderRadius: number
-    cardStyle: string,
-    layout: "stack" | "grid" | "masonry"
-    cardBackground: string
-    cardBackground: string
-    cardShadow: string
-    cardPadding: string
-    cardBorder: string
-    backdropBlur: string
-    shadow: string
-    secondaryText: string
+    backgroundColor: string;
+    backgroundType: "solid" | "gradient" | "image" | "glass";
+    primaryColor: string;
+    textColor: string;
+    fontFamily?: string;
+    borderRadius?: number;
+    cardStyle: string;
+    layout?: "stack" | "grid" | "masonry";
+    cardBackground: string;
+    cardBorderColor?: string;
+    cardShadow?: string;
+    cardPadding?: string;
+    cardBorder: string;
+    backdropBlur: string;
+    shadow: string;
+    secondaryText: string;
 }
+
 
 export type ScreenSize = "mobile" | "tablet" | "desktop"
 export type PreviewMode = "mobile" | "tablet" | "desktop"
