@@ -12,12 +12,19 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 
-const Tab = () => {
+type Props = {
+    params: Promise<{ username: string }>;
+};
+
+const Tab = ({ username }: { username: string }) => {
+    if (typeof window !== "undefined") {
+        console.log(localStorage.getItem("token"));
+    }
     switch (useSelector((state: RootState) => state.nav.tabName)) {
         case "Dashboard":
             return (
                 <div className='w-full h-fit flex flex-col  justify-center gap-4  bg-[var(--primary-bg)]'>
-                    <DashBoardUserProfile />
+                    <DashBoardUserProfile user={username} />
                     <YourLinks />
                     <TopLinks />
                 </div>
@@ -25,7 +32,7 @@ const Tab = () => {
         case "Links":
             return (
                 <div className='w-full h-fit flex flex-col  justify-center gap-4  bg-[var(--primary-bg)]'>
-                    <DashBoardUserProfile />
+                    <DashBoardUserProfile user={username} />
                     {/* <YourLinks /> */}
                     <LinkPerformanceSection />
                 </div>
@@ -33,7 +40,7 @@ const Tab = () => {
         case "Analytics":
             return (
                 <div className='w-full h-fit flex flex-col  justify-center gap-4  bg-[var(--primary-bg)]'>
-                    <DashBoardUserProfile />
+                    <DashBoardUserProfile user={username} />
                     <AnalyticsHeader />
                 </div>
             );
@@ -50,11 +57,17 @@ const Tab = () => {
     }
 }
 
-function page() {
+async function page({ params }: Props) {
+    const { username } = await params;
+
+    if (!username) {
+        return <div className='w-full h-full flex items-center justify-center'>Please Login to view your dashboard</div>
+    }
+
     return (
         <div className='w-full h-fit flex flex-col overflow-y-auto  justify-center gap-4 p-4 bg-[var(--primary-bg)]'>
             {/* <DashBoardUserProfile /> */}
-            <Tab />
+            <Tab username={username} />
         </div>
     )
 }

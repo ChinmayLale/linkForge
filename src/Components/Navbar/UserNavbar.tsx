@@ -30,8 +30,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/Components/ui/avatar'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/Components/ui/sheet'
 import { Separator } from '@/Components/ui/separator'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setTabName, TabName } from '@/store/slices/navigationSlice'
+import { RootState } from '@/store/store'
+import { signOut } from 'next-auth/react'
 
 // Mock user data
 const mockUser = {
@@ -43,6 +45,9 @@ const mockUser = {
 }
 
 const DashboardNavigation = () => {
+    const { username = "", name = "", bio, avatarUrl, loading, error, totalClicks = 0, totalLinks = 0, ctr = 0.0, email } = useSelector(
+        (state: RootState) => state.user
+    );
     const [activeTab, setActiveTab] = useState('dashboard')
     const [notifications] = useState(2)
     const [linkCount] = useState(12)
@@ -55,6 +60,17 @@ const DashboardNavigation = () => {
         { id: 'analytics', label: 'Analytics', icon: BarChart3, badge: null },
         { id: 'settings', label: 'Settings', icon: Settings, badge: null },
     ]
+
+    const handleLogOut = async () => {
+        try {
+            // Simulate logout logic
+            signOut({ callbackUrl: '/' });
+            console.log("User logged out successfully")
+            setActiveTab('dashboard') // Reset active tab on logout
+        } catch (error) {
+            console.error("Logout failed:", error)
+        }
+    }
 
     interface NavItemProps {
         item: {
@@ -102,16 +118,16 @@ const DashboardNavigation = () => {
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={mockUser.avatar} alt={mockUser.name} />
-                        <AvatarFallback>{mockUser.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        <AvatarImage src={avatarUrl} alt={mockUser.name} />
+                        <AvatarFallback>{name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{mockUser.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{mockUser.email}</p>
+                        <p className="text-sm font-medium leading-none">{name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{email}</p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -132,7 +148,7 @@ const DashboardNavigation = () => {
                     <CreditCard className="mr-2 h-4 w-4" />
                     <span>Billing & Plans</span>
                     <Badge variant="outline" className="ml-auto">
-                        {mockUser.plan}
+                        Update This
                     </Badge>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
@@ -144,7 +160,7 @@ const DashboardNavigation = () => {
                     <span>Help & Support</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">
+                <DropdownMenuItem className="text-red-600" onClick={handleLogOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
                 </DropdownMenuItem>

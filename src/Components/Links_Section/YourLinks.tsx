@@ -8,97 +8,114 @@ import { Label } from '@/Components/ui/label'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/Components/ui/dropdown-menu'
 import { Card, CardContent } from '@/Components/ui/card'
 import { Badge } from '@/Components/ui/badge'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
+import { LinkItem } from '@/types'
+import { addLink } from '@/store/slices/linkSlice'
+import Image from 'next/image'
 
 
 
 
-const linksData = [
-    {
-        id: 1,
-        title: "My Portfolio Website",
-        url: "https://alexjohnson.dev",
-        clicks: 2341,
-        active: true,
-        thumbnail: "🌐",
-        color: "bg-blue-500",
-    },
-    {
-        id: 2,
-        title: "Instagram Profile",
-        url: "https://instagram.com/alexj",
-        clicks: 1892,
-        active: true,
-        thumbnail: "📸",
-        color: "bg-pink-500",
-    },
-    {
-        id: 3,
-        title: "YouTube Channel",
-        url: "https://youtube.com/alexjohnson",
-        clicks: 1567,
-        active: true,
-        thumbnail: "🎥",
-        color: "bg-red-500",
-    },
-    {
-        id: 4,
-        title: "Latest Blog Post",
-        url: "https://blog.alexjohnson.dev/latest",
-        clicks: 987,
-        active: true,
-        thumbnail: "📝",
-        color: "bg-green-500",
-    },
-    {
-        id: 5,
-        title: "Twitter Profile",
-        url: "https://twitter.com/alexj",
-        clicks: 876,
-        active: false,
-        thumbnail: "🐦",
-        color: "bg-sky-500",
-    },
-    {
-        id: 6,
-        title: "LinkedIn Profile",
-        url: "https://linkedin.com/in/alexj",
-        clicks: 654,
-        active: true,
-        thumbnail: "💼",
-        color: "bg-blue-600",
-    },
-]
+// const linksData = [
+//     {
+//         id: 1,
+//         title: "My Portfolio Website",
+//         url: "https://alexjohnson.dev",
+//         clicks: 2341,
+//         active: true,
+//         thumbnail: "🌐",
+//         color: "bg-blue-500",
+//     },
+//     {
+//         id: 2,
+//         title: "Instagram Profile",
+//         url: "https://instagram.com/alexj",
+//         clicks: 1892,
+//         active: true,
+//         thumbnail: "📸",
+//         color: "bg-pink-500",
+//     },
+//     {
+//         id: 3,
+//         title: "YouTube Channel",
+//         url: "https://youtube.com/alexjohnson",
+//         clicks: 1567,
+//         active: true,
+//         thumbnail: "🎥",
+//         color: "bg-red-500",
+//     },
+//     {
+//         id: 4,
+//         title: "Latest Blog Post",
+//         url: "https://blog.alexjohnson.dev/latest",
+//         clicks: 987,
+//         active: true,
+//         thumbnail: "📝",
+//         color: "bg-green-500",
+//     },
+//     {
+//         id: 5,
+//         title: "Twitter Profile",
+//         url: "https://twitter.com/alexj",
+//         clicks: 876,
+//         active: false,
+//         thumbnail: "🐦",
+//         color: "bg-sky-500",
+//     },
+//     {
+//         id: 6,
+//         title: "LinkedIn Profile",
+//         url: "https://linkedin.com/in/alexj",
+//         clicks: 654,
+//         active: true,
+//         thumbnail: "💼",
+//         color: "bg-blue-600",
+//     },
+// ]
 
 
 function YourLinks() {
 
-    const [links, setLinks] = React.useState(linksData)
     const [isAddLinkOpen, setIsAddLinkOpen] = React.useState(false)
     const [newLink, setNewLink] = React.useState({ title: "", url: "", thumbnail: "", color: "bg-blue-500" })
 
+    const { links, loading, error } = useSelector((state: RootState) => state.link)
+    const dispatch = useDispatch()
+
     const handleAddLink = () => {
         if (newLink.title && newLink.url) {
-            const link = {
-                id: Date.now(),
-                title: newLink.title,
-                url: newLink.url,
-                clicks: 0,
+            const newLink: LinkItem = {
+                id: "6",
+                type: "music",
+                title: "New Track - Chill Vibes",
+                url: "https://spotify.com/track/abc123",
+                color: "#1db954",
                 active: true,
-                thumbnail: newLink.thumbnail || "🔗",
-                color: newLink.color,
-            }
-            setLinks([...links, link])
+                style: "fill",
+                metadata: {
+                    artist: "Alex Johnson",
+                    duration: "3:21",
+                    thumbnail: "https://example.com/thumbnail.jpg",
+                },
+                clicks: 0, // Optional clicks count for analytics
+                thumbnail: "https://avatar.iran.liara.run/public/job/operator/male", // Default thumbnail if not provided
+            };
+
+            dispatch(addLink(newLink));
+            // setLinks([...links, link])
             setNewLink({ title: "", url: "", thumbnail: "", color: "bg-blue-500" })
             setIsAddLinkOpen(false)
         }
     }
 
-    const toggleLinkStatus = (id: number) => {
-        setLinks(links.map((link) => (link.id === id ? { ...link, active: !link.active } : link)))
+    const toggleLinkStatus = (id: string) => {
+        // setLinks(links.map((link) => (link.id === id ? { ...link, active: !link.active } : link)))
+        console.log("Toggle Link Status Called for ID:", id);
     }
 
-    const deleteLink = (id: number) => {
-        setLinks(links.filter((link) => link.id !== id))
+    const deleteLink = (id: string) => {
+        console.log("Delete Link For ID:", id);
     }
 
     return (
@@ -181,7 +198,13 @@ function YourLinks() {
                                     <div
                                         className={`w-10 h-10 ${link.color} rounded-lg flex items-center justify-center text-white text-lg`}
                                     >
-                                        {link.thumbnail}
+                                        <Image
+                                            src={link.thumbnail || ""}
+                                            alt={link.title}
+                                            width={40}
+                                            height={40}
+                                            className="rounded-lg h-full max-w-full"
+                                        />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <h4 className="font-medium text-secondary-foreground truncate">{link.title}</h4>
@@ -217,7 +240,7 @@ function YourLinks() {
                                 <div className="flex items-center space-x-4">
                                     <div className="flex items-center space-x-1 text-sm text-gray-500">
                                         <MousePointer className="h-4 w-4" />
-                                        <span>{link.clicks.toLocaleString()}</span>
+                                        <span>{link?.clicks?.toLocaleString()}</span>
                                     </div>
                                     <Badge variant={link.active ? "default" : "secondary"}>
                                         {link.active ? "Active" : "Inactive"}

@@ -1,15 +1,19 @@
-
+import { BASE_URL } from "@/Constants/Endpoints";
+import axios from "axios";
 
 export const checkUsernameAvailability = async (username: string): Promise<{ available: boolean; message?: string }> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Mock logic - replace with actual API call
-    const unavailableUsernames = ['admin', 'test', 'user', 'johndoe', 'jane'];
-    
-    if (unavailableUsernames.includes(username.toLowerCase())) {
-        return { available: false, message: 'Username is already taken' };
+    try {
+        if (!username || username.trim() === "") {
+            return { available: false, message: "Username cannot be empty" };
+        }
+        const response = await axios.get(`${BASE_URL}/auth/check-username`, {
+            params: { username },
+        })
+        console.log({ response: response });
+
+        return { available: response.status < 400, message: response.data?.message || "Username is available" };
+    } catch (error) {
+        console.log({ error });
+        return { available: false, message: "An error occurred while checking username availability" };
     }
-    
-    return { available: true, message: 'Username is available' };
 };

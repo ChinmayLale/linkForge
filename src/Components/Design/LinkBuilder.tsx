@@ -58,80 +58,9 @@ export default function LinkBuilder4() {
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop",
   });
 
-  const [links, setLinks] = useState<LinkItem[]>([
-    // {
-    //   id: "1",
-    //   type: "music",
-    //   title: "Latest Track - Midnight Vibes",
-    //   url: "https://spotify.com/track/123",
-    //   color: "#1db954",
-    //   visible: true,
-    //   style: "default",
-    //   metadata: {
-    //     artist: "Alex Johnson",
-    //     duration: "3:42",
-    //     thumbnail: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop",
-    //   },
-    // },
-    {
-      id: "2",
-      type: "video",
-      title: "Behind the Scenes",
-      url: "https://youtube.com/watch?v=123",
-      color: "#ff0000",
-      visible: true,
-      style: "default",
-      metadata: {
-        thumbnail:
-          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
-        duration: "5:23",
-        description: "Creating my latest music video",
-      },
-    },
-    {
-      id: "3",
-      type: "social",
-      title: "Follow on Instagram",
-      url: "https://instagram.com/alexjohnson",
-      icon: "instagram",
-      color: "#e1306c",
-      visible: true,
-      style: "default",
-    },
-    {
-      id: "4",
-      type: "event",
-      title: "Live Concert - NYC",
-      url: "https://tickets.com/alex-concert",
-      color: "#8b5cf6",
-      visible: true,
-      style: "default",
-      metadata: {
-        date: "Dec 15, 2024",
-        location: "Madison Square Garden",
-        description: "Don't miss the biggest show of the year!",
-      },
-    },
-    {
-      id: "5",
-      type: "gallery",
-      title: "Photo Gallery",
-      url: "#gallery",
-      color: "#f59e0b",
-      visible: true,
-      style: "default",
-      metadata: {
-        images: [
-          "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=80&h=80&fit=crop",
-          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=80&h=80&fit=crop",
-          "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=80&h=80&fit=crop",
-          "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=80&h=80&fit=crop",
-        ],
-      },
-    },
-  ]);
+  const [links, setLinks] = useState<LinkItem[]>([]);
 
-  const [theme, setTheme] = useState<ThemeSettings>(templateStyles.dark);
+  const [theme, setTheme] = useState<ThemeSettings>(templateStyles.clean);
 
   const addComponent = (type: string) => {
     const componentDefaults = {
@@ -187,7 +116,7 @@ export default function LinkBuilder4() {
       id: Date.now().toString(),
       type: type as LinkItem["type"],
       color: theme.primaryColor,
-      visible: true,
+      active: true,
       style: "default",
       ...defaults,
     };
@@ -217,7 +146,6 @@ export default function LinkBuilder4() {
   const applyTemplate = (templateId: string) => {
     const template = templateStyles[templateId as keyof typeof templateStyles];
     if (template) {
-      // setTheme({ ...theme, ...template });
       setTheme(template);
     }
     setMobileMenuOpen(false);
