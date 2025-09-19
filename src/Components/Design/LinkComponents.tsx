@@ -268,25 +268,33 @@
 //   }
 // }
 
-
-
-"use client"
-import { Button } from "@/Components/ui/button"
-import { Badge } from "@/Components/ui/badge"
-import { Progress } from "@/Components/ui/progress"
-import { Play, Pause, Heart, Share, Calendar, MapPin, Mail, ExternalLink, LinkIcon } from "lucide-react"
-import type { LinkItem, ThemeSettings } from "../../types"
-import { socialIcons } from "../../Constants"
-import Image from "next/image"
-import { Card, CardContent } from "../ui/card"
+"use client";
+import { Button } from "@/Components/ui/button";
+import { Badge } from "@/Components/ui/badge";
+import { Progress } from "@/Components/ui/progress";
+import {
+  Play,
+  Pause,
+  Heart,
+  Share,
+  Calendar,
+  MapPin,
+  Mail,
+  ExternalLink,
+  LinkIcon,
+} from "lucide-react";
+import type { LinkItem, ThemeSettings } from "../../types";
+import { socialIcons } from "../../Constants";
+import Image from "next/image";
+import { Card, CardContent } from "../ui/card";
 
 interface LinkComponentsProps {
-  link: LinkItem
-  theme: ThemeSettings
-  selectedElement: string | null
-  setSelectedElement: (id: string) => void
-  playingMusic: string | null
-  setPlayingMusic: (id: string | null) => void
+  link: LinkItem;
+  theme: ThemeSettings;
+  selectedElement: string | null;
+  setSelectedElement: (id: string) => void;
+  playingMusic: string | null;
+  setPlayingMusic: (id: string | null) => void;
 }
 
 export function LinkComponents({
@@ -297,13 +305,12 @@ export function LinkComponents({
   playingMusic,
   setPlayingMusic,
 }: LinkComponentsProps) {
-
   // Enhanced base classes using all theme properties
   const baseClasses = `
     group relative transition-all duration-300 cursor-pointer overflow-hidden
     ${selectedElement === link.id ? "ring-2 ring-opacity-60" : ""}
     hover:scale-[1.02] active:scale-[0.98]
-  `
+  `;
 
   // Dynamic styles based on theme properties
   const getCardStyles = () => {
@@ -313,72 +320,74 @@ export function LinkComponents({
       color: theme.textColor,
       boxShadow: theme.shadow,
       borderRadius: `${theme.borderRadius || 16}px`,
-    }
+    };
 
     // Apply backdrop blur for glass themes
     if (theme.backdropBlur) {
-      styles.backdropFilter = 'blur(12px)'
-      styles.WebkitBackdropFilter = 'blur(12px)'
+      styles.backdropFilter = "blur(12px)";
+      styles.WebkitBackdropFilter = "blur(12px)";
     }
 
-    return styles
-  }
+    return styles;
+  };
 
   // Get text colors based on theme
   const getTextStyles = () => ({
     primary: { color: theme.textColor },
     secondary: { color: theme.secondaryText },
     accent: { color: theme.primaryColor },
-  })
+  });
 
   // Enhanced style classes for different link styles
   const getStyleClasses = (style: string, color: string) => {
-    const textStyles = getTextStyles()
+    const textStyles = getTextStyles();
 
     switch (style) {
       case "outline":
         return {
-          backgroundColor: 'transparent',
-          borderWidth: '2px',
-          borderStyle: 'solid',
+          backgroundColor: "transparent",
+          borderWidth: "2px",
+          borderStyle: "solid",
           borderColor: color,
           color: color,
-        }
+        };
       case "fill":
         return {
           backgroundColor: color,
-          borderWidth: '0',
-          color: '#ffffff',
-        }
+          borderWidth: "0",
+          color: "#ffffff",
+        };
       case "gradient":
         return {
           background: `linear-gradient(135deg, ${color} 0%, ${theme.primaryColor} 100%)`,
-          borderWidth: '0',
-          color: '#ffffff',
-        }
+          borderWidth: "0",
+          color: "#ffffff",
+        };
       case "neon":
         return {
-          backgroundColor: '#000000',
-          borderWidth: '2px',
-          borderStyle: 'solid',
+          backgroundColor: "#000000",
+          borderWidth: "2px",
+          borderStyle: "solid",
           borderColor: color,
           color: color,
           boxShadow: `0 0 20px ${color}33`,
-        }
+        };
       default:
         return {
           backgroundColor: theme.cardBackground,
           borderColor: theme.cardBorder,
           color: textStyles.primary.color,
-        }
+        };
     }
-  }
+  };
 
-  const customStyles = getStyleClasses(link.style, link.color)
-  const textStyles = getTextStyles()
+  const customStyles = getStyleClasses(link.style, link.color);
+  const textStyles = getTextStyles();
 
   // Ring color for selected state
-  const ringColor = { '--tw-ring-color': theme.primaryColor } as React.CSSProperties
+  const ringColor = {
+    "--tw-ring-color": theme.primaryColor,
+  } as React.CSSProperties;
 
   switch (link.type) {
     case "music":
@@ -408,8 +417,8 @@ export function LinkComponents({
                 variant="ghost"
                 className="absolute inset-0 w-full h-full bg-black/40 hover:bg-black/60 text-white rounded-lg"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setPlayingMusic(playingMusic === link.id ? null : link.id)
+                  e.stopPropagation();
+                  setPlayingMusic(playingMusic === link.id ? null : link.id);
                 }}
               >
                 {playingMusic === link.id ? (
@@ -420,7 +429,10 @@ export function LinkComponents({
               </Button>
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-xs sm:text-sm truncate" style={textStyles.primary}>
+              <h3
+                className="font-semibold text-xs sm:text-sm truncate"
+                style={textStyles.primary}
+              >
                 {link.title}
               </h3>
               <p className="text-xs" style={textStyles.secondary}>
@@ -457,7 +469,7 @@ export function LinkComponents({
             </div>
           </div>
         </div>
-      )
+      );
 
     case "video":
       return (
@@ -472,7 +484,7 @@ export function LinkComponents({
           onClick={() => setSelectedElement(link.id)}
         >
           <div className="relative">
-            <img
+            <Image
               src={
                 link.thumbnail ||
                 "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
@@ -504,7 +516,10 @@ export function LinkComponents({
             </Badge>
           </div>
           <div className="p-3 sm:p-4">
-            <h3 className="font-semibold text-xs sm:text-sm mb-1" style={textStyles.primary}>
+            <h3
+              className="font-semibold text-xs sm:text-sm mb-1"
+              style={textStyles.primary}
+            >
               {link.title}
             </h3>
             <p className="text-xs line-clamp-2" style={textStyles.secondary}>
@@ -512,7 +527,7 @@ export function LinkComponents({
             </p>
           </div>
         </div>
-      )
+      );
 
     case "event":
       return (
@@ -537,14 +552,23 @@ export function LinkComponents({
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-xs sm:text-sm mb-1" style={textStyles.primary}>
+              <h3
+                className="font-semibold text-xs sm:text-sm mb-1"
+                style={textStyles.primary}
+              >
                 {link.title}
               </h3>
-              <div className="flex items-center gap-2 text-xs mb-1" style={textStyles.secondary}>
+              <div
+                className="flex items-center gap-2 text-xs mb-1"
+                style={textStyles.secondary}
+              >
                 <Calendar className="w-3 h-3" />
                 <span>data here</span>
               </div>
-              <div className="flex items-center gap-2 text-xs mb-2" style={textStyles.secondary}>
+              <div
+                className="flex items-center gap-2 text-xs mb-2"
+                style={textStyles.secondary}
+              >
                 <MapPin className="w-3 h-3" />
                 <span className="truncate">location here</span>
               </div>
@@ -565,52 +589,16 @@ export function LinkComponents({
             </Button>
           </div>
         </div>
-      )
+      );
 
     case "gallery":
       return (
-        // <div
-        //   key={link.id}
-        //   className={`${baseClasses} p-3 sm:p-4 border`}
-        //   style={{
-        //     ...getCardStyles(),
-        //     ...customStyles,
-        //     ...(selectedElement === link.id ? ringColor : {}),
-        //   }}
-        //   onClick={() => setSelectedElement(link.id)}
-        // >
-        //   <div className="flex items-center justify-between mb-3">
-        //     <h3 className="font-semibold text-xs sm:text-sm" style={textStyles.primary}>
-        //       {link.title}
-        //     </h3>
-        //     <Badge
-        //       variant="secondary"
-        //       className="text-xs"
-        //       style={{
-        //         backgroundColor: `${theme.primaryColor}20`,
-        //         color: theme.primaryColor,
-        //       }}
-        //     >
-        //       {link.metadata?.images?.length || 0} photos
-        //     </Badge>
-        //   </div>
-        //   <div className="grid grid-cols-4 gap-1">
-        //     {link.metadata?.images?.slice(0, 4).map((img, idx) => (
-        //       <img
-        //         key={idx}
-        //         src={img || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"}
-        //         alt={`Gallery ${idx + 1}`}
-        //         className="w-full h-10 sm:h-12 object-cover"
-        //         style={{ borderRadius: `${(theme.borderRadius || 16) / 2}px` }}
-        //       />
-        //     ))}
-        //   </div>
-        // </div>
         <Card
           key={link.id}
           onClick={() => setSelectedElement(link.id)}
-          className={`group cursor-pointer transition-shadow border hover:shadow-lg rounded-2xl ${selectedElement === link.id ? "ring-2 ring-offset-2" : ""
-            }`}
+          className={`group cursor-pointer transition-shadow border hover:shadow-lg rounded-2xl ${
+            selectedElement === link.id ? "ring-2 ring-offset-2" : ""
+          }`}
           style={{
             ...getCardStyles(),
             ...customStyles,
@@ -640,7 +628,10 @@ export function LinkComponents({
 
             <div className="grid grid-cols-4 gap-1 rounded overflow-hidden">
               {link.images?.slice(0, 4).map((img: string, idx: number) => (
-                <div key={idx} className="aspect-square overflow-hidden rounded-sm">
+                <div
+                  key={idx}
+                  className="aspect-square overflow-hidden rounded-sm"
+                >
                   <Image
                     src={
                       img ||
@@ -651,14 +642,16 @@ export function LinkComponents({
                     height={200}
                     unoptimized
                     className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-105"
-                    style={{ borderRadius: `${(theme.borderRadius || 16) / 2}px` }}
+                    style={{
+                      borderRadius: `${(theme.borderRadius || 16) / 2}px`,
+                    }}
                   />
                 </div>
               ))}
             </div>
           </CardContent>
         </Card>
-      )
+      );
 
     case "contact":
       return (
@@ -683,7 +676,10 @@ export function LinkComponents({
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-xs sm:text-sm" style={textStyles.primary}>
+              <h3
+                className="font-semibold text-xs sm:text-sm"
+                style={textStyles.primary}
+              >
                 {link.title}
               </h3>
               <p className="text-xs" style={textStyles.secondary}>
@@ -696,10 +692,12 @@ export function LinkComponents({
             />
           </div>
         </div>
-      )
+      );
 
     default:
-      const IconComponent = link.icon ? socialIcons[link.icon as keyof typeof socialIcons] : LinkIcon
+      const IconComponent = link.icon
+        ? socialIcons[link.icon as keyof typeof socialIcons]
+        : LinkIcon;
       return (
         <div
           key={link.id}
@@ -718,7 +716,10 @@ export function LinkComponents({
                 style={{ color: textStyles.secondary.color, opacity: 0.8 }}
               />
             )}
-            <span className="font-medium text-xs sm:text-sm truncate" style={textStyles.primary}>
+            <span
+              className="font-medium text-xs sm:text-sm truncate"
+              style={textStyles.primary}
+            >
               {link.title}
             </span>
             {link.type === "social" && (
@@ -729,6 +730,6 @@ export function LinkComponents({
             )}
           </div>
         </div>
-      )
+      );
   }
 }

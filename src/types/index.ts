@@ -27,7 +27,7 @@ export type LinkMetadata =
     | VideoMetadata
     | EventMetadata
     | GalleryMetadata
-    | Record<string, any>; // fallback for others
+    | Record<string, unknown>; // fallback for others
 
 export type LinkType = "music" | "video" | "event" | "gallery" | "contact" | "social" | "default";
 
@@ -70,7 +70,7 @@ export interface ThemeSettings {
     cardPadding?: string;
     cardBorder: string;
     backdropBlur: string;
-    shadow: string;
+    shadow?: string;
     secondaryText: string;
 }
 

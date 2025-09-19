@@ -93,7 +93,7 @@ export function SettingsPanel({
                         className="mt-1"
                       />
                     </div>
-                    <div>
+                    {/* <div>
                       <Label className="text-xs">Color</Label>
                       <Input
                         type="color"
@@ -103,8 +103,8 @@ export function SettingsPanel({
                         }
                         className="h-10 w-full p-1 mt-1"
                       />
-                    </div>
-                    <div>
+                    </div> */}
+                    {/* <div>
                       <Label className="text-xs">Style</Label>
                       <Select
                         value={element.style}
@@ -128,7 +128,7 @@ export function SettingsPanel({
                           <SelectItem value="neon">Neon</SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
+                    </div> */}
                     {element.type === "music" && (
                       <>
                         <div>
