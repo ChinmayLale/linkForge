@@ -405,6 +405,8 @@ export function LinkComponents({
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex-shrink-0">
               <Image
+                width={10}
+                height={10}
                 src={
                   link.thumbnail ||
                   "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=60&h=60&fit=crop"
@@ -489,6 +491,8 @@ export function LinkComponents({
                 link.thumbnail ||
                 "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
               }
+              height={32}
+              width={32}
               alt="Video thumbnail"
               className="w-full h-24 sm:h-32 object-cover"
             />

@@ -96,3 +96,12 @@ export interface PublishedDesign {
     category?: string
     tags?: string[]
 }
+
+
+export interface UpdateUserProfileInput {
+    name?: string;
+    bio?: string;
+    tags?: string[];
+    avatarUrl?: string;
+    isProfilePublic?: boolean;
+}

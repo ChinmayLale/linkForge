@@ -4,16 +4,16 @@ import axios from "axios";
 
 const getUserProfileApi = async (username: string, token?: string) => {
     try {
-        // const token = localStorage.getItem('token') || '';
-        console.log("Token from Params:", token);
-        // if (!token) {
-        //     throw new Error('User is not authenticated');
-        // }
+        if (!username || username.trim() === "") {
+            throw new Error("Username cannot be empty");
+        }
 
 
-        const response = await axios.get(`https://linktree-backend-two.vercel.app/api/v1/user/profile`, {
+        console.log("Token From Get User Profile:", token);
+
+        const response = await axios.get(`${BASE_URL}/user/profile`, {
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQzYzc4Y2FkLTNkZmYtNDkxMS1hYjMyLTg3ZjkyMDQ5N2YzOCIsImVtYWlsIjoidGVtcDFAZ21haWwuY29tIiwiaWF0IjoxNzU1MDIyMzY1LCJleHAiOjE3NTU2MjcxNjV9.ZmS_sxrLcCuo1r2B2SCpTJG_nPwQ3N2ZkdX3Gsy5taY`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });

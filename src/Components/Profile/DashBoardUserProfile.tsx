@@ -1,95 +1,124 @@
-"use client"
-import Image from 'next/image'
-import React, { useEffect } from 'react'
-// import { SheetTitle } from '@/Components/ui/sheet'
-import BioCounts from '../BioCounts'
-import { Button } from '@/Components/ui/button'
-import { Eye, Share2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '@/store/store'
-import { userThunks } from '@/store/thunks/user'
-import { Skeleton } from '../ui/skeleton'
+"use client";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import BioCounts from "../BioCounts";
+import { Button } from "@/Components/ui/button";
+import { Eye, Share2 } from "lucide-react";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { userThunks } from "@/store/thunks/user";
+import { Skeleton } from "../ui/skeleton";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
+  const {
+    username,
+    name,
+    bio,
+    avatarUrl,
+    loading,
+    error,
+    totalClicks = 0,
+    totalLinks = 0,
+    ctr = 0.0,
+  } = useSelector((state: RootState) => state.user);
 
-    const { username, name, bio, avatarUrl, loading, error, totalClicks = 0, totalLinks = 0, ctr = 0.0 } = useSelector(
-        (state: RootState) => state.user
-    );
-    const dispatch = useDispatch<AppDispatch>();
-    // const session = useSession();
-    useEffect(() => {
-        console.log("Fetching User Profile for:", user);
-        dispatch(userThunks.getUserProfileThunk(user))
-    }, [username]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { data: session } = useSession();
+  const [src, setSrc] = useState(
+    avatarUrl || `https://avatar.iran.liara.run/username?username=${username}`
+  );
 
-    useEffect(() => {
-        if (error) {
-            toast.error(error);
-        }
-    }, [error]);
-
-    if (!loading && !username) {
-        return null; // Don't render anything until we fetch something
+  useEffect(() => {
+    if (session?.customToken && !username) {
+      dispatch(
+        userThunks.getUserProfileThunk({
+          username: user,
+          token: session.customToken,
+        })
+      );
     }
-    if (loading) {
-        return (
-            <div className="w-full h-fit flex md:flex-row justify-center gap-4 p-4 bg-sidebar rounded-2xl flex-col">
-                {/* Avatar Skeleton */}
-                <div className="w-[50%] md:w-[15%] h-full flex flex-row items-center justify-center">
-                    <Skeleton className="w-[80px] h-[80px] rounded-full" />
-                </div>
+  }, [session, username]);
 
-                {/* Name + Bio Skeleton */}
-                <div className="w-full flex flex-col items-start gap-2">
-                    <Skeleton className="h-6 w-[200px]" />
-                    <Skeleton className="h-4 w-[350px]" />
-                    <Skeleton className="h-4 w-[300px]" />
-                    <Skeleton className="h-4 w-[250px]" />
-                </div>
-
-                {/* Buttons Skeleton */}
-                <div className="w-[25%] h-full flex md:flex-col flex-row items-center justify-around gap-4">
-                    <Skeleton className="h-10 w-[120px]" />
-                    <Skeleton className="h-10 w-[120px]" />
-                </div>
-            </div>
-        )
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
     }
+  }, [error]);
 
+  if (!loading && !username) return null;
 
-
+  if (loading) {
     return (
-        <div className='w-full h-fit flex md:flex-row justify-center gap-4 p-4 bg-sidebar rounded-2xl flex-col'>
-
-            <div className='w-[50%] md:w-[15%] h-full flex flex-row items-center justify-center'>
-                <Image
-                    src={avatarUrl || `https://avatar.iran.liara.run/username?username=${username}`}
-                    alt='user profile'
-                    width={100}
-                    height={100}
-                    className='w-[80%] rounded-[50%] object-cover'
-                    unoptimized
-                />
-            </div>
-            <div className='w-full flex flex-col items-start'>
-                <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">@ {username}<span className="ml-4 text-muted-foreground text-lg font-medium">{name}</span></h2>
-                <p className="leading-7 ">
-                    {bio || "This user has not set a bio yet. You can add one in the settings."}
-                </p>
-
-                <BioCounts links={totalLinks} clicks={totalClicks} ctr={ctr} />
-            </div>
-            <div className='w-[25%] h-full flex md:flex-col flex-row items-center justify-around gap-4'>
-                <Button variant="outline" size="sm" className='cursor-pointer' onClick={() => toast.info("Previewing Profile")}>
-                    <Eye />   Preview Page
-                </Button>
-                <Button variant="outline" size="sm" className='cursor-pointer' onClick={() => toast.info("Link Copied to Clipboard")}>
-                    <Share2 />  Share Profile
-                </Button>
-            </div>
+      <div className="w-full flex flex-col md:flex-row gap-6 p-6 bg-sidebar rounded-2xl">
+        <Skeleton className="w-20 h-20 rounded-full" />
+        <div className="flex flex-col gap-3 flex-1">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-4 w-64" />
+          <Skeleton className="h-4 w-56" />
         </div>
-    )
+        <div className="flex gap-3">
+          <Skeleton className="h-10 w-28" />
+          <Skeleton className="h-10 w-28" />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full flex flex-col md:flex-row items-center md:items-start gap-6 p-6 bg-sidebar rounded-2xl shadow-md">
+      {/* Profile Image */}
+      <div className="flex-shrink-0">
+        <Avatar className="rounded-full border-4 border-ring shadow-sm object-cover w-28 h-28">
+          <AvatarImage src={avatarUrl} alt={username} />
+          <AvatarFallback>
+            <AvatarImage
+              src={
+                avatarUrl ||
+                `https://avatar.iran.liara.run/username?username=${username}`
+              }
+              alt={username}
+            />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
+      {/* User Info */}
+      <div className="flex flex-col flex-1 gap-2 text-center md:text-left">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">@{username}</h2>
+          <p className="text-muted-foreground text-lg">{name}</p>
+        </div>
+        <p className="text-sm text-gray-400 mt-1">
+          {bio ||
+            "This user has not set a bio yet. You can add one in the settings."}
+        </p>
+        <BioCounts links={totalLinks} clicks={totalClicks} ctr={ctr} />
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-3 mt-4 md:mt-0">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 hover:scale-105 transition-transform"
+          onClick={() => toast.info("Previewing Profile")}
+        >
+          <Eye size={16} /> Preview
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 hover:scale-105 transition-transform"
+          onClick={() => toast.info("Link Copied to Clipboard")}
+        >
+          <Share2 size={16} /> Share
+        </Button>
+      </div>
+    </div>
+  );
 }
 
-export default DashBoardUserProfile
+export default DashBoardUserProfile;

@@ -193,7 +193,7 @@ export default function LinkBuilder4() {
   );
 
   return (
-    <div className={`min-h-screen ${darkMode ? "dark" : ""}`}>
+    <div className={`min-h-screen bg-background text-foreground`}>
       <div className="min-h-screen bg-background text-foreground">
         <Header
           screenSize={screenSize}
