@@ -43,12 +43,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { updateUserProfileService } from "@/Services/user/updateUserProfileService";
 
 export default function SettingsPage() {
   const user = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState(false);
   const { edgestore } = useEdgeStore();
+  const { data } = useSession();
   const [formData, setFormData] = useState({
     username: user.username,
     name: user.name || "",
@@ -160,10 +162,19 @@ export default function SettingsPage() {
     setFormData((prev) => ({ ...prev, coverImageUrl: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
+    const token = data?.customToken;
     console.log("Updated Details:", formData);
+
+    const result = updateUserProfileService(formData, token ? token : "");
+
+    toast.promise(result, {
+      loading: "Updating profile...",
+      success: "Profile updated successfully",
+      error: "Error updating profile",
+    });
 
     // Update user details in the database
 
@@ -215,13 +226,13 @@ export default function SettingsPage() {
                           avatarPreview ||
                           formData.avatarUrl ||
                           `https://avatar.iran.liara.run/username?username=${
-                            formData.displayName || "User"
+                            formData.name || "User"
                           }`
                         }
                         className="object-cover"
                       />
                       <AvatarFallback className="bg-primary text-primary-foreground text-xl lg:text-2xl font-bold">
-                        {formData.displayName?.charAt(0) || "U"}
+                        {formData.name?.charAt(0) || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="absolute -bottom-2 -right-2 rounded-full bg-accent p-2 shadow-lg transition-all duration-300 group-hover:scale-110">
@@ -233,7 +244,7 @@ export default function SettingsPage() {
                   <div className="text-center space-y-3 w-full">
                     <div className="space-y-1">
                       <p className="text-xl lg:text-2xl font-bold text-foreground text-balance">
-                        {formData.displayName || "Your Display Name"}
+                        {formData.name || "Your Display Name"}
                       </p>
                       <p className="text-muted-foreground">
                         @{formData.username || "username"}
@@ -311,18 +322,18 @@ export default function SettingsPage() {
 
                         <div className="space-y-2">
                           <Label
-                            htmlFor="displayName"
+                            htmlFor="name"
                             className="text-sm font-medium text-foreground flex items-center gap-2"
                           >
                             <User className="h-4 w-4 text-muted-foreground" />
-                            Display Name
+                            Name
                           </Label>
                           <Input
                             id="name"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
-                            placeholder="Your  Name"
+                            placeholder="Your Name"
                             className="bg-input border-border/50 focus:border-primary focus:ring-primary/20 transition-all duration-200"
                           />
                         </div>

@@ -29,6 +29,7 @@ interface PreviewCanvasProps {
   links: LinkItem[];
   renderComponent: (link: LinkItem) => React.ReactNode;
   setSelectedElement: () => void;
+  readonly?: boolean;
 }
 
 export function PreviewCanvas({

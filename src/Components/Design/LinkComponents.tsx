@@ -447,7 +447,7 @@ export function LinkComponents({
                   style={{ accentColor: theme.primaryColor }}
                 />
                 <span className="text-xs" style={textStyles.secondary}>
-                  link metadataduration here
+                  {link.duration || "00:00"}
                 </span>
               </div>
             </div>

@@ -1,6 +1,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LinkItem } from "../../types/index";
+import { linksThunks } from "../thunks/links";
 
 interface LinksState {
     links: LinkItem[];
@@ -9,24 +10,7 @@ interface LinksState {
 }
 
 const initialState: LinksState = {
-    links: [
-        {
-            id: "2",
-            type: "video",
-            title: "Behind the Scenes",
-            url: "https://youtube.com/watch?v=123",
-            color: "#ff0000",
-            active: true,
-            style: "default",
-            metadata: {
-                thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
-                duration: "5:23",
-                description: "Creating my latest music video",
-            },
-            clicks: 0, // Optional clicks count for analytics
-            thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
-        },
-    ],
+    links: [],
     loading: false,
     error: null,
 };
@@ -67,6 +51,21 @@ const linksSlice = createSlice({
             state.links = state.links.filter(link => link.id !== action.payload);
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(linksThunks.getAllUserLinkThunk.fulfilled, (state, action) => {
+            state.links = action.payload;
+            state.loading = false;
+            state.error = null;
+        })
+        builder.addCase(linksThunks.getAllUserLinkThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        builder.addCase(linksThunks.getAllUserLinkThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message || "Failed to fetch links";
+        });
+    }
 });
 
 export const { setLinks, addLink, updateLink, deleteLink } = linksSlice.actions;

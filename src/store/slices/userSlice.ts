@@ -14,6 +14,7 @@ interface userState {
     totalLinks?: number; // Optional property for total links
     totalClicks?: number; // Optional property for total views
     ctr?: number; // Optional property for click-through rate
+    coverImageUrl?: string
 }
 
 
@@ -30,7 +31,8 @@ const initialState: userState = {
     avatarUrl: "", // Default value for user avatar URL
     totalLinks: 0,
     totalClicks: 0,
-    ctr: 0
+    ctr: 0,
+    coverImageUrl: ""
 };
 
 

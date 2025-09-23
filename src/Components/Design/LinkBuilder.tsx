@@ -15,6 +15,8 @@ import type {
   PreviewMode,
 } from "../../types";
 import { templateStyles } from "@/Constants";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function LinkBuilder4() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -28,6 +30,9 @@ export default function LinkBuilder4() {
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
 
+  const userLinks = useSelector((state: RootState) => state.link.links);
+
+  const userData = useSelector((state: RootState) => state.user);
   // Responsive hook
   useEffect(() => {
     const handleResize = () => {
@@ -49,16 +54,22 @@ export default function LinkBuilder4() {
   }, []);
 
   const [profile, setProfile] = useState<ProfileData>({
-    name: "Alex Johnson",
-    bio: "Digital Creator & Music Producer",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop&crop=face",
-    username: "alexjohnson",
-    coverImage:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=200&fit=crop",
+    name: userData.name || "",
+    bio: userData.bio || "",
+    avatar: userData.avatarUrl || "",
+    username: userData.username,
+    coverImage: userData.avatarUrl || "",
   });
 
-  const [links, setLinks] = useState<LinkItem[]>([]);
+  const [links, setLinks] = useState<LinkItem[]>(userLinks);
+
+  console.log("--------------------------------------");
+  console.log({ userLinks });
+  console.log("--------------------------------------");
+
+  useEffect(() => {
+    setLinks(userLinks);
+  }, [userLinks]);
 
   const [theme, setTheme] = useState<ThemeSettings>(templateStyles.clean);
 

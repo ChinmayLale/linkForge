@@ -99,9 +99,11 @@ export interface PublishedDesign {
 
 
 export interface UpdateUserProfileInput {
+    username?: string;
     name?: string;
     bio?: string;
     tags?: string[];
     avatarUrl?: string;
+    coverImageUrl?: string;
     isProfilePublic?: boolean;
 }

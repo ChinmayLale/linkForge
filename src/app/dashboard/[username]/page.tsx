@@ -8,9 +8,11 @@ import TopLinks from "@/Components/Links_Section/SectionTwo";
 import YourLinks from "@/Components/Links_Section/YourLinks";
 import DashBoardUserProfile from "@/Components/Profile/DashBoardUserProfile";
 import SettingsPage from "@/Components/Settings/Settings";
-import { RootState } from "@/store/store";
-import React from "react";
-import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { linksThunks } from "@/store/thunks/links";
+import { useSession } from "next-auth/react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
   params: Promise<{ username: string }>;
@@ -63,6 +65,18 @@ const Tab = ({ username }: { username: string }) => {
 
 function Page({ params }: Props) {
   const { username } = React.use(params);
+  const { data } = useSession();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const links = useSelector((state: RootState) => state.link.links);
+
+  useEffect(() => {
+    if (data?.customToken && !links.length) {
+      dispatch(
+        linksThunks.getAllUserLinkThunk({ token: data?.customToken || "" })
+      );
+    }
+  }, [data, dispatch, links]);
 
   if (!username) {
     return (
