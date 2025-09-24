@@ -41,7 +41,7 @@ import { Separator } from "@/Components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { setTabName, TabName } from "@/store/slices/navigationSlice";
 import { RootState } from "@/store/store";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 import { useTheme } from "next-themes";
 
@@ -58,29 +58,17 @@ const DashboardNavigation = () => {
   const {
     username,
     name,
-    bio,
+    // bio,
     avatarUrl,
-    loading,
-    error,
-    totalClicks = 0,
-    totalLinks = 0,
-    ctr = 0.0,
+    // loading,
+    // error,
+    // totalClicks = 0,
+    // totalLinks = 0,
+    // ctr = 0.0,
     email,
   } = useSelector((state: RootState) => state.user);
-  const { data } = useSession();
-  console.log({
-    username,
-    name,
-    bio,
-    avatarUrl,
-    loading,
-    error,
-    totalClicks,
-    totalLinks,
-    ctr,
-    email,
-    token: data?.customToken,
-  });
+  // const { data } = useSession();
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const [notifications] = useState(2);
   const [linkCount] = useState(12);

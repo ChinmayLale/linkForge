@@ -567,18 +567,17 @@ export function LinkComponents({
                 style={textStyles.secondary}
               >
                 <Calendar className="w-3 h-3" />
-                <span>data here</span>
+                <span>{link.metadata?.date || "dd-mm-yyyy"}</span>
               </div>
               <div
                 className="flex items-center gap-2 text-xs mb-2"
                 style={textStyles.secondary}
               >
                 <MapPin className="w-3 h-3" />
-                <span className="truncate">location here</span>
+                <span className="truncate">
+                  {link.metadata?.location || "India"}
+                </span>
               </div>
-              <p className="text-xs line-clamp-2" style={textStyles.secondary}>
-                link desc her
-              </p>
             </div>
             <Button
               size="sm"

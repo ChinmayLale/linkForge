@@ -220,7 +220,7 @@ export function PreviewCanvas({
                           setSelectedElement();
                         }}
                       />
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-6 sm:h-6 bg-green-500 rounded-full border-2 border-white"></div>
+                      {/* <div className="absolute -bottom-[-10px] -right-1 w-2 h-2 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div> */}
                     </div>
                     <h1
                       className="text-lg sm:text-xl font-bold mb-2"

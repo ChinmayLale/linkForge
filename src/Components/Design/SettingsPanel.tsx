@@ -169,7 +169,7 @@ export function SettingsPanel({
                         <div>
                           <Label className="text-xs">Date</Label>
                           <Input
-                            value={"date here"}
+                            value={`${new Date().toISOString().split("T")[0]}`}
                             onChange={(e) =>
                               updateLink(element.id, {
                                 metadata: {
@@ -178,13 +178,15 @@ export function SettingsPanel({
                                 },
                               })
                             }
+                            type="date"
                             className="mt-1"
                           />
                         </div>
                         <div>
                           <Label className="text-xs">Location</Label>
                           <Input
-                            value={"location here"}
+                            placeholder={"location here"}
+                            
                             onChange={(e) =>
                               updateLink(element.id, {
                                 metadata: {

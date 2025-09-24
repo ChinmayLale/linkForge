@@ -1319,7 +1319,7 @@ export const components = [
     { id: "social", name: "Social", icon: Instagram, type: "social" },
     { id: "music", name: "Music", icon: Music, type: "music" },
     { id: "video", name: "Video", icon: Video, type: "video" },
-    { id: "image", name: "Image", icon: ImageIcon, type: "image" },
+    // { id: "image", name: "Image", icon: ImageIcon, type: "image" },
     { id: "contact", name: "Contact", icon: Mail, type: "contact" },
     { id: "event", name: "Event", icon: Calendar, type: "event" },
     { id: "gallery", name: "Gallery", icon: ImageIcon, type: "gallery" },

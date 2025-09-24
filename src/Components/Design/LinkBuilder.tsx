@@ -21,6 +21,7 @@ import { useSession } from "next-auth/react";
 import { addUserLinksService } from "@/Services/links/addUserLinks.service";
 import { toast } from "sonner";
 import { useThemes } from "@/hooks/getCustomThemes";
+import { deleteUserLinkService } from "@/Services/links/deleteUserLink.service";
 
 export default function LinkBuilder4() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -152,11 +153,22 @@ export default function LinkBuilder4() {
   );
 
   const deleteLink = useCallback(
-    (id: string) => {
+    async (id: string) => {
+      const isDeleting = deleteUserLinkService(id, data?.customToken || "");
+      toast.promise(isDeleting, {
+        loading: "Deleting link...",
+        success: "Link deleted successfully",
+        error: "Error deleting link",
+      });
+
       setLinks(links.filter((link) => link.id !== id));
       if (selectedElement === id) {
         setSelectedElement(null);
       }
+      // setLinks(links.filter((link) => link.id !== id));
+      // if (selectedElement === id) {
+      //   setSelectedElement(null);
+      // }
     },
     [links, selectedElement]
   );
