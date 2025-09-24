@@ -18,7 +18,7 @@ const getUserProfileApi = async (username: string, token?: string) => {
             }
         });
         const { data } = response.data;
-        console.log({ data })
+        // console.log({ data })
         if (!data) {
             throw new Error('Failed to fetch user profile for this username');
         }

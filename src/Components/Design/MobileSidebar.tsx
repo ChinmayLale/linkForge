@@ -7,7 +7,7 @@ import {
   CollapsibleTrigger,
 } from "@/Components/ui/collapsible";
 import { Layout, Plus, ChevronRight } from "lucide-react";
-import { templates, components } from "../../Constants";
+import { components } from "../../Constants";
 import { Card, CardContent } from "../ui/card";
 
 interface MobileSidebarProps {
@@ -17,6 +17,7 @@ interface MobileSidebarProps {
   setComponentsOpen: (open: boolean) => void;
   applyTemplate: (templateId: string) => void;
   addComponent: (type: string) => void;
+  templates: { id: string; name: string; preview: string }[];
 }
 
 export function MobileSidebar({
@@ -26,6 +27,7 @@ export function MobileSidebar({
   setComponentsOpen,
   applyTemplate,
   addComponent,
+  templates,
 }: MobileSidebarProps) {
   return (
     <div className="p-4 space-y-4 h-full flex flex-col">
@@ -52,9 +54,9 @@ export function MobileSidebar({
           <div className="grid grid-cols-2 gap-2">
             {templates.map((template) => (
               <Card
-                key={template.id}
+                key={template.name}
                 className={`cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.02] ${template.preview} h-16 flex items-center justify-center`}
-                onClick={() => applyTemplate(template.id)}
+                onClick={() => applyTemplate(template.name)}
               >
                 <CardContent>
                   <div className="flex items-center justify-center h-full w-full">

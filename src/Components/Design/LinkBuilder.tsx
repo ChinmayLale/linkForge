@@ -14,12 +14,13 @@ import type {
   ScreenSize,
   PreviewMode,
 } from "../../types";
-import { templateStyles } from "@/Constants";
+// import { templateStyles } from "@/Constants";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useSession } from "next-auth/react";
 import { addUserLinksService } from "@/Services/links/addUserLinks.service";
 import { toast } from "sonner";
+import { useThemes } from "@/hooks/getCustomThemes";
 
 export default function LinkBuilder4() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -32,6 +33,8 @@ export default function LinkBuilder4() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
+
+  const { templateStyles, templates } = useThemes();
 
   const userLinks = useSelector((state: RootState) => state.link.links);
 
@@ -67,12 +70,19 @@ export default function LinkBuilder4() {
   });
 
   const [links, setLinks] = useState<LinkItem[]>(userLinks);
+  const defaultTheme = templateStyles.clean || Object.values(templateStyles)[0];
+
+  const [theme, setTheme] = useState<ThemeSettings>(defaultTheme);
+
+  useEffect(() => {
+    const newDefault = templateStyles.clean || Object.values(templateStyles)[0];
+
+    setTheme(newDefault);
+  }, [templateStyles, templates]);
 
   useEffect(() => {
     setLinks(userLinks);
   }, [userLinks]);
-
-  const [theme, setTheme] = useState<ThemeSettings>(templateStyles.clean);
 
   const addComponent = (type: string) => {
     const componentDefaults = {
@@ -162,7 +172,9 @@ export default function LinkBuilder4() {
   };
 
   const applyTemplate = (templateId: string) => {
+    console.log("Apply theme Clicked ");
     const template = templateStyles[templateId as keyof typeof templateStyles];
+    // console.log({ template });
     if (template) {
       setTheme(template);
     }
@@ -191,6 +203,7 @@ export default function LinkBuilder4() {
       setComponentsOpen={setComponentsOpen}
       applyTemplate={applyTemplate}
       addComponent={addComponent}
+      templates={templates}
     />
   );
 

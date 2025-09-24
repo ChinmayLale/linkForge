@@ -25,6 +25,10 @@ export const addUserLinksService = async (data: LinkItem[], token: string) => {
          return link.id.startsWith('temp_');
       });
 
+      if (filteredLinks.length === 0) {
+         return [];
+      }
+
       const response = await axios.post(`${BASE_URL}/link/add`, { links: filteredLinks }, {
          headers: {
             "Content-Type": "application/json",

@@ -88,7 +88,7 @@ function Page({ params }: Props) {
     }
   }, [data, dispatch, links]);
 
-  console.log({ themes });
+  // console.log({ themes });
 
   if (!username) {
     return (
