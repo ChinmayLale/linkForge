@@ -14,7 +14,7 @@ export const getUserLinksService = async (token: string): Promise<LinkItem[]> =>
       });
 
       console.log("User links fetched successfully:");
-      console.log({ resData: response.data });
+      // console.log({ resData: response.data });
       if (response.data.success) {
 
          return response.data.data as LinkItem[];

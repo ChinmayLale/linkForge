@@ -17,6 +17,9 @@ import type {
 import { templateStyles } from "@/Constants";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useSession } from "next-auth/react";
+import { addUserLinksService } from "@/Services/links/addUserLinks.service";
+import { toast } from "sonner";
 
 export default function LinkBuilder4() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -31,6 +34,8 @@ export default function LinkBuilder4() {
   const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
 
   const userLinks = useSelector((state: RootState) => state.link.links);
+
+  const { data } = useSession();
 
   const userData = useSelector((state: RootState) => state.user);
   // Responsive hook
@@ -62,10 +67,6 @@ export default function LinkBuilder4() {
   });
 
   const [links, setLinks] = useState<LinkItem[]>(userLinks);
-
-  console.log("--------------------------------------");
-  console.log({ userLinks });
-  console.log("--------------------------------------");
 
   useEffect(() => {
     setLinks(userLinks);
@@ -100,10 +101,6 @@ export default function LinkBuilder4() {
             "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=200&h=120&fit=crop",
         },
       },
-      image: {
-        title: "Image",
-        url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop",
-      },
       contact: { title: "Contact Me", url: "mailto:contact@example.com" },
       event: {
         title: "New Event",
@@ -124,7 +121,7 @@ export default function LinkBuilder4() {
       componentDefaults[type as keyof typeof componentDefaults] ||
       componentDefaults.link;
     const newItem: LinkItem = {
-      id: Date.now().toString(),
+      id: `temp_${type}_${Date.now()}`,
       type: type as LinkItem["type"],
       color: theme.primaryColor,
       active: true,
@@ -153,6 +150,16 @@ export default function LinkBuilder4() {
     },
     [links, selectedElement]
   );
+
+  const handleSaveLink = async () => {
+    const token = data?.customToken || "";
+    const res = addUserLinksService(links, token);
+    toast.promise(res, {
+      loading: "Saving links...",
+      success: "Links saved successfully",
+      error: "Error saving links",
+    });
+  };
 
   const applyTemplate = (templateId: string) => {
     const template = templateStyles[templateId as keyof typeof templateStyles];
@@ -219,6 +226,7 @@ export default function LinkBuilder4() {
           username={profile.username}
           MobileSidebar={MobileSidebarComponent}
           SettingsPanel={SettingsPanelComponent}
+          handleSaveLink={handleSaveLink}
         />
         <div className="flex h-[calc(100vh-3rem)] sm:h-[calc(100vh-3.5rem)]">
           {screenSize !== "mobile" && (

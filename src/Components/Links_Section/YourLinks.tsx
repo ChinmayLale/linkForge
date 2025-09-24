@@ -5,7 +5,7 @@ import {
   Filter,
   MoreVertical,
   MousePointer,
-  Plus,
+  // Plus,
   Search,
   ToggleLeft,
   ToggleRight,
@@ -14,16 +14,16 @@ import {
 import React from "react";
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-  DialogHeader,
-  DialogDescription,
-  DialogFooter,
-} from "@/Components/ui/dialog";
-import { Label } from "@/Components/ui/label";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogTitle,
+//   DialogTrigger,
+//   DialogHeader,
+//   DialogDescription,
+//   DialogFooter,
+// } from "@/Components/ui/dialog";
+// import { Label } from "@/Components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,51 +33,51 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Card, CardContent } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { LinkItem } from "@/types";
-import { addLink } from "@/store/slices/linkSlice";
+// import { LinkItem } from "@/types";
+// import { addLink } from "@/store/slices/linkSlice";
 import LinkCardSkeleton from "@/Components/misc/LinkCardSkeleton";
 import file from "../../../public/file.svg";
 import Image from "next/image";
 
 function YourLinks() {
-  const [isAddLinkOpen, setIsAddLinkOpen] = React.useState(false);
-  const [newLink, setNewLink] = React.useState({
-    title: "",
-    url: "",
-    thumbnail: "",
-    color: "bg-blue-500",
-  });
+  // const [isAddLinkOpen, setIsAddLinkOpen] = React.useState(false);
+  // const [newLink, setNewLink] = React.useState({
+  //   title: "",
+  //   url: "",
+  //   thumbnail: "",
+  //   color: "bg-blue-500",
+  // });
 
   const { links, loading } = useSelector((state: RootState) => state.link);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const handleAddLink = () => {
-    if (newLink.title && newLink.url) {
-      const newLink: LinkItem = {
-        id: "6",
-        type: "music",
-        title: "New Track - Chill Vibes",
-        url: "https://spotify.com/track/abc123",
-        color: "#1db954",
-        active: true,
-        style: "fill",
-        metadata: {
-          artist: "Alex Johnson",
-          duration: "3:21",
-          thumbnail: "https://example.com/thumbnail.jpg",
-        },
-        clicks: 0, // Optional clicks count for analytics
-        thumbnail: "https://avatar.iran.liara.run/public/job/operator/male", // Default thumbnail if not provided
-      };
+  // const handleAddLink = () => {
+  //   if (newLink.title && newLink.url) {
+  //     const newLink: LinkItem = {
+  //       id: "6",
+  //       type: "music",
+  //       title: "New Track - Chill Vibes",
+  //       url: "https://spotify.com/track/abc123",
+  //       color: "#1db954",
+  //       active: true,
+  //       style: "fill",
+  //       metadata: {
+  //         artist: "Alex Johnson",
+  //         duration: "3:21",
+  //         thumbnail: "https://example.com/thumbnail.jpg",
+  //       },
+  //       clicks: 0, // Optional clicks count for analytics
+  //       thumbnail: "https://avatar.iran.liara.run/public/job/operator/male", // Default thumbnail if not provided
+  //     };
 
-      dispatch(addLink(newLink));
-      // setLinks([...links, link])
-      setNewLink({ title: "", url: "", thumbnail: "", color: "bg-blue-500" });
-      setIsAddLinkOpen(false);
-    }
-  };
+  //     dispatch(addLink(newLink));
+  //     // setLinks([...links, link])
+  //     setNewLink({ title: "", url: "", thumbnail: "", color: "bg-blue-500" });
+  //     setIsAddLinkOpen(false);
+  //   }
+  // };
 
   const toggleLinkStatus = (id: string) => {
     // setLinks(links.map((link) => (link.id === id ? { ...link, active: !link.active } : link)))
@@ -118,7 +118,7 @@ function YourLinks() {
               <Filter className="mr-2 h-4 w-4" />
               Filter
             </Button>
-            <Dialog open={isAddLinkOpen} onOpenChange={setIsAddLinkOpen}>
+            {/* <Dialog open={isAddLinkOpen} onOpenChange={setIsAddLinkOpen}>
               <DialogTrigger asChild>
                 <Button variant="default" size="sm">
                   <Plus className="h-4 w-4" />
@@ -173,7 +173,7 @@ function YourLinks() {
                   </Button>
                 </DialogFooter>
               </DialogContent>
-            </Dialog>
+            </Dialog> */}
           </div>
         </div>
       </div>

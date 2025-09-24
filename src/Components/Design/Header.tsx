@@ -17,7 +17,7 @@ import {
   //   Moon,
 } from "lucide-react";
 import { ScrollArea } from "@/Components/ui/scroll-area";
-import type { ScreenSize } from "../../types/index";
+import type { LinkItem, ScreenSize } from "../../types/index";
 // import { useTheme } from "next-themes";
 
 interface HeaderProps {
@@ -33,6 +33,7 @@ interface HeaderProps {
   username: string;
   MobileSidebar: React.ComponentType;
   SettingsPanel: React.ReactNode;
+  handleSaveLink: () => void;
 }
 
 export function Header({
@@ -48,6 +49,7 @@ export function Header({
   username,
   MobileSidebar,
   SettingsPanel,
+  handleSaveLink,
 }: HeaderProps) {
   //   const { setTheme, theme } = useTheme();
   return (
@@ -123,7 +125,7 @@ export function Header({
             <Eye className="h-4 w-4 mr-2" />
             Preview
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleSaveLink}>
             <Save className="h-3 h-3 sm:h-4 sm:w-4 sm:mr-2" />
             <span className="hidden sm:inline">Save</span>
           </Button>

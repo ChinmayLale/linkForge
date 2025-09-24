@@ -10,6 +10,8 @@ import DashBoardUserProfile from "@/Components/Profile/DashBoardUserProfile";
 import SettingsPage from "@/Components/Settings/Settings";
 import { AppDispatch, RootState } from "@/store/store";
 import { linksThunks } from "@/store/thunks/links";
+import { themeThunks } from "@/store/thunks/theme";
+import { ThemeSettings } from "@/types";
 import { useSession } from "next-auth/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -70,13 +72,23 @@ function Page({ params }: Props) {
 
   const links = useSelector((state: RootState) => state.link.links);
 
+  const themes: ThemeSettings[] = useSelector(
+    (state: RootState) => state.theme.theme
+  );
+
   useEffect(() => {
     if (data?.customToken && !links.length) {
       dispatch(
         linksThunks.getAllUserLinkThunk({ token: data?.customToken || "" })
       );
+
+      dispatch(
+        themeThunks.getAllThemesThunk({ token: data?.customToken || "" })
+      );
     }
   }, [data, dispatch, links]);
+
+  console.log({ themes });
 
   if (!username) {
     return (

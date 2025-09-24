@@ -56,7 +56,10 @@ export interface ProfileData {
 }
 
 export interface ThemeSettings {
+    id: string;
     backgroundColor: string;
+    name: string;
+    preview: string;
     backgroundType: "solid" | "gradient" | "image" | "glass";
     primaryColor: string;
     textColor: string;

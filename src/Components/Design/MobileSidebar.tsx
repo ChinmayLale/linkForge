@@ -81,7 +81,7 @@ export function MobileSidebar({
           <Button variant="ghost" className="w-full justify-between p-2">
             <div className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              <span className="font-medium">Components</span>
+              <span className="font-medium">Add Links</span>
             </div>
             <ChevronRight
               className={`h-4 w-4 transition-transform ${
