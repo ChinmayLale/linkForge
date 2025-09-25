@@ -71,7 +71,8 @@ function Page({ params }: Props) {
   const { username } = React.use(params);
   const { data } = useSession();
   const dispatch = useDispatch<AppDispatch>();
-  
+  const [isThemeFetched, setIsThemeFetched] = React.useState(false);
+  const [isLinksFetched, setIsLinksFetched] = React.useState(false);
   const links = useSelector((state: RootState) => state.link.links);
 
   const themes: ThemeSettings[] = useSelector(
@@ -79,16 +80,22 @@ function Page({ params }: Props) {
   );
 
   useEffect(() => {
-    if (data?.customToken && !links) {
+    if (data?.customToken && !isLinksFetched) {
       dispatch(
         linksThunks.getAllUserLinkThunk({ token: data?.customToken || "" })
       );
+      setIsLinksFetched(true);
+    }
+  }, [data, links]);
 
+  useEffect(() => {
+    if (data?.customToken && !isThemeFetched) {
       dispatch(
         themeThunks.getAllThemesThunk({ token: data?.customToken || "" })
       );
+      setIsThemeFetched(true);
     }
-  }, [data, links]);
+  }, [data, themes]);
 
   // console.log({ themes });
 
