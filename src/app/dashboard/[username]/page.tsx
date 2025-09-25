@@ -79,7 +79,7 @@ function Page({ params }: Props) {
   );
 
   useEffect(() => {
-    if (data?.customToken && !links.length) {
+    if (data?.customToken && !links) {
       dispatch(
         linksThunks.getAllUserLinkThunk({ token: data?.customToken || "" })
       );
@@ -88,7 +88,7 @@ function Page({ params }: Props) {
         themeThunks.getAllThemesThunk({ token: data?.customToken || "" })
       );
     }
-  }, [data, dispatch, links]);
+  }, [data, links]);
 
   // console.log({ themes });
 
