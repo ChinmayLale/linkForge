@@ -71,6 +71,13 @@ export function Header({
       error: "Error publishing links",
     });
   };
+
+  const handleCopy = () => {
+    const link = `https://link-forge-ten.vercel.app/${username}`;
+    navigator.clipboard.writeText(link);
+    toast.success("Link copied to clipboard");
+  };
+
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-8 sm:h-14 items-center px-2 sm:px-4">
@@ -108,14 +115,12 @@ export function Header({
             variant="secondary"
             className="font-mono text-xs hidden sm:inline-flex"
           >
-            linktr.ee/{username}
+            linkForge.app/{username}
           </Badge>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() =>
-              navigator.clipboard.writeText(`https://linktr.ee/${username}`)
-            }
+            onClick={handleCopy}
             className="hidden sm:inline-flex"
           >
             <Copy className="h-4 w-4" />
