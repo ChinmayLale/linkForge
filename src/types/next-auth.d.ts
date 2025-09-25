@@ -1,6 +1,6 @@
 // types/next-auth.d.ts
 /* eslint-disable @typescript-eslint/no-unused-vars */
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DefaultSession, DefaultJWT } from "next-auth"
 
 declare module "next-auth" {
