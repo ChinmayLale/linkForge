@@ -1,4 +1,6 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import type React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/Components/ui/sheet";
 import { Button } from "@/Components/ui/button";
@@ -18,6 +20,9 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import type { LinkItem, ScreenSize } from "../../types/index";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { toggleIsPublished, toggleIsSaved } from "@/store/slices/miscSlice";
 // import { useTheme } from "next-themes";
 
 interface HeaderProps {
@@ -52,6 +57,9 @@ export function Header({
   handleSaveLink,
 }: HeaderProps) {
   //   const { setTheme, theme } = useTheme();
+  const isSaved = useSelector((state: RootState) => state.misc.isSaved);
+  const isPublished = useSelector((state: RootState) => state.misc.isPublished);
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-8 sm:h-14 items-center px-2 sm:px-4">
@@ -125,13 +133,26 @@ export function Header({
             <Eye className="h-4 w-4 mr-2" />
             Preview
           </Button>
-          <Button variant="outline" size="sm" onClick={handleSaveLink}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              handleSaveLink();
+              dispatch(toggleIsSaved(true));
+            }}
+          >
             <Save className="h-3 h-3 sm:h-4 sm:w-4 sm:mr-2" />
             <span className="hidden sm:inline">Save</span>
+            {!isSaved && (
+              <span className="ml-1 h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+            )}
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={() => dispatch(toggleIsPublished(true))}>
             <Upload className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
             <span className="hidden sm:inline">Publish</span>
+            {!isPublished && (
+              <span className="ml-1 h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
+            )}
           </Button>
           {/* <Button
             variant="ghost"

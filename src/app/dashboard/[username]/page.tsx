@@ -1,4 +1,6 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import AnalyticsHeader from "@/Components/Analytics/AnalyticsHeader";
 // import LinkBuilder from '@/Components/Design/LinkBuilder'
 // import LinkBuilder3 from '@/Components/Design/LinkBuilder3'
@@ -13,7 +15,7 @@ import { linksThunks } from "@/store/thunks/links";
 import { themeThunks } from "@/store/thunks/theme";
 import { ThemeSettings } from "@/types";
 import { useSession } from "next-auth/react";
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
@@ -69,7 +71,7 @@ function Page({ params }: Props) {
   const { username } = React.use(params);
   const { data } = useSession();
   const dispatch = useDispatch<AppDispatch>();
-
+  
   const links = useSelector((state: RootState) => state.link.links);
 
   const themes: ThemeSettings[] = useSelector(

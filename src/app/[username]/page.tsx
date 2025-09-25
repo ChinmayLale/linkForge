@@ -1,9 +1,13 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, { useState } from "react";
 import { Badge } from "@/Components/ui/badge";
 import type { ProfileData, ThemeSettings, LinkItem } from "@/types";
 import { LinkComponents } from "@/Components/Design/LinkComponents";
 import Loading from "./_Components/loading";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface PageProps {
   params: {
@@ -17,14 +21,14 @@ const PublicProfile = ({ params }: PageProps) => {
   const { username } = params;
   const [loading, setLoading] = useState(true);
 
-  
-
+  const theme = useSelector((state: RootState) => state.theme.theme);
+  const profile = useSelector((state: RootState) => state.user);
 
   const getBackgroundStyle = () => {
-    if (theme.backgroundType === "gradient") {
-      return { background: theme.backgroundColor };
-    }
-    return { backgroundColor: theme.backgroundColor };
+    // if (theme.backgroundType === "gradient") {
+    //   return { background: theme.backgroundColor };
+    // }
+    // return { backgroundColor: theme.backgroundColor };
   };
 
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
@@ -58,7 +62,7 @@ const PublicProfile = ({ params }: PageProps) => {
         <div className="text-center mb-8">
           <div className="relative inline-block mb-4">
             <img
-              src={profile.avatar}
+              src={profile.avatarUrl}
               alt={profile.name}
               className="w-20 h-20 rounded-full border-4 border-white/30 shadow-xl object-cover"
             />

@@ -24,7 +24,7 @@ export function LoginForm({ className }: { className?: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [hasCheckedLogin, setHasCheckedLogin] = useState(false);
   const [showSignupPrompt, setShowSignupPrompt] = useState(false);
-  const [pendingGoogleUser, setPendingGoogleUser] = useState<any>(null);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState<unknown>(null);
 
   // Check for existing session and handle Google auth errors
   useEffect(() => {

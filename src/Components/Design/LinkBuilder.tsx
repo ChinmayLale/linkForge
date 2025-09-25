@@ -15,15 +15,18 @@ import type {
   PreviewMode,
 } from "../../types";
 // import { templateStyles } from "@/Constants";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import { useSession } from "next-auth/react";
 import { addUserLinksService } from "@/Services/links/addUserLinks.service";
 import { toast } from "sonner";
 import { useThemes } from "@/hooks/getCustomThemes";
 import { deleteUserLinkService } from "@/Services/links/deleteUserLink.service";
+import { toggleIsPublished, toggleIsSaved } from "@/store/slices/miscSlice";
+import { updateUserThemeService } from "@/Services/Theme/updateUserTheme.service";
 
 export default function LinkBuilder4() {
+  const dispatch = useDispatch<AppDispatch>();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
@@ -34,7 +37,6 @@ export default function LinkBuilder4() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [settingsPanelOpen, setSettingsPanelOpen] = useState(false);
   const [screenSize, setScreenSize] = useState<ScreenSize>("desktop");
-
   const { templateStyles, templates } = useThemes();
 
   const userLinks = useSelector((state: RootState) => state.link.links);
@@ -71,15 +73,25 @@ export default function LinkBuilder4() {
   });
 
   const [links, setLinks] = useState<LinkItem[]>(userLinks);
-  const defaultTheme = templateStyles.clean || Object.values(templateStyles)[0];
+  const defaultTheme = userData.theme || templateStyles.clean;
 
   const [theme, setTheme] = useState<ThemeSettings>(defaultTheme);
 
   useEffect(() => {
-    const newDefault = templateStyles.clean || Object.values(templateStyles)[0];
+    if (userData && userData.theme) {
+      setTheme(userData.theme);
+    }
+  }, [userData]);
 
-    setTheme(newDefault);
-  }, [templateStyles, templates]);
+  useEffect(() => {
+    dispatch(toggleIsSaved(false));
+    dispatch(toggleIsPublished(false));
+  }, [theme, dispatch, links]);
+
+  // useEffect(() => {
+  //   const newDefault = templateStyles.clean || Object.values(templateStyles)[0];
+  //   setTheme(newDefault);
+  // }, [templateStyles, templates]);
 
   useEffect(() => {
     setLinks(userLinks);
@@ -176,10 +188,13 @@ export default function LinkBuilder4() {
   const handleSaveLink = async () => {
     const token = data?.customToken || "";
     const res = addUserLinksService(links, token);
-    toast.promise(res, {
-      loading: "Saving links...",
-      success: "Links saved successfully",
-      error: "Error saving links",
+    const updateTheme = await updateUserThemeService(theme.id, token);
+    const combinedPromise = Promise.all([res, updateTheme]);
+
+    toast.promise(combinedPromise, {
+      loading: "Saving links and updating theme...",
+      success: "Links & theme saved successfully",
+      error: "Error saving links or theme",
     });
   };
 

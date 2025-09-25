@@ -7,6 +7,7 @@ import { themeThunks } from '../thunks/theme';
 interface initialState {
    theme: ThemeSettings[]
    error?: string | null;
+   selectedTheme?: ThemeSettings | null
    loading: boolean; // <-
 }
 
@@ -16,6 +17,7 @@ const initialState: initialState = {
    theme: [],
    error: "",
    loading: false, // <-
+   selectedTheme: null
 }
 
 const ThemeSlice = createSlice({
@@ -24,6 +26,9 @@ const ThemeSlice = createSlice({
    reducers: {
       addthemesReducer: (state, action: PayloadAction<ThemeSettings[]>) => {
          state.theme = action.payload
+      },
+      setSelectedTheme: (state, action: PayloadAction<ThemeSettings>) => {
+         state.selectedTheme = action.payload
       }
    },
    extraReducers: (builder) => {
@@ -49,4 +54,4 @@ const ThemeSlice = createSlice({
 
 export default ThemeSlice.reducer
 
-export const { addthemesReducer } = ThemeSlice.actions
+export const { addthemesReducer, setSelectedTheme } = ThemeSlice.actions

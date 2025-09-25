@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { userThunks } from '../thunks/user';
+import { ThemeSettings } from '@/types';
 
 interface userState {
     username: string;
@@ -9,6 +10,7 @@ interface userState {
     email?: string;
     bio?: string;
     tags?: string[];
+    theme?: ThemeSettings | null;
     themeId?: string;
     avatarUrl?: string;
     totalLinks?: number; // Optional property for total links
@@ -66,18 +68,19 @@ const userSlice = createSlice({
             state.error = undefined;
         });
         builder.addCase(userThunks.getUserProfileThunk.fulfilled, (state, action: PayloadAction<userState>) => {
-            const { username, name, bio, avatarUrl, tags, email, themeId, totalClicks, totalLinks: linksCount, ctr } = action.payload;
+            const { username, name, bio, avatarUrl, tags, email, theme, totalClicks, totalLinks: linksCount, ctr } = action.payload;
             state.username = username;
             state.name = name || "";
             state.bio = bio || "";
             state.avatarUrl = avatarUrl || "";
             state.tags = tags || [];
             state.email = email || "";
-            state.themeId = themeId || "";
+            state.themeId = theme?.id || "";
             state.error = undefined; // Clear any previous error
             state.loading = false;
             state.totalClicks = totalClicks || 0;
             state.totalLinks = linksCount || 0;
+            state.theme = theme || null;
             state.ctr = ctr || 0; // Set click-through rate if provided
         });
         builder.addCase(userThunks.getUserProfileThunk.rejected, (state, action) => {
