@@ -23,6 +23,9 @@ import type { LinkItem, ScreenSize } from "../../types/index";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { toggleIsPublished, toggleIsSaved } from "@/store/slices/miscSlice";
+import { publishUserLinks } from "@/Services/links/PublishUserLinks.service";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 // import { useTheme } from "next-themes";
 
 interface HeaderProps {
@@ -56,10 +59,18 @@ export function Header({
   SettingsPanel,
   handleSaveLink,
 }: HeaderProps) {
-  //   const { setTheme, theme } = useTheme();
+  const { data } = useSession();
   const isSaved = useSelector((state: RootState) => state.misc.isSaved);
   const isPublished = useSelector((state: RootState) => state.misc.isPublished);
   const dispatch = useDispatch<AppDispatch>();
+  const handlePublish = () => {
+    const res = publishUserLinks(data?.customToken || "");
+    toast.promise(res, {
+      loading: "Publishing...",
+      success: "Links published successfully",
+      error: "Error publishing links",
+    });
+  };
   return (
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-8 sm:h-14 items-center px-2 sm:px-4">
@@ -147,7 +158,13 @@ export function Header({
               <span className="ml-1 h-2 w-2 rounded-full bg-red-500 animate-ping"></span>
             )}
           </Button>
-          <Button size="sm" onClick={() => dispatch(toggleIsPublished(true))}>
+          <Button
+            size="sm"
+            onClick={() => {
+              handlePublish();
+              dispatch(toggleIsPublished(true));
+            }}
+          >
             <Upload className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
             <span className="hidden sm:inline">Publish</span>
             {!isPublished && (

@@ -84,6 +84,9 @@ export default function LinkBuilder4() {
   }, [userData]);
 
   useEffect(() => {
+    if (userData.theme === theme) {
+      return;
+    }
     dispatch(toggleIsSaved(false));
     dispatch(toggleIsPublished(false));
   }, [theme, dispatch, links]);
