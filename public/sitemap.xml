@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- Landing/Dashboard Page -->
+  <url>
+    <loc>https://link-forge-ten.vercel.app/</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Login Page -->
+  <url>
+    <loc>https://link-forge-ten.vercel.app/login</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Signup Page -->
+  <url>
+    <loc>https://link-forge-ten.vercel.app/signup</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 
+    Dynamic User Profile Routes: https://link-forge-ten.vercel.app/[username]
+    
+    Note: You should dynamically generate entries for each username.
+    Below are example entries - replace with actual usernames from your database.
+    
+    For many users, consider using a sitemap index file that points to 
+    multiple sitemap files (max 50,000 URLs per sitemap file).
+  -->
+  
+  <!-- Example user profiles - replace with actual usernames -->
+  <url>
+    <loc>https://link-forge-ten.vercel.app/astrochinmay</loc>
+    <lastmod>2025-10-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  
+  <!-- Add more username entries here -->
+  
+  <!-- 
+    Protected Dashboard Routes: https://link-forge-ten.vercel.app/dashboard/username
+    
+    Note: Protected routes (requiring authentication) should NOT be included 
+    in the sitemap as search engines cannot access them and they provide no 
+    SEO value. Only public pages should be in your sitemap.
+  -->
+
+</urlset>
