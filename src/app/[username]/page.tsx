@@ -112,7 +112,15 @@ const PublicProfile = ({ params }: PageProps) => {
     const fetchData = async () => {
       setLoading(true);
       const result = await getUserPageData(username);
+
       setData(result);
+
+      if (result.userProfile) {
+        document.title = `${result.userProfile.name} (@${username}) | linkForge`;
+      } else {
+        document.title = `@${username} | linkForge`;
+      }
+
       setLoading(false);
     };
 
