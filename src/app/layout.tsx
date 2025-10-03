@@ -77,6 +77,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta
+          name="google-site-verification"
+          content="cMAjLyDUDwIUTu6m3jbQSYWp83I9TDNqq96u7l8zb7o"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable}${plusJakarta.variable} antialiased  scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent`}
       >
