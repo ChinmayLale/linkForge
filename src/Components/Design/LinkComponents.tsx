@@ -14,7 +14,14 @@ import {
   ExternalLink,
   LinkIcon,
 } from "lucide-react";
-import type { EventMetadata, LinkItem, ThemeSettings } from "../../types";
+import type {
+  EventMetadata,
+  GalleryMetadata,
+  LinkItem,
+  LinkMetadata,
+  ThemeSettings,
+  VideoMetadata,
+} from "../../types";
 import { socialIcons } from "../../Constants";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
@@ -70,6 +77,7 @@ export function LinkComponents({
   });
 
   // Enhanced style classes for different link styles
+
   const getStyleClasses = (style: string, color: string) => {
     const textStyles = getTextStyles();
 
@@ -205,6 +213,59 @@ export function LinkComponents({
       );
 
     case "video":
+      // Utility function to extract YouTube video ID and determine if it's a Short
+      const getYouTubeVideoInfo = (
+        url: string
+      ): { videoId: string | null; isShort: boolean } => {
+        try {
+          const urlObj = new URL(url);
+          const hostname = urlObj.hostname.toLowerCase();
+          const pathname = urlObj.pathname;
+
+          // Standard YouTube URL (e.g., https://www.youtube.com/watch?v=VIDEO_ID)
+          if (
+            hostname.includes("youtube.com") &&
+            urlObj.searchParams.get("v")
+          ) {
+            return { videoId: urlObj.searchParams.get("v"), isShort: false };
+          }
+          // YouTube Shorts URL (e.g., https://www.youtube.com/shorts/VIDEO_ID)
+          if (
+            hostname.includes("youtube.com") &&
+            pathname.startsWith("/shorts/")
+          ) {
+            return { videoId: pathname.split("/")[2], isShort: true };
+          }
+          // Shortened YouTube URL (e.g., https://youtu.be/VIDEO_ID)
+          if (hostname.includes("youtu.be")) {
+            return { videoId: pathname.split("/")[1], isShort: false }; // Treat as standard video
+          }
+          return { videoId: null, isShort: false };
+        } catch {
+          return { videoId: null, isShort: false };
+        }
+      };
+
+      // Format duration for Shorts (e.g., convert "45" to "0:45")
+      const formatDuration = (duration: string): string => {
+        try {
+          const seconds = parseInt(duration);
+          if (isNaN(seconds)) return duration;
+          const minutes = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+          return `${minutes}:${secs.toString().padStart(2, "0")}`;
+        } catch {
+          return duration;
+        }
+      };
+
+      const { videoId, isShort } = getYouTubeVideoInfo(link.url);
+      const isVideoMetadata = (
+        metadata: LinkMetadata | undefined
+      ): metadata is VideoMetadata => {
+        return !!metadata && "duration" in metadata;
+      };
+
       return (
         <div
           key={link.id}
@@ -216,30 +277,50 @@ export function LinkComponents({
           }}
           onClick={() => setSelectedElement(link.id)}
         >
-          <div className="relative">
-            <Image
-              src={
-                link.thumbnail ||
-                "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
-              }
-              height={32}
-              width={32}
-              alt="Video thumbnail"
-              className="w-full h-24 sm:h-32 object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <Button
-                size="lg"
-                variant="ghost"
-                className="rounded-full"
-                style={{
-                  backgroundColor: `${theme.primaryColor}33`,
-                  color: theme.primaryColor,
-                }}
-              >
-                <Play className="w-4 h-4 sm:w-6 sm:h-6 ml-1" />
-              </Button>
-            </div>
+          <div
+            className="relative w-full"
+            style={{
+              paddingBottom: isShort
+                ? "177.78%"
+                : "56.25%" /* 9:16 for Shorts, 16:9 for standard */,
+            }}
+          >
+            {videoId ? (
+              <iframe
+                src={`https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0`}
+                title={link.title}
+                className="absolute top-0 left-0 w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ) : (
+              <Image
+                src={
+                  link.thumbnail ||
+                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=200&fit=crop"
+                }
+                height={32}
+                width={32}
+                alt="Video thumbnail"
+                className="absolute top-0 left-0 w-full h-full object-cover"
+              />
+            )}
+            {!videoId && (
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                <Button
+                  size="lg"
+                  variant="ghost"
+                  className="rounded-full"
+                  style={{
+                    backgroundColor: `${theme.primaryColor}33`,
+                    color: theme.primaryColor,
+                  }}
+                >
+                  <Play className="w-4 h-4 sm:w-6 sm:h-6 ml-1" />
+                </Button>
+              </div>
+            )}
             <Badge
               className="absolute top-2 right-2 text-xs"
               style={{
@@ -247,7 +328,9 @@ export function LinkComponents({
                 color: theme.textColor,
               }}
             >
-              duration here
+              {link.metadata && isVideoMetadata(link.metadata)
+                ? formatDuration(link.metadata.duration)
+                : "N/A"}
             </Badge>
           </div>
           <div className="p-3 sm:p-4">
@@ -258,7 +341,9 @@ export function LinkComponents({
               {link.title}
             </h3>
             <p className="text-xs line-clamp-2" style={textStyles.secondary}>
-              duration
+              {link.metadata && isVideoMetadata(link.metadata)
+                ? link.metadata.description || "No description"
+                : "No description"}
             </p>
           </div>
         </div>
@@ -328,6 +413,13 @@ export function LinkComponents({
       );
 
     case "gallery":
+      function isGalleryMetadata(
+        metadata: LinkMetadata | undefined
+      ): metadata is GalleryMetadata {
+        return (
+          !!metadata && "images" in metadata && Array.isArray(metadata.images)
+        );
+      }
       return (
         <Card
           key={link.id}
@@ -341,7 +433,7 @@ export function LinkComponents({
             ...(selectedElement === link.id ? ringColor : {}),
           }}
         >
-          <CardContent className="px-4 space-y-2">
+          <CardContent className="px-4 py-3 space-y-3">
             <div className="flex items-center justify-between">
               <h3
                 className="font-semibold text-sm sm:text-base truncate"
@@ -349,42 +441,73 @@ export function LinkComponents({
               >
                 {link.title}
               </h3>
-
               <Badge
                 variant="secondary"
                 className="text-xs"
                 style={{
-                  backgroundColor: `${theme.backgroundColor} `,
+                  backgroundColor: theme.backgroundColor,
                   color: theme.secondaryText,
                 }}
               >
-                link photos here
+                {link.metadata && isGalleryMetadata(link.metadata)
+                  ? link.metadata.images.length
+                  : 0}{" "}
+                {link.metadata &&
+                isGalleryMetadata(link.metadata) &&
+                link.metadata.images.length === 1
+                  ? "photo"
+                  : "photos"}
               </Badge>
             </div>
 
-            <div className="grid grid-cols-4 gap-1 rounded overflow-hidden">
-              {link.images?.slice(0, 4).map((img: string, idx: number) => (
-                <div
-                  key={idx}
-                  className="aspect-square overflow-hidden rounded-sm"
-                >
-                  <Image
-                    src={
-                      img ||
-                      "https://images.unsplash.com/photo-1721830991086-6060b6979cf6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXN0cm9ub3V0fGVufDB8fDB8fHww"
-                    }
-                    alt={`Gallery ${idx + 1}`}
-                    width={200}
-                    height={200}
-                    unoptimized
-                    className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-105"
-                    style={{
-                      borderRadius: `${(theme.borderRadius || 16) / 2}px`,
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
+            {/* Gallery Grid */}
+            {link.type === "gallery" &&
+            link.metadata &&
+            isGalleryMetadata(link.metadata) ? (
+              <div
+                className={`grid gap-1.5 rounded overflow-hidden ${
+                  link.metadata.images.length === 1
+                    ? "grid-cols-1"
+                    : link.metadata.images.length === 2
+                    ? "grid-cols-2"
+                    : link.metadata.images.length === 3
+                    ? "grid-cols-3"
+                    : "grid-cols-4"
+                }`}
+              >
+                {link.metadata.images
+                  .slice(0, 4)
+                  .map((img: string, idx: number) => (
+                    <div
+                      key={idx}
+                      className="aspect-square overflow-hidden rounded-sm relative"
+                    >
+                      <img
+                        src={img}
+                        alt={`${link.title} - Image ${idx + 1}`}
+                        className="object-cover w-full h-full transition-transform duration-200 group-hover:scale-110"
+                        style={{
+                          borderRadius: `${(theme.borderRadius || 16) / 4}px`,
+                        }}
+                      />
+                      {idx === 3 &&
+                        link.metadata &&
+                        isGalleryMetadata(link.metadata) &&
+                        link.metadata.images.length > 4 && (
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <span className="text-white font-semibold text-sm">
+                              +{link.metadata.images.length - 4}
+                            </span>
+                          </div>
+                        )}
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                <p className="text-xs text-muted-foreground">No images added</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       );

@@ -19,6 +19,7 @@ import type {
   LinkItem,
 } from "../../types";
 import { useCallback, useEffect, useState } from "react";
+import PreviewSkeleton from "./PreviewSkeleton";
 
 interface PreviewCanvasProps {
   previewMode: PreviewMode;
@@ -86,11 +87,15 @@ export function PreviewCanvas({
   const getBackgroundStyle = () => {
     // console.log("theme passed:", theme);
 
-    if (theme.backgroundType === "gradient") {
-      return { background: theme.backgroundColor };
-    }
+    // if (theme.backgroundType === "gradient") {
+    //   return { background: theme.backgroundColor };
+    // }
     return { backgroundColor: theme.backgroundColor };
   };
+
+  if (!theme) {
+    return <PreviewSkeleton />;
+  }
 
   return (
     <div className="flex-1 flex flex-col min-w-0">
@@ -240,19 +245,20 @@ export function PreviewCanvas({
                     >
                       {profile.bio}
                     </p>
-                    <div
+                    {/* add user tags here  */}
+                    {/* <div
                       className="flex justify-center gap-2 flex-wrap"
                       onClick={() => {
                         setSelectedElement();
                       }}
                     >
                       <Badge variant="secondary" className="text-xs">
-                        🎵 Music Producer
+                        ✨ Designer
                       </Badge>
                       <Badge variant="secondary" className="text-xs">
                         ✨ Creator
                       </Badge>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="space-y-3 sm:space-y-4">
                     {links

@@ -13,6 +13,7 @@ import SettingsPage from "@/Components/Settings/Settings";
 import { AppDispatch, RootState } from "@/store/store";
 import { linksThunks } from "@/store/thunks/links";
 import { themeThunks } from "@/store/thunks/theme";
+import { userThunks } from "@/store/thunks/user";
 import { ThemeSettings } from "@/types";
 import { useSession } from "next-auth/react";
 import React, { use, useEffect } from "react";
@@ -78,6 +79,17 @@ function Page({ params }: Props) {
   const themes: ThemeSettings[] = useSelector(
     (state: RootState) => state.theme.theme
   );
+
+  useEffect(() => {
+    if (data?.customToken && username) {
+      dispatch(
+        userThunks.getUserProfileThunk({
+          username: username,
+          token: data?.customToken || "",
+        })
+      );
+    }
+  }, []);
 
   useEffect(() => {
     if (data?.customToken && !isLinksFetched) {

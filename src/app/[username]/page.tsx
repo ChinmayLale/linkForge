@@ -227,14 +227,15 @@ const PublicProfile = ({ params }: PageProps) => {
             {userProfile.bio}
           </p>
 
-          <div className="flex justify-center gap-2 flex-wrap">
+          {/*   Add Tags To Peoples */}
+          {/* <div className="flex justify-center gap-2 flex-wrap">
             <Badge variant="secondary" className="text-xs">
               🎵 Music Producer
             </Badge>
             <Badge variant="secondary" className="text-xs">
               ✨ Creator
             </Badge>
-          </div>
+          </div> */}
         </div>
 
         {/* Links Section */}

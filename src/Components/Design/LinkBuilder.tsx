@@ -13,6 +13,7 @@ import type {
   ThemeSettings,
   ScreenSize,
   PreviewMode,
+  GalleryMetadata,
 } from "../../types";
 // import { templateStyles } from "@/Constants";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,9 +25,12 @@ import { useThemes } from "@/hooks/getCustomThemes";
 import { deleteUserLinkService } from "@/Services/links/deleteUserLink.service";
 import { toggleIsPublished, toggleIsSaved } from "@/store/slices/miscSlice";
 import { updateUserThemeService } from "@/Services/Theme/updateUserTheme.service";
+import PreviewSkeleton from "./PreviewSkeleton";
+import { useEdgeStore } from "@/lib/edgestore";
 
 export default function LinkBuilder4() {
   const dispatch = useDispatch<AppDispatch>();
+  const { edgestore } = useEdgeStore();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [previewMode, setPreviewMode] = useState<PreviewMode>("mobile");
@@ -161,7 +165,18 @@ export default function LinkBuilder4() {
   const updateLink = useCallback(
     (id: string, updates: Partial<LinkItem>) => {
       setLinks(
-        links.map((link) => (link.id === id ? { ...link, ...updates } : link))
+        links.map((link) =>
+          link.id === id
+            ? {
+                ...link,
+                ...updates,
+                // Ensure images and metadata.images stay in sync for gallery links
+                ...(updates.metadata && link.type === "gallery"
+                  ? { images: (updates.metadata as GalleryMetadata).images }
+                  : {}),
+              }
+            : link
+        )
       );
     },
     [links]
@@ -248,10 +263,15 @@ export default function LinkBuilder4() {
         setProfile={setProfile}
         theme={theme}
         setTheme={setTheme}
+        edgeStoreApi={edgestore}
       />
     ),
     [selectedElement, links, profile, theme, deleteLink, updateLink]
   );
+
+  if (!theme) {
+    return <PreviewSkeleton />;
+  }
 
   return (
     <div className={`min-h-screen bg-background text-foreground`}>
@@ -305,6 +325,7 @@ export default function LinkBuilder4() {
                   setProfile={setProfile}
                   theme={theme}
                   setTheme={setTheme}
+                  edgeStoreApi={edgestore}
                 />
               </ScrollArea>
             </div>
