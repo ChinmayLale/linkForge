@@ -29,6 +29,7 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  // console.log("TEMPPPPP USERnAMEEEE ISSSS +++++++", tmpUsername);
   const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -49,6 +50,15 @@ export function SignUpForm({
 
   // Debounce username input
   const debouncedUsername = useDebounce(username, 500);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const tmpUsername = localStorage.getItem("tmpUsername");
+      if (tmpUsername) {
+        setUsername(tmpUsername);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const checkLoginStatus = async () => {

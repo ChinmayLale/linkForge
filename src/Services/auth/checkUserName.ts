@@ -10,8 +10,10 @@ export const checkUsernameAvailability = async (username: string): Promise<{ ava
             params: { username },
         })
         console.log({ response: response });
-
-        return { available: response.status < 400, message: response.data?.message || "Username is available" };
+        const { data } = response.data;
+        console.log("Is Username Availble : ", data);
+        const { availble, message } = data;
+        return { available: availble, message: message || availble ? "Username is available" : "Username is not available" };
     } catch (error) {
         console.log({ error });
         return { available: false, message: "An error occurred while checking username availability" };
