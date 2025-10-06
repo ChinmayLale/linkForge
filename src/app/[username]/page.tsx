@@ -9,6 +9,7 @@ import Loading from "./_Components/loading";
 import axios from "axios";
 import { BASE_URL } from "@/Constants/Endpoints";
 import Link from "next/link";
+import { addViewsToLinkService } from "@/Services/links/addLinkViews.service";
 
 interface PageProps {
   params: Promise<{
@@ -106,6 +107,19 @@ const PublicProfile = ({ params }: PageProps) => {
   });
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [playingMusic, setPlayingMusic] = useState<string | null>(null);
+
+  const [viewAdded, setViewAdded] = useState(false);
+
+  useEffect(() => {
+    const addViewsToLink = async () => {
+      if (username && !viewAdded) {
+        await addViewsToLinkService(username);
+        setViewAdded(true);
+      }
+    };
+
+    addViewsToLink();
+  }, [username, viewAdded]); 
 
   // Fetch data on component mount
   useEffect(() => {

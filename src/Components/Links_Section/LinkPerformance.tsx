@@ -107,6 +107,7 @@ function LinkPerformanceSection() {
     "views" | "clicks" | "ctr" | "change" | "conversion"
   >("clicks");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
   const filtered = linkPerformance.filter((l) => {
     const matchesCategory = category === "all" || l.category === category;
@@ -130,55 +131,54 @@ function LinkPerformanceSection() {
     return sortDir === "asc" ? diff : -diff;
   });
 
+  const handleCopy = (url: string, id: number) => {
+    navigator.clipboard.writeText(url);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
     <div className="w-full h-full">
-      <Card className="w-full max-h-full bg-card border-border">
-        <CardHeader className="pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1">
-              <div className="text-base font-semibold text-card-foreground">
-                Link performance
+      <Card className="w-full h-full bg-card border-border flex flex-col">
+        <CardHeader className="pb-3 px-4 sm:px-6 pt-4 shrink-0">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-lg font-semibold text-card-foreground">
+                Link Performance
               </div>
-              <CardDescription className="text-muted-foreground">
-                Search, filter, and sort to review engagement at a glance
+              <CardDescription className="text-xs text-muted-foreground">
+                Track engagement metrics across all your links
               </CardDescription>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5">
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs bg-transparent"
+                className="h-8 text-xs px-3 bg-transparent"
               >
                 Export
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs bg-transparent"
-              >
-                Share
               </Button>
             </div>
           </div>
 
-          <div className="mt-4 flex flex-col md:flex-row gap-3 md:items-center">
-            <div className="relative md:w-1/2">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="mt-3 flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search links by title or URL"
-                className="pl-9"
+                placeholder="Search links..."
+                className="pl-8 h-9 text-sm"
                 aria-label="Search links"
               />
             </div>
-            <div className="flex gap-3 md:ml-auto">
+            <div className="flex gap-2">
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="w-[150px]">
+                <SelectTrigger className="w-[130px] h-9 text-sm">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All categories</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   {categories.map((c) => (
                     <SelectItem key={c} value={c}>
                       {c}
@@ -197,80 +197,126 @@ function LinkPerformanceSection() {
                   setSortDir(dir);
                 }}
               >
-                <SelectTrigger className="w-[180px]">
-                  <div className="flex items-center gap-2">
-                    <ArrowUpDown className="h-4 w-4" />
+                <SelectTrigger className="w-[140px] h-9 text-sm">
+                  <div className="flex items-center gap-1.5">
+                    <ArrowUpDown className="h-3.5 w-3.5" />
                     <SelectValue placeholder="Sort" />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="clicks:desc">
-                    Clicks • High → Low
-                  </SelectItem>
-                  <SelectItem value="clicks:asc">
-                    Clicks • Low → High
-                  </SelectItem>
-                  <SelectItem value="views:desc">Views • High → Low</SelectItem>
-                  <SelectItem value="views:asc">Views • Low → High</SelectItem>
-                  <SelectItem value="ctr:desc">CTR • High → Low</SelectItem>
-                  <SelectItem value="ctr:asc">CTR • Low → High</SelectItem>
-                  <SelectItem value="change:desc">
-                    Change • High → Low
-                  </SelectItem>
-                  <SelectItem value="change:asc">
-                    Change • Low → High
-                  </SelectItem>
-                  <SelectItem value="conversion:desc">
-                    Conversion • High → Low
-                  </SelectItem>
-                  <SelectItem value="conversion:asc">
-                    Conversion • Low → High
-                  </SelectItem>
+                  <SelectItem value="clicks:desc">Clicks ↓</SelectItem>
+                  <SelectItem value="clicks:asc">Clicks ↑</SelectItem>
+                  <SelectItem value="views:desc">Views ↓</SelectItem>
+                  <SelectItem value="views:asc">Views ↑</SelectItem>
+                  <SelectItem value="ctr:desc">CTR ↓</SelectItem>
+                  <SelectItem value="ctr:asc">CTR ↑</SelectItem>
+                  <SelectItem value="change:desc">Change ↓</SelectItem>
+                  <SelectItem value="change:asc">Change ↑</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+
+        <CardContent className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4">
+          <div className="space-y-2.5">
             {sorted.map((link, idx) => (
               <Card
                 key={link.id}
-                className="group hover:shadow-lg transition-all duration-300 border-border bg-background/60 backdrop-blur-sm"
+                className="group hover:shadow-md hover:border-primary/20 transition-all duration-200 border-border bg-background/50"
               >
-                <CardContent className="p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-xs font-medium text-muted-foreground shrink-0">
-                        #{idx + 1}
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                      <div className="relative shrink-0">
+                        <div className="w-11 h-11 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5 rounded-xl flex items-center justify-center text-xl border border-border/50">
+                          {link.thumbnail}
+                        </div>
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-muted rounded-full flex items-center justify-center text-[10px] font-semibold text-muted-foreground border border-background">
+                          {idx + 1}
+                        </div>
                       </div>
-                      <div className="w-10 h-10 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center text-lg border border-border/50 shrink-0">
-                        {link.thumbnail}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <div className="font-semibold text-card-foreground truncate">
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <div className="font-semibold text-sm text-card-foreground truncate">
                             {link.title}
                           </div>
                           <Badge
                             variant="secondary"
-                            className="text-2xs px-2 py-0.5"
+                            className="text-[10px] px-1.5 py-0 h-4 shrink-0"
                           >
                             {link.category}
                           </Badge>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <ExternalLink className="h-3 w-3" />
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <ExternalLink className="h-3 w-3 shrink-0" />
                           <span className="truncate">{link.url}</span>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => handleCopy(link.url, link.id)}
+                            className="h-5 w-5 p-0 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                             aria-label="Copy URL"
                           >
-                            <Copy className="h-3 w-3" />
+                            <Copy
+                              className={`h-3 w-3 ${
+                                copiedId === link.id ? "text-green-500" : ""
+                              }`}
+                            />
                           </Button>
                         </div>
+                      </div>
+                    </div>
+
+                    <div className="hidden sm:flex items-center gap-3 shrink-0">
+                      <div className="flex flex-col items-center px-3 py-1.5 rounded-lg bg-muted/40 min-w-[70px]">
+                        <div className="flex items-center gap-1.5">
+                          <Eye className="h-3.5 w-3.5 text-chart-1" />
+                          <div className="text-sm font-semibold">
+                            {link.views.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="text-[10px] text-muted-foreground">
+                          views
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center px-3 py-1.5 rounded-lg bg-muted/40 min-w-[70px]">
+                        <div className="flex items-center gap-1.5">
+                          <MousePointer className="h-3.5 w-3.5 text-chart-2" />
+                          <div className="text-sm font-semibold">
+                            {link.clicks.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="text-[10px] text-muted-foreground">
+                          clicks
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-center px-3 py-1.5 rounded-lg bg-muted/40 min-w-[60px]">
+                        <div className="text-sm font-semibold">
+                          {link.clickRate}%
+                        </div>
+                        <div className="text-[10px] text-muted-foreground">
+                          CTR
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/60 bg-background/50">
+                        {link.trend === "up" ? (
+                          <TrendingUp className="h-3.5 w-3.5 text-green-500" />
+                        ) : (
+                          <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                        )}
+                        <span
+                          className={`text-xs font-semibold ${
+                            link.change > 0 ? "text-green-600" : "text-red-600"
+                          }`}
+                        >
+                          {link.change > 0 ? "+" : ""}
+                          {link.change}%
+                        </span>
                       </div>
                     </div>
 
@@ -279,79 +325,72 @@ function LinkPerformanceSection() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 shrink-0"
                         >
                           <MoreVertical className="h-4 w-4" />
                           <span className="sr-only">Open actions</span>
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuContent align="end" className="w-40">
                         <DropdownMenuItem>
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          View Link
+                          <ExternalLink className="h-3.5 w-3.5 mr-2" />
+                          View
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Share2 className="h-4 w-4 mr-2" />
-                          Share Link
+                          <Share2 className="h-3.5 w-3.5 mr-2" />
+                          Share
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Copy className="h-4 w-4 mr-2" />
-                          Copy URL
+                        <DropdownMenuItem
+                          onClick={() => handleCopy(link.url, link.id)}
+                        >
+                          <Copy className="h-3.5 w-3.5 mr-2" />
+                          Copy
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-3 gap-3">
-                    <div className="flex flex-col items-center justify-center rounded-md bg-muted/30 p-3">
-                      <div className="text-2xs text-muted-foreground">
-                        Views
+                  <div className="sm:hidden mt-3 grid grid-cols-4 gap-2">
+                    <div className="flex flex-col items-center py-2 rounded-lg bg-muted/40">
+                      <Eye className="h-3.5 w-3.5 text-chart-1 mb-1" />
+                      <div className="text-xs font-semibold">
+                        {link.views.toLocaleString()}
                       </div>
-                      <div className="mt-1 flex items-center gap-2">
-                        <Eye className="h-3.5 w-3.5 text-chart-1" />
-                        <div className="text-sm font-semibold">
-                          {link.views.toLocaleString()}
-                        </div>
+                      <div className="text-[9px] text-muted-foreground">
+                        views
                       </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center rounded-md bg-muted/30 p-3">
-                      <div className="text-2xs text-muted-foreground">
-                        Clicks
+                    <div className="flex flex-col items-center py-2 rounded-lg bg-muted/40">
+                      <MousePointer className="h-3.5 w-3.5 text-chart-2 mb-1" />
+                      <div className="text-xs font-semibold">
+                        {link.clicks.toLocaleString()}
                       </div>
-                      <div className="mt-1 flex items-center gap-2">
-                        <MousePointer className="h-3.5 w-3.5 text-chart-2" />
-                        <div className="text-sm font-semibold">
-                          {link.clicks.toLocaleString()}
-                        </div>
+                      <div className="text-[9px] text-muted-foreground">
+                        clicks
                       </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center rounded-md bg-muted/30 p-3">
-                      <div className="text-2xs text-muted-foreground">CTR</div>
-                      <div className="mt-1 text-sm font-semibold">
+                    <div className="flex flex-col items-center py-2 rounded-lg bg-muted/40">
+                      <div className="text-xs font-semibold">
                         {link.clickRate}%
                       </div>
+                      <div className="text-[9px] text-muted-foreground">
+                        CTR
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between rounded-md bg-muted/30 p-3">
-                    <div className="text-2xs text-muted-foreground">Trend</div>
-                    <div
-                      className={`text-xs font-semibold ${
-                        link.change > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
-                      {link.change > 0 ? "+" : ""}
-                      {link.change}%
-                    </div>
-                    <div className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-2xs border border-border/60">
+                    <div className="flex flex-col items-center py-2 rounded-lg bg-muted/40">
                       {link.trend === "up" ? (
-                        <TrendingUp className="h-3.5 w-3.5 text-green-500" />
+                        <TrendingUp className="h-3.5 w-3.5 text-green-500 mb-1" />
                       ) : (
-                        <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+                        <TrendingDown className="h-3.5 w-3.5 text-red-500 mb-1" />
                       )}
-                      <span className="text-muted-foreground">
-                        vs. previous
-                      </span>
+                      <div
+                        className={`text-xs font-semibold ${
+                          link.change > 0 ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {link.change > 0 ? "+" : ""}
+                        {link.change}%
+                      </div>
                     </div>
                   </div>
                 </CardContent>
