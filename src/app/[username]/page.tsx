@@ -172,13 +172,17 @@ const PublicProfile = ({ params }: PageProps) => {
         key={link.id}
         onClick={async () => {
           await trackClick(link.id);
-          const a = document.createElement("a");
-          a.href = link.url;
-          a.target = "_self"; // ✅ open in same tab
-          a.rel = "noopener noreferrer";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          if (link.url.startsWith("mailto:")) {
+            window.location.href = link.url;
+          } else {
+            const a = document.createElement("a");
+            a.href = link.url;
+            a.target = "_self";
+            a.rel = "noopener noreferrer";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
         }}
       >
         <LinkComponents
