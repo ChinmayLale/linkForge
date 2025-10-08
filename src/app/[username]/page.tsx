@@ -172,7 +172,13 @@ const PublicProfile = ({ params }: PageProps) => {
         key={link.id}
         onClick={async () => {
           await trackClick(link.id);
-          window.location.href = link.url;
+          const a = document.createElement("a");
+          a.href = link.url;
+          a.target = "_self"; // ✅ open in same tab
+          a.rel = "noopener noreferrer";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
         }}
       >
         <LinkComponents
