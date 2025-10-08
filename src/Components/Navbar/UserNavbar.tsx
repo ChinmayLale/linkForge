@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   Home,
   Link,
@@ -291,12 +291,22 @@ const DashboardNavigation: React.FC = () => {
     (state: RootState) => state.user
   );
 
+  const links = useSelector((state: RootState) => state.link.links);
+
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [notifications] = useState<number>(2);
-  const [linkCount] = useState<number>(12);
+  const [linkCount, setLinkCount] = useState<number>(links.length || 0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { setTheme } = useTheme();
+
+  const currentTabName = useSelector((state: RootState) => state.nav.tabName);
+
+  useEffect(() => {
+    if (currentTabName) {
+      setActiveTab(currentTabName.toLowerCase());
+    }
+  }, [currentTabName]);
 
   // Memoize navItems array
   const navItems = useMemo<NavItemType[]>(
@@ -328,7 +338,7 @@ const DashboardNavigation: React.FC = () => {
       dispatch(setTabName(itemLabel as TabName));
       if (isMobile) setMobileMenuOpen(false);
     },
-    [dispatch]
+    [dispatch, currentTabName]
   );
 
   // Render function for NavItem to avoid creating new functions in render
