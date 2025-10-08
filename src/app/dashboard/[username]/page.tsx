@@ -16,7 +16,7 @@ import { themeThunks } from "@/store/thunks/theme";
 import { userThunks } from "@/store/thunks/user";
 import { ThemeSettings } from "@/types";
 import { useSession } from "next-auth/react";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 type Props = {
@@ -75,6 +75,7 @@ function Page({ params }: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const [isThemeFetched, setIsThemeFetched] = React.useState(false);
   const [isLinksFetched, setIsLinksFetched] = React.useState(false);
+  const [isUserFetched, setIsUserFetched] = React.useState(false);
   const links = useSelector((state: RootState) => state.link.links);
 
   const themes: ThemeSettings[] = useSelector(
@@ -82,7 +83,8 @@ function Page({ params }: Props) {
   );
 
   useEffect(() => {
-    if (data?.customToken && username) {
+    if (data?.customToken && !isUserFetched) {
+      setIsUserFetched(true);
       dispatch(
         userThunks.getUserProfileThunk({
           username: username,
@@ -90,7 +92,7 @@ function Page({ params }: Props) {
         })
       );
     }
-  }, []);
+  }, [data?.customToken, isUserFetched]);
 
   useEffect(() => {
     if (data?.customToken && !isLinksFetched) {
