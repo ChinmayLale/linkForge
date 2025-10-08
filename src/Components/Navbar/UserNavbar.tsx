@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   Home,
   Link,
   Palette,
-  BarChart3,
   Settings,
   User,
   Bell,
@@ -42,89 +41,73 @@ import { useDispatch, useSelector } from "react-redux";
 import { setTabName, TabName } from "@/store/slices/navigationSlice";
 import { RootState } from "@/store/store";
 import { signOut } from "next-auth/react";
-
 import { useTheme } from "next-themes";
 
 // Mock user data
-const mockUser = {
-  name: "John Doe",
-  email: "john@example.com",
-  avatar: "",
-  username: "john",
-  plan: "Pro",
-};
+// const mockUser = {
+//   name: "John Doe",
+//   email: "john@example.com",
+//   avatar: "",
+//   username: "john",
+//   plan: "Pro",
+// };
 
-const DashboardNavigation = () => {
-  const {
-    username,
-    name,
-    // bio,
-    avatarUrl,
-    // loading,
-    // error,
-    // totalClicks = 0,
-    // totalLinks = 0,
-    // ctr = 0.0,
-    email,
-  } = useSelector((state: RootState) => state.user);
-  // const { data } = useSession();
+interface NavItemType {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  badge?: number | null;
+}
 
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [notifications] = useState(2);
-  const [linkCount] = useState(12);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { setTheme } = useTheme();
-  const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home, badge: null },
-    { id: "links", label: "Links", icon: Link, badge: linkCount },
-    { id: "design", label: "Design", icon: Palette, badge: null },
-    { id: "analytics", label: "Analytics", icon: BarChart3, badge: null },
-    { id: "settings", label: "Settings", icon: Settings, badge: null },
-  ];
+interface NavItemProps {
+  item: NavItemType;
+  isMobile?: boolean;
+  isActive: boolean;
+  onClick: () => void;
+}
 
-  const handleLogOut = async () => {
-    try {
-      // Simulate logout logic
-      signOut({ callbackUrl: "/" });
-      console.log("User logged out successfully");
-      setActiveTab("dashboard"); // Reset active tab on logout
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+interface ProfileDropdownProps {
+  name: string;
+  email: string;
+  avatarUrl: string;
+  username: string;
+  onLogout: () => void;
+}
 
-  interface NavItemProps {
-    item: {
-      id: string;
-      label: string;
-      icon: React.ElementType;
-      badge?: number | null;
-    };
-    isMobile?: boolean;
-  }
-  // NavItem component for both desktop and mobile
-  const NavItem = ({ item, isMobile = false }: NavItemProps) => {
+interface QuickActionsProps {
+  notifications: number;
+  setTheme: (theme: string) => void;
+}
+
+interface MobileSheetProps {
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+  navItems: NavItemType[];
+  renderNavItem: (item: NavItemType, isMobile: boolean) => React.ReactNode;
+}
+
+// Memoized NavItem component
+const NavItem = React.memo<NavItemProps>(
+  ({ item, isMobile = false, isActive, onClick }) => {
     const Icon = item.icon;
-    const isActive = activeTab === item.id;
+
+    const buttonClassName = useMemo(() => {
+      return `
+      ${isMobile ? "flex flex-col h-14 p-2" : "flex items-center gap-2 h-9"}
+      ${
+        isActive
+          ? "bg-primary text-primary-foreground"
+          : "text-muted-foreground hover:text-foreground"
+      }
+      transition-colors
+    `;
+    }, [isMobile, isActive]);
 
     return (
       <Button
         variant={isActive ? "default" : "ghost"}
-        className={`
-          ${isMobile ? "flex flex-col h-14 p-2" : "flex items-center gap-2 h-9"}
-          ${
-            isActive
-              ? "bg-primary text-primary-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }
-          transition-colors
-        `}
-        onClick={() => {
-          setActiveTab(item.id);
-          dispatch(setTabName(item.label as TabName));
-          if (isMobile) setMobileMenuOpen(false);
-        }}
+        className={buttonClassName}
+        onClick={onClick}
       >
         <Icon className={isMobile ? "h-5 w-5" : "h-4 w-4"} />
         <span className={`${isMobile ? "text-xs mt-1" : "text-sm"}`}>
@@ -137,18 +120,29 @@ const DashboardNavigation = () => {
         )}
       </Button>
     );
-  };
+  }
+);
 
-  const ProfileDropdown = () => (
+NavItem.displayName = "NavItem";
+
+// Memoized ProfileDropdown component
+const ProfileDropdown = React.memo<ProfileDropdownProps>(
+  ({ name, email, avatarUrl, username, onLogout }) => (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={avatarUrl} alt={mockUser.name} />
+            <AvatarImage
+              src={
+                avatarUrl ||
+                `https://avatar.iran.liara.run/username?username=${username}`
+              }
+              alt={name}
+            />
             <AvatarFallback>
               <AvatarImage
                 src={`https://avatar.iran.liara.run/username?username=${username}`}
-                alt={mockUser.name}
+                alt={name}
               />
             </AvatarFallback>
           </Avatar>
@@ -193,15 +187,20 @@ const DashboardNavigation = () => {
           <span>Help & Support</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-red-600" onClick={handleLogOut}>
+        <DropdownMenuItem className="text-red-600" onClick={onLogout}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
+);
 
-  const QuickActions = () => (
+ProfileDropdown.displayName = "ProfileDropdown";
+
+// Memoized QuickActions component
+const QuickActions = React.memo<QuickActionsProps>(
+  ({ notifications, setTheme }) => (
     <div className="flex items-center space-x-2">
       <Button variant="outline" size="sm">
         <Eye className="h-4 w-4 mr-2" />
@@ -236,9 +235,14 @@ const DashboardNavigation = () => {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  );
+  )
+);
 
-  const MobileSheet = () => (
+QuickActions.displayName = "QuickActions";
+
+// Memoized MobileSheet component
+const MobileSheet = React.memo<MobileSheetProps>(
+  ({ mobileMenuOpen, setMobileMenuOpen, navItems, renderNavItem }) => (
     <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="sm" className="md:hidden">
@@ -256,13 +260,16 @@ const DashboardNavigation = () => {
         </SheetHeader>
         <div className="mt-6 space-y-2">
           {navItems.map((item) => (
-            <div key={item.id} className="w-full">
-              <NavItem item={item} isMobile={false} />
+            <div
+              key={item.id}
+              className="w-full items-center justify-center pl-4"
+            >
+              {renderNavItem(item, false)}
             </div>
           ))}
         </div>
         <Separator className="my-6" />
-        <div className="space-y-2">
+        <div className="space-y-2 px-2">
           <Button variant="outline" className="w-full justify-start">
             <Eye className="h-4 w-4 mr-2" />
             View My Page
@@ -274,6 +281,70 @@ const DashboardNavigation = () => {
         </div>
       </SheetContent>
     </Sheet>
+  )
+);
+
+MobileSheet.displayName = "MobileSheet";
+
+const DashboardNavigation: React.FC = () => {
+  const { username, name, avatarUrl, email } = useSelector(
+    (state: RootState) => state.user
+  );
+
+  const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [notifications] = useState<number>(2);
+  const [linkCount] = useState<number>(12);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { setTheme } = useTheme();
+
+  // Memoize navItems array
+  const navItems = useMemo<NavItemType[]>(
+    () => [
+      { id: "dashboard", label: "Dashboard", icon: Home, badge: null },
+      { id: "links", label: "Links", icon: Link, badge: linkCount },
+      { id: "design", label: "Design", icon: Palette, badge: null },
+      // { id: "analytics", label: "Analytics", icon: BarChart3, badge: null },
+      { id: "settings", label: "Settings", icon: Settings, badge: null },
+    ],
+    [linkCount]
+  );
+
+  // Memoized logout handler
+  const handleLogOut = useCallback(async (): Promise<void> => {
+    try {
+      signOut({ callbackUrl: "/" });
+      console.log("User logged out successfully");
+      setActiveTab("dashboard");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  }, []);
+
+  // Memoized nav item click handler
+  const handleNavItemClick = useCallback(
+    (itemId: string, itemLabel: string, isMobile: boolean): void => {
+      setActiveTab(itemId);
+      dispatch(setTabName(itemLabel as TabName));
+      if (isMobile) setMobileMenuOpen(false);
+    },
+    [dispatch]
+  );
+
+  // Render function for NavItem to avoid creating new functions in render
+  const renderNavItem = useCallback(
+    (item: NavItemType, isMobile: boolean): React.ReactNode => {
+      return (
+        <NavItem
+          key={item.id}
+          item={item}
+          isMobile={isMobile}
+          isActive={activeTab === item.id}
+          onClick={() => handleNavItemClick(item.id, item.label, isMobile)}
+        />
+      );
+    },
+    [activeTab, handleNavItemClick]
   );
 
   return (
@@ -287,23 +358,32 @@ const DashboardNavigation = () => {
               LinkForge
             </div>
             <div className="flex items-center space-x-1">
-              {navItems.map((item) => (
-                <NavItem key={item.id} item={item} />
-              ))}
+              {navItems.map((item) => renderNavItem(item, false))}
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <QuickActions />
-            <ProfileDropdown />
+            <QuickActions notifications={notifications} setTheme={setTheme} />
+            <ProfileDropdown
+              name={name || ""}
+              email={email || ""}
+              avatarUrl={avatarUrl || ""}
+              username={username}
+              onLogout={handleLogOut}
+            />
           </div>
         </div>
       </nav>
 
       {/* Mobile Navigation Header */}
-      <nav className="md:hidden bg-background border-b sticky top-0 z-50">
+      <nav className="md:hidden bg-background border-b sticky top-0 z-[9999]">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <MobileSheet />
+            <MobileSheet
+              mobileMenuOpen={mobileMenuOpen}
+              setMobileMenuOpen={setMobileMenuOpen}
+              navItems={navItems}
+              renderNavItem={renderNavItem}
+            />
             <div className="flex items-center gap-2 text-lg font-bold">
               <Link className="h-5 w-5" />
               LinkForge
@@ -318,43 +398,14 @@ const DashboardNavigation = () => {
                 </Badge>
               )}
             </Button>
-            <ProfileDropdown />
+            <ProfileDropdown
+              name={name || ""}
+              email={email || ""}
+              avatarUrl={avatarUrl || ""}
+              username={username}
+              onLogout={handleLogOut}
+            />
           </div>
-        </div>
-      </nav>
-
-      {/* Main Content Area */}
-      {/* <main className="flex-1 p-6 pb-20 md:pb-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="mb-6">
-                        <h1 className="text-2xl font-bold capitalize">{activeTab}</h1>
-                        <p className="text-muted-foreground">
-                            {activeTab === 'dashboard' && 'Welcome back! Here\'s your overview.'}
-                            {activeTab === 'links' && 'Manage your links and organize them.'}
-                            {activeTab === 'design' && 'Customize your page appearance.'}
-                            {activeTab === 'analytics' && 'Track your page performance.'}
-                            {activeTab === 'settings' && 'Manage your account settings.'}
-                        </p>
-                    </div>
-
-                    
-                    <div className="bg-card rounded-lg border p-6">
-                        <h2 className="text-lg font-semibold mb-4">
-                            {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Content
-                        </h2>
-                        <p className="text-muted-foreground">
-                            This is where the {activeTab} page content would be displayed.
-                        </p>
-                    </div>
-                </div>
-            </main> */}
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t">
-        <div className="flex justify-around py-2">
-          {navItems.map((item) => (
-            <NavItem key={item.id} item={item} isMobile={true} />
-          ))}
         </div>
       </nav>
     </div>

@@ -9,6 +9,7 @@ import {
   ToggleRight,
   Trash2,
   MousePointer2,
+  Link,
 } from "lucide-react";
 import React from "react";
 import { Input } from "@/Components/ui/input";
@@ -22,15 +23,15 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Card, CardContent } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import LinkCardSkeleton from "@/Components/misc/LinkCardSkeleton";
-import file from "../../../public/file.svg";
+// import file from "../../../public/file.svg";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { setTabName, TabName } from "@/store/slices/navigationSlice";
 
 function YourLinks() {
-  const router = useRouter();
+  const dispatch = useDispatch();
   const { links, loading } = useSelector((state: RootState) => state.link);
 
   const toggleLinkStatus = (id: string) => {
@@ -101,7 +102,7 @@ function YourLinks() {
             <CardContent
               className="p-4"
               onClick={() => {
-                router.push(`/dashboard/design`);
+                dispatch(setTabName("Design" as TabName));
               }}
             >
               <div className="flex items-start justify-between mb-3 gap-2">
@@ -109,13 +110,19 @@ function YourLinks() {
                   <div
                     className={`w-10 h-10 ${link.color} rounded-lg flex items-center justify-center text-white text-lg shrink-0`}
                   >
-                    <Image
-                      src={link.thumbnail || link.images?.[0] || file}
-                      alt={link.title}
-                      width={40}
-                      height={40}
-                      className="rounded-lg h-full w-full object-cover"
-                    />
+                    {link.images?.[0] || link.thumbnail ? (
+                      <Image
+                        src={link.images?.[0] || link.thumbnail || ""}
+                        alt={link.title}
+                        width={40}
+                        height={40}
+                        className="rounded-lg h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted">
+                        <Link className="w-6 h-6 text-muted-foreground" />
+                      </div>
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <h4 className="text-sm sm:text-base font-medium text-foreground truncate">

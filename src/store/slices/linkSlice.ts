@@ -1,18 +1,20 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LinkItem } from "../../types/index";
+import { ChartData, LinkItem } from "../../types/index";
 import { linksThunks } from "../thunks/links";
 
 interface LinksState {
     links: LinkItem[];
     loading: boolean;
     error: string | null;
+    chartData?: ChartData[]
 }
 
 const initialState: LinksState = {
     links: [],
     loading: false,
     error: null,
+    chartData: []
 };
 
 
@@ -52,6 +54,7 @@ const linksSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        // Cases For User Link Service 
         builder.addCase(linksThunks.getAllUserLinkThunk.fulfilled, (state, action) => {
             state.links = action.payload;
             state.loading = false;
@@ -64,6 +67,22 @@ const linksSlice = createSlice({
         builder.addCase(linksThunks.getAllUserLinkThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message || "Failed to fetch links";
+        });
+
+        // Cases For Graph Data
+
+        builder.addCase(linksThunks.getViewsVsClickGraphDataThunk.fulfilled, (state, action) => {
+            state.chartData = action.payload;
+            state.loading = false;
+            state.error = null;
+        })
+        builder.addCase(linksThunks.getViewsVsClickGraphDataThunk.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
+        builder.addCase(linksThunks.getViewsVsClickGraphDataThunk.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message || "Failed to fetch graph data";
         });
     }
 });

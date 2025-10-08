@@ -1,18 +1,21 @@
 // src/store/counterSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+
 interface MiscState {
     value: number;
     showProgressBar?: boolean; // Optional property to control progress bar visibility
     isSaved?: boolean
     isPublished?: boolean
+    totalClicks?: number
 }
 
 const initialState: MiscState = {
     value: 0,
     showProgressBar: false, // Default value for progress bar visibility
     isSaved: true,
-    isPublished: true
+    isPublished: true,
+    totalClicks: 0
 };
 
 const miscSlice = createSlice({
@@ -36,10 +39,19 @@ const miscSlice = createSlice({
         },
         toggleIsPublished: (state, action) => {
             state.isPublished = action.payload
+        },
+        setTotalClicks: (state, action) => {
+            const { links } = action.payload
+            if (!links) {
+                return;
+            }
+            // Calculate total clicks based on the links
+            const totalClicks = links.reduce((acc, link) => acc + link.clicks, 0);
+            state.totalClicks = totalClicks
         }
     },
 });
 
-export const { increment, decrement, setValue, toggleProgressBar, toggleIsSaved, toggleIsPublished } = miscSlice.actions;
+export const { increment, decrement, setValue, toggleProgressBar, toggleIsSaved, toggleIsPublished, setTotalClicks } = miscSlice.actions;
 
 export default miscSlice.reducer;

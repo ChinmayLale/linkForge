@@ -13,6 +13,7 @@ import { userThunks } from "@/store/thunks/user";
 import { Skeleton } from "../ui/skeleton";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { setTotalClicks } from "@/store/slices/miscSlice";
 
 function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
   const {
@@ -24,7 +25,6 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
     error,
     totalClicks = 0,
     totalLinks = 0,
-    ctr = 0.0,
   } = useSelector((state: RootState) => state.user);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +33,10 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
     avatarUrl || `https://avatar.iran.liara.run/username?username=${username}`
   );
 
+  const links = useSelector((state: RootState) => state.link.links);
+  const totalLinkClicks = useSelector(
+    (state: RootState) => state.misc.totalClicks
+  );
   useEffect(() => {
     if (session?.customToken && !username) {
       dispatch(
@@ -45,12 +49,23 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
   }, [session, username]);
 
   useEffect(() => {
+    if (links) {
+      dispatch(setTotalClicks({ links }));
+    }
+  }, [links]);
+
+  useEffect(() => {
     if (error) {
       toast.error(error);
     }
   }, [error]);
 
   if (!loading && !username) return null;
+
+  const ctr =
+    links && links.length > 0 && totalLinkClicks !== undefined
+      ? ((totalLinkClicks / links.length) * 100).toFixed(1) + "%"
+      : "0%";
 
   if (loading) {
     return (
@@ -74,7 +89,13 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
       {/* Profile Image */}
       <div className="flex-shrink-0">
         <Avatar className="rounded-full border-4 border-ring shadow-sm object-cover w-28 h-28">
-          <AvatarImage src={avatarUrl} alt={username} />
+          <AvatarImage
+            src={
+              avatarUrl ||
+              `https://avatar.iran.liara.run/username?username=${username}`
+            }
+            alt={username}
+          />
           <AvatarFallback>
             <AvatarImage
               src={
@@ -97,7 +118,11 @@ function DashBoardUserProfile({ user = "Chinmay" }: { user?: string }) {
           {bio ||
             "This user has not set a bio yet. You can add one in the settings."}
         </p>
-        <BioCounts links={totalLinks} clicks={totalClicks} ctr={ctr} />
+        <BioCounts
+          links={links.length || 0}
+          clicks={totalLinkClicks || 0}
+          ctr={ctr ? parseFloat(ctr) : 0}
+        />
       </div>
 
       {/* Action Buttons */}

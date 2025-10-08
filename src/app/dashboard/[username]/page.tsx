@@ -25,8 +25,9 @@ type Props = {
 
 const Tab = ({ username }: { username: string }) => {
   if (typeof window !== "undefined") {
-    console.log(localStorage.getItem("token"));
+    // console.log(localStorage.getItem("token"));
   }
+  const links = useSelector((state: RootState) => state.link.links);
   switch (useSelector((state: RootState) => state.nav.tabName)) {
     case "Dashboard":
       return (
@@ -41,7 +42,7 @@ const Tab = ({ username }: { username: string }) => {
         <div className="w-full h-fit flex flex-col  justify-center gap-4  bg-[var(--primary-bg)]">
           <DashBoardUserProfile user={username} />
           {/* <YourLinks /> */}
-          <LinkPerformanceSection />
+          <LinkPerformanceSection data={links} />
         </div>
       );
     case "Analytics":

@@ -9,7 +9,7 @@ const getUserProfileApi = async (username: string, token?: string) => {
         }
 
 
-        console.log("Token From Get User Profile:", token);
+        // console.log("Token From Get User Profile:", token);
 
         const response = await axios.get(`${BASE_URL}/user/profile`, {
             headers: {

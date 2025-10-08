@@ -17,6 +17,7 @@ interface userState {
     totalClicks?: number; // Optional property for total views
     ctr?: number; // Optional property for click-through rate
     coverImageUrl?: string
+    views?: number
 }
 
 
@@ -34,7 +35,8 @@ const initialState: userState = {
     totalLinks: 0,
     totalClicks: 0,
     ctr: 0,
-    coverImageUrl: ""
+    coverImageUrl: "",
+    views: 0
 };
 
 
@@ -68,7 +70,7 @@ const userSlice = createSlice({
             state.error = undefined;
         });
         builder.addCase(userThunks.getUserProfileThunk.fulfilled, (state, action: PayloadAction<userState>) => {
-            const { username, name, bio, avatarUrl, tags, email, theme, totalClicks, totalLinks: linksCount, ctr } = action.payload;
+            const { username, name, bio, avatarUrl, tags, email, theme, totalClicks, totalLinks: linksCount, ctr, views } = action.payload;
             state.username = username;
             state.name = name || "";
             state.bio = bio || "";
@@ -82,6 +84,7 @@ const userSlice = createSlice({
             state.totalLinks = linksCount || 0;
             state.theme = theme || null;
             state.ctr = ctr || 0; // Set click-through rate if provided
+            state.views = views || 0
         });
         builder.addCase(userThunks.getUserProfileThunk.rejected, (state, action) => {
             console.log({ payload: action.payload });

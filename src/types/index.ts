@@ -110,3 +110,10 @@ export interface UpdateUserProfileInput {
     coverImageUrl?: string;
     isProfilePublic?: boolean;
 }
+
+
+export type ChartData = {
+    title: string;
+    views: number;
+    clicks: number;
+};
