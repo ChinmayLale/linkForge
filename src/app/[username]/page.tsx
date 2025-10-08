@@ -10,6 +10,8 @@ import axios from "axios";
 import { BASE_URL } from "@/Constants/Endpoints";
 import Link from "next/link";
 import { addViewsToLinkService } from "@/Services/links/addLinkViews.service";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface PageProps {
   params: Promise<{
@@ -109,6 +111,7 @@ const PublicProfile = ({ params }: PageProps) => {
   const [playingMusic, setPlayingMusic] = useState<string | null>(null);
 
   const [viewAdded, setViewAdded] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const addViewsToLink = async () => {
@@ -119,7 +122,7 @@ const PublicProfile = ({ params }: PageProps) => {
     };
 
     addViewsToLink();
-  }, [username, viewAdded]); 
+  }, [username, viewAdded]);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -165,7 +168,13 @@ const PublicProfile = ({ params }: PageProps) => {
 
   const renderComponent = (link: LinkItem) => {
     return (
-      <div key={link.id} onClick={() => trackClick(link.id)}>
+      <div
+        key={link.id}
+        onClick={async () => {
+          await trackClick(link.id);
+          window.location.href = link.url;
+        }}
+      >
         <LinkComponents
           link={link}
           theme={data.theme!}
