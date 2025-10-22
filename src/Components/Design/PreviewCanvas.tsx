@@ -85,11 +85,11 @@ export function PreviewCanvas({
   };
 
   const getBackgroundStyle = () => {
-    // console.log("theme passed:", theme);
+    console.log("theme passed:", theme);
 
-    // if (theme.backgroundType === "gradient") {
-    //   return { background: theme.backgroundColor };
-    // }
+    if (theme.backgroundType === "gradient") {
+      return { background: theme.backgroundColor };
+    }
     return { backgroundColor: theme.backgroundColor };
   };
 

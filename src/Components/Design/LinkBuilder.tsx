@@ -219,7 +219,7 @@ export default function LinkBuilder4() {
   const applyTemplate = (templateId: string) => {
     console.log("Apply theme Clicked ");
     const template = templateStyles[templateId as keyof typeof templateStyles];
-    // console.log({ template });
+    console.log({ template });
     if (template) {
       setTheme(template);
     }
